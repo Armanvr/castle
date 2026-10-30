@@ -17,6 +17,7 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
 		clock: 'M12 3a9 9 0 100 18 9 9 0 000-18 M12 7v5l3 2',
 		close: 'M6 6l12 12 M6 18L18 6',
 		check: 'M5 12l4 4L19 6',
+		search: 'M11 4a7 7 0 100 14 7 7 0 000-14 M21 21l-5-5',
 	}
 	return (
 		<svg

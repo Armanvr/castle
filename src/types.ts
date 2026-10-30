@@ -189,7 +189,8 @@ export interface Vitals {
 	maxHp: number
 	hp: number
 	tempHp: number
-	conditions: { name: string; duration?: string }[]
+	// duration: legacy free text; rounds: remaining turns (0 = expired, the DM removes it)
+	conditions: { name: string; duration?: string; rounds?: number }[]
 	exhaustion: number
 	status: ParticipantStatus
 	removedStatus?: Exclude<ParticipantStatus, 'removed'>

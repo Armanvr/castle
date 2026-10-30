@@ -5,14 +5,10 @@ import { frPlural } from '../services/labels'
 import type { Campaign, Combatant, GameState, Monster, Vitals } from '../types'
 import { FormulaRoll } from './DiceRoller'
 import { Icon } from './icons'
-import { readIntegerInput } from './input'
+import { isTyping, readIntegerInput } from './input'
 import { MonsterProfile, SourceNote } from './Views'
 
-function participantLabel(p: Combatant, state: GameState) {
-	if (p.type === 'player') return p.name
-	const same = state.combat?.participants.filter((x) => x.monsterId === p.monsterId) ?? []
-	return p.name + ' · ' + (same.findIndex((x) => x.id === p.id) + 1)
-}
+const participantLabel = game.participantLabel
 const typeLabels = {
 	player: 'Personnage joueur',
 	monster: 'Monstre',
@@ -21,19 +17,41 @@ const typeLabels = {
 }
 const statusLabels: Record<string, string> = { unconscious: 'Inconscient', stable: 'Stable', dead: 'Mort' }
 export type Update = (change: (state: GameState) => GameState) => void
+// Like Update, but records the target's HP fields beforehand so the combat view can undo it.
+export type Track = (targetId: string, label: string, change: (state: GameState) => GameState, damage?: number) => void
+type UndoEntry = { label: string; targetId: string; before: game.VitalsSnapshot }
+const UNDO_LIMIT = 20
+// Same bounds as the stats editor and the unknown-stats inputs of "Ajouter une créature".
+const statFields = [
+	['armorClass', 'CA', 0, 100],
+	['maxHp', 'PV maximum', 1, Number.MAX_SAFE_INTEGER],
+	['initiativeBonus', 'Bonus d’initiative', -100, 100],
+] as const
+const validStat = (text: string, min: number, max: number) =>
+	text.trim() !== '' && Number.isSafeInteger(Number(text)) && Number(text) >= min && Number(text) <= max
+const statRange = (min: number, max: number) =>
+	max === Number.MAX_SAFE_INTEGER ? `entier supérieur ou égal à ${min}` : `entier de ${min} à ${max}`
+// Remaining rounds are shown instead of the legacy free-text duration; 0 means expired.
+const conditionSuffix = (c: Vitals['conditions'][number]) =>
+	c.rounds === undefined ? (c.duration ?? '') : c.rounds > 0 ? frPlural(c.rounds, 'round', 'rounds') : 'expirée'
 export function VitalControls({
 	vitals,
 	maxHp,
 	targetId,
 	update,
+	track,
+	name = 'ce participant',
 }: {
 	vitals: Vitals
 	maxHp: number
 	targetId: string
 	update: Update
+	track?: Track
+	name?: string
 }) {
 	const [amount, setAmount] = useState('1')
 	const validAmount = Number.isSafeInteger(Number(amount)) && Number(amount) > 0
+	const run: Track = (id, label, change, damage) => (track ? track(id, label, change, damage) : update(change))
 	return (
 		<div class='vital-controls'>
 			<div class='hp-number'>
@@ -42,7 +60,19 @@ export function VitalControls({
 				{vitals.tempHp > 0 && <em>+{vitals.tempHp} temporaires</em>}
 			</div>
 			<meter min='0' max={maxHp} value={vitals.hp} aria-label='Points de vie' />
-			<div class='damage-controls'>
+			<form
+				class='damage-controls'
+				onSubmit={(e) => {
+					e.preventDefault()
+					if (validAmount)
+						run(
+							targetId,
+							`${frPlural(Number(amount), 'dégât', 'dégâts')} à ${name}`,
+							(s) => game.damage(s, targetId, Number(amount)),
+							Number(amount),
+						)
+				}}
+			>
 				<input
 					aria-label='Quantité de dégâts ou soins'
 					type='number'
@@ -53,22 +83,22 @@ export function VitalControls({
 					value={amount}
 					onInput={(e) => setAmount(e.currentTarget.value)}
 				/>
-				<button
-					type='button'
-					disabled={!validAmount}
-					onClick={() => update((s) => game.damage(s, targetId, Number(amount)))}
-				>
+				<button type='submit' disabled={!validAmount}>
 					− Dégâts
 				</button>
 				<button
 					type='button'
 					class='heal'
 					disabled={!validAmount}
-					onClick={() => update((s) => game.heal(s, targetId, Number(amount)))}
+					onClick={() =>
+						run(targetId, `${frPlural(Number(amount), 'soin', 'soins')} à ${name}`, (s) =>
+							game.heal(s, targetId, Number(amount)),
+						)
+					}
 				>
 					+ Soins
 				</button>
-			</div>
+			</form>
 			{!validAmount && <small role='status'>Dégâts ou soins : saisissez un entier positif.</small>}
 			<div class='inline-fields'>
 				<label>
@@ -80,7 +110,10 @@ export function VitalControls({
 						value={vitals.hp}
 						onChange={(e) => {
 							const value = readIntegerInput(e.currentTarget)
-							if (value !== null) update((s) => game.updateVitals(s, targetId, { hp: value }))
+							if (value !== null)
+								run(targetId, `PV actuels de ${name} : ${vitals.hp} → ${value}`, (s) =>
+									game.updateVitals(s, targetId, { hp: value }),
+								)
 						}}
 					/>
 				</label>
@@ -92,7 +125,10 @@ export function VitalControls({
 						value={vitals.tempHp}
 						onChange={(e) => {
 							const value = readIntegerInput(e.currentTarget)
-							if (value !== null) update((s) => game.updateVitals(s, targetId, { tempHp: value }))
+							if (value !== null)
+								run(targetId, `PV temporaires de ${name} : ${vitals.tempHp} → ${value}`, (s) =>
+									game.updateVitals(s, targetId, { tempHp: value }),
+								)
 						}}
 					/>
 				</label>
@@ -106,15 +142,33 @@ function Participant({
 	update,
 	campaign,
 	onRemoved,
+	track,
+	announce,
 }: {
 	p: Combatant
 	state: GameState
 	update: Update
 	campaign: Campaign
 	onRemoved: (message: string) => void
+	track: Track
+	announce: (message: string) => void
 }) {
 	const v = game.getVitals(state, p)
 	const id = p.playerId || p.id
+	// Condition picked in the select but not yet added: waiting for its optional duration in rounds.
+	const [pendingCondition, setPendingCondition] = useState<string | null>(null)
+	const [rounds, setRounds] = useState('')
+	const validRounds = rounds.trim() === '' || (Number.isSafeInteger(Number(rounds)) && Number(rounds) >= 1)
+	const conditionSelect = useRef<HTMLSelectElement>(null)
+	const roundsInput = useRef<HTMLInputElement>(null)
+	useEffect(() => {
+		if (pendingCondition) roundsInput.current?.focus()
+	}, [pendingCondition])
+	const closeConditionRow = () => {
+		setPendingCondition(null)
+		setRounds('')
+		conditionSelect.current?.focus()
+	}
 	const removalNotice = `${participantLabel(p, state)} retiré du combat. Réintégrer depuis « Retirés ».`
 	const monster = campaign.monsters.find((m) => m.id === p.monsterId)
 	return (
@@ -139,7 +193,14 @@ function Participant({
 					/>
 				</label>
 			</div>
-			<VitalControls vitals={v} maxHp={p.maxHp} targetId={id} update={update} />
+			<VitalControls
+				vitals={v}
+				maxHp={p.maxHp}
+				targetId={id}
+				update={update}
+				track={track}
+				name={participantLabel(p, state)}
+			/>
 			{p.type === 'player' && v.hp === 0 && (
 				<fieldset class='death-saves' aria-labelledby={`death-saves-${p.id}`}>
 					<b id={`death-saves-${p.id}`}>Sauvegardes contre la mort</b>
@@ -149,14 +210,23 @@ function Participant({
 					</span>
 					<div class='button-row'>
 						{(['success', 'failure', 'natural20', 'natural1'] as const).map((result, i) => (
-							<button type='button' onClick={() => update((s) => game.deathSave(s, id, result))}>
+							<button
+								type='button'
+								onClick={() =>
+									track(id, `Sauvegarde contre la mort de ${participantLabel(p, state)}`, (s) =>
+										game.deathSave(s, id, result),
+									)
+								}
+							>
 								{['Réussite', 'Échec', '20 naturel', '1 naturel'][i]}
 							</button>
 						))}
 					</div>
 				</fieldset>
 			)}
-			{monster && <MonsterActions monster={monster} />}
+			{monster && (
+				<MonsterActions monster={monster} attacker={p} state={state} track={track} announce={announce} />
+			)}
 			<div class='inline-fields'>
 				<label>
 					État
@@ -182,16 +252,19 @@ function Participant({
 				<label>
 					Conditions
 					<select
+						ref={conditionSelect}
 						aria-label={`Conditions : ajouter ou retirer une condition à ${p.name}`}
 						value=''
 						onChange={(e) => {
 							const name = e.currentTarget.value
 							if (!name) return
 							// a condition already present is removed by setCondition: no duration to ask
-							const duration = v.conditions.some((c) => c.name === name)
-								? undefined
-								: window.prompt('Durée facultative (ex. 2 rounds)') || undefined
-							update((s) => game.setCondition(s, p.id, name, duration))
+							if (v.conditions.some((c) => c.name === name))
+								update((s) => game.setCondition(s, p.id, name))
+							else {
+								setPendingCondition(name)
+								setRounds('')
+							}
 						}}
 					>
 						<option value=''>+ Ajouter une condition</option>
@@ -201,17 +274,55 @@ function Participant({
 					</select>
 				</label>
 			</div>
+			{pendingCondition && (
+				<form
+					class='condition-duration'
+					onSubmit={(e) => {
+						e.preventDefault()
+						if (!validRounds) return
+						update((s) =>
+							game.setCondition(s, p.id, pendingCondition, rounds.trim() ? Number(rounds) : undefined),
+						)
+						closeConditionRow()
+					}}
+					onKeyDown={(e) => {
+						if (e.key !== 'Escape') return
+						e.preventDefault() // table mode must not also exit
+						closeConditionRow()
+					}}
+				>
+					<label>
+						Durée en rounds (facultatif) · {pendingCondition}
+						<input
+							ref={roundsInput}
+							type='number'
+							min='1'
+							step='1'
+							aria-invalid={!validRounds}
+							value={rounds}
+							onInput={(e) => setRounds(e.currentTarget.value)}
+						/>
+					</label>
+					<button type='submit' disabled={!validRounds}>
+						Ajouter
+					</button>
+					<button type='button' onClick={closeConditionRow}>
+						Annuler
+					</button>
+					{!validRounds && <small role='status'>Durée : saisissez un entier positif ou laissez vide.</small>}
+				</form>
+			)}
 			<div class='condition-list'>
 				{v.conditions.map((c) => (
 					<button
 						type='button'
-						class='tag'
+						class={`tag${c.rounds === 0 ? ' is-expired' : ''}`}
 						title='Retirer cette condition'
-						aria-label={`Retirer la condition ${c.name}`}
+						aria-label={`Retirer la condition ${c.name}${conditionSuffix(c) && ` (${conditionSuffix(c)})`}`}
 						onClick={() => update((s) => game.setCondition(s, p.id, c.name))}
 					>
 						{c.name}
-						{c.duration && ` · ${c.duration}`} ×
+						{conditionSuffix(c) && ` · ${conditionSuffix(c)}`} ×
 					</button>
 				))}
 			</div>
@@ -224,13 +335,7 @@ function Participant({
 						{p.type === 'player' ? 'du PJ · appliquées à sa fiche' : 'de cette créature uniquement'}
 					</legend>
 					<div class='inline-fields'>
-						{(
-							[
-								['armorClass', 'CA', 0, 100],
-								['maxHp', 'PV maximum', 1, Number.MAX_SAFE_INTEGER],
-								['initiativeBonus', 'Bonus d’initiative', -100, 100],
-							] as const
-						).map(([key, label, min, max]) => (
+						{statFields.map(([key, label, min, max]) => (
 							<label key={key}>
 								{label}
 								<input
@@ -312,6 +417,7 @@ function InitiativeRow({
 	focused,
 	tied,
 	onFocus,
+	track,
 }: {
 	p: Combatant
 	state: GameState
@@ -320,6 +426,7 @@ function InitiativeRow({
 	focused: boolean
 	tied: boolean
 	onFocus: () => void
+	track: Track
 }) {
 	const [amount, setAmount] = useState('1')
 	const validAmount = Number.isSafeInteger(Number(amount)) && Number(amount) > 0
@@ -360,8 +467,9 @@ function InitiativeRow({
 						</span>
 					)}
 					{v.conditions.map((c) => (
-						<span class='tag' key={c.name}>
+						<span class={`tag${c.rounds === 0 ? ' is-expired' : ''}`} key={c.name}>
 							{c.name}
+							{conditionSuffix(c) && ` · ${conditionSuffix(c)}`}
 						</span>
 					))}
 				</div>
@@ -382,7 +490,14 @@ function InitiativeRow({
 					type='button'
 					aria-label={`Dégâts à ${label}`}
 					disabled={!validAmount}
-					onClick={() => update((s) => game.damage(s, id, Number(amount)))}
+					onClick={() =>
+						track(
+							id,
+							`${frPlural(Number(amount), 'dégât', 'dégâts')} à ${label}`,
+							(s) => game.damage(s, id, Number(amount)),
+							Number(amount),
+						)
+					}
 				>
 					−
 				</button>
@@ -391,7 +506,11 @@ function InitiativeRow({
 					class='heal'
 					aria-label={`Soins à ${label}`}
 					disabled={!validAmount}
-					onClick={() => update((s) => game.heal(s, id, Number(amount)))}
+					onClick={() =>
+						track(id, `${frPlural(Number(amount), 'soin', 'soins')} à ${label}`, (s) =>
+							game.heal(s, id, Number(amount)),
+						)
+					}
 				>
 					+
 				</button>
@@ -431,11 +550,78 @@ export function CombatView({
 	}, [requestedEncounter])
 	const [participantType, setParticipantType] = useState<'monster' | 'ally' | 'hostile'>('monster')
 	const [monsterId, setMonsterId] = useState(campaign.monsters[0]?.id || '')
+	// DM-supplied values for the selected monster's unknown (null) stats, as typed.
+	const [typedStats, setTypedStats] = useState<Record<string, string>>({})
+	const addedMonster = campaign.monsters.find((m) => m.id === monsterId)
+	const missingStats = statFields.filter(([key]) => addedMonster?.[key] === null)
+	const statsComplete =
+		!!addedMonster && missingStats.every(([key, , min, max]) => validStat(typedStats[key] ?? '', min, max))
 	// null = the focus panel follows the active combatant
 	const [focusId, setFocusId] = useState<string | null>(null)
 	useEffect(() => setFocusId(null), [combat?.activeId])
 	// Message of the polite live region; replaced by the next remove/restore, never cleared by a timer.
 	const [notice, setNotice] = useState('')
+	// In-memory only (never saved): last HP-affecting actions made from this view, newest last.
+	const [undoStack, setUndoStack] = useState<UndoEntry[]>([])
+	useEffect(() => setUndoStack([]), [combat?.id, combat?.status === 'finished'])
+	const track: Track = (targetId, label, change, damage) =>
+		update((s) => {
+			const next = change(s)
+			if (damage) {
+				const p = s.combat?.participants.find((x) => x.id === targetId || x.playerId === targetId)
+				const concentration = p && game.concentrationNotice(s, next, targetId, damage, participantLabel(p, s))
+				if (concentration) setNotice(concentration)
+			}
+			const before = game.vitalsSnapshot(s, targetId)
+			// shortcut: side effect inside the updater (Preact runs it once, eagerly), it is the only place that sees the state the change applies to; upgrade: have update() return the previous state.
+			if (JSON.stringify(before) !== JSON.stringify(game.vitalsSnapshot(next, targetId)))
+				setUndoStack((stack) => [...stack, { label, targetId, before }].slice(-UNDO_LIMIT))
+			return next
+		})
+	const lastUndo = undoStack.at(-1)
+	const undo = () => {
+		if (!lastUndo) return
+		setUndoStack(undoStack.slice(0, -1))
+		update((s) => game.restoreVitals(s, lastUndo.targetId, lastUndo.before))
+		setNotice(`Annulé : ${lastUndo.label}`)
+	}
+	const advance = () =>
+		update((s) => {
+			const next = game.nextTurn(s)
+			const expired = game
+				.expiredConditions(s, next)
+				.map(({ participantId, condition }) => {
+					const p = next.combat!.participants.find((x) => x.id === participantId)!
+					return `Condition expirée : ${condition} (${participantLabel(p, next)})`
+				})
+				.join(' · ')
+			if (expired) setNotice(expired)
+			return next
+		})
+	// Re-registered every render so the handlers always see the current state; one document listener.
+	useEffect(() => {
+		if (!combat || combat.status === 'finished') return
+		const onKey = (e: KeyboardEvent) => {
+			if (isTyping(e.target)) return
+			const key = e.key.toLowerCase()
+			if (key === 'z' && (e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey) {
+				e.preventDefault()
+				undo()
+			} else if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.repeat) {
+				if (key === 'n' && combat.status === 'active') advance()
+				else if (key === 'd') {
+					// the sheet of the displayed combatant; VitalControls is shared with the character sheet, so no ref
+					const input = document.querySelector<HTMLInputElement>('#combat-focus .damage-controls input')
+					if (!input) return
+					input.focus()
+					input.select()
+				} else return
+				e.preventDefault()
+			}
+		}
+		document.addEventListener('keydown', onKey)
+		return () => document.removeEventListener('keydown', onKey)
+	})
 	// Where focus goes once the removed/restored combatant has re-rendered: a row id, or the Retirés summary.
 	const pendingFocus = useRef<{ row: string } | 'summary' | 'next' | null>(null)
 	const removedSummary = useRef<HTMLElement>(null)
@@ -550,6 +736,9 @@ export function CombatView({
 									Tour de : <strong>{participantLabel(activeP, state)}</strong>
 								</p>
 							)}
+							<p class='shortcut-hint'>
+								Raccourcis : N tour suivant · D dégâts · Entrée appliquer · Ctrl+Z annuler
+							</p>
 						</div>
 						<div class='button-row'>
 							<button
@@ -602,10 +791,20 @@ export function CombatView({
 							</button>
 							<button
 								type='button'
+								class='undo-button'
+								disabled={!lastUndo}
+								aria-keyshortcuts='Control+Z Meta+Z'
+								onClick={undo}
+							>
+								{lastUndo ? `Annuler · ${lastUndo.label}` : 'Annuler'}
+							</button>
+							<button
+								type='button'
 								class='primary'
 								ref={nextTurnButton}
 								disabled={combat.status !== 'active'}
-								onClick={() => update(game.nextTurn)}
+								aria-keyshortcuts='N'
+								onClick={advance}
 							>
 								Tour suivant <Icon name='arrow' size={16} />
 							</button>
@@ -625,6 +824,7 @@ export function CombatView({
 											focused={focused?.id === p.id}
 											tied={order[i - 1]?.initiative === p.initiative}
 											onFocus={() => focus(p.id)}
+											track={track}
 										/>
 									))}
 								</ol>
@@ -673,7 +873,10 @@ export function CombatView({
 									<select
 										aria-label='Créature à ajouter'
 										value={monsterId}
-										onChange={(e) => setMonsterId(e.currentTarget.value)}
+										onChange={(e) => {
+											setMonsterId(e.currentTarget.value)
+											setTypedStats({})
+										}}
 									>
 										{campaign.monsters.map((m) => (
 											<option value={m.id}>{m.name}</option>
@@ -681,32 +884,62 @@ export function CombatView({
 									</select>
 									<button
 										type='button'
+										disabled={!statsComplete}
 										onClick={() => {
-											const m = campaign.monsters.find((m) => m.id === monsterId)
-											if (!m) return
-											const read = (label: string, current: number | null) => {
-												if (current !== null) return current
-												const input = window.prompt(`${label} de ${m.name} (valeur MJ requise)`)
-												if (input === null || !input.trim()) return null
-												const value = Number(input)
-												return Number.isFinite(value) ? value : null
-											}
-											const maxHp = read('PV maximum', m.maxHp),
-												armorClass = read('CA', m.armorClass),
-												initiativeBonus = read('Bonus d’initiative', m.initiativeBonus)
-											if (maxHp === null || armorClass === null || initiativeBonus === null)
-												return
+											if (!addedMonster || !statsComplete) return
+											const known = (key: (typeof statFields)[number][0]) =>
+												addedMonster[key] ?? Number(typedStats[key])
 											update((s) =>
 												game.addParticipant(s, campaign, monsterId, participantType, {
-													maxHp,
-													armorClass,
-													initiativeBonus,
+													maxHp: known('maxHp'),
+													armorClass: known('armorClass'),
+													initiativeBonus: known('initiativeBonus'),
 												}),
 											)
+											setTypedStats({})
 										}}
 									>
 										<Icon name='plus' size={16} /> Ajouter une créature
 									</button>
+									{missingStats.length > 0 && (
+										<fieldset class='missing-stats'>
+											<legend>Valeurs MJ requises pour {addedMonster?.name}</legend>
+											<div class='inline-fields'>
+												{missingStats.map(([key, label, min, max]) => {
+													const valid = validStat(typedStats[key] ?? '', min, max)
+													return (
+														<label key={key}>
+															{label}
+															<input
+																type='number'
+																required
+																min={min}
+																max={max}
+																step='1'
+																aria-invalid={!valid}
+																aria-describedby={`missing-${key}`}
+																value={typedStats[key] ?? ''}
+																onInput={(e) =>
+																	setTypedStats({
+																		...typedStats,
+																		[key]: e.currentTarget.value,
+																	})
+																}
+															/>
+															<small
+																id={`missing-${key}`}
+																role={valid ? undefined : 'status'}
+															>
+																{valid
+																	? ''
+																	: `${label} : ${statRange(min, max)} requis.`}
+															</small>
+														</label>
+													)
+												})}
+											</div>
+										</fieldset>
+									)}
 									<span class='muted'>
 										À initiative égale, ↑ fait passer un participant avant le précédent.
 									</span>
@@ -725,6 +958,8 @@ export function CombatView({
 										update={update}
 										campaign={campaign}
 										onRemoved={onRemoved}
+										track={track}
+										announce={setNotice}
 									/>
 								</section>
 							)}
@@ -901,7 +1136,69 @@ function EncounterPreparation({
 	)
 }
 
-function MonsterActions({ monster }: { monster: Monster }) {
+function DamageRoll({
+	formula,
+	label,
+	targets,
+	onApply,
+}: {
+	formula: string
+	label: string
+	targets: { id: string; label: string }[]
+	onApply: (targetId: string, total: number) => void
+}) {
+	const [target, setTarget] = useState('')
+	// a target that was removed or died meanwhile is no longer offered: treat it as unselected
+	const chosen = targets.some((t) => t.id === target) ? target : ''
+	return (
+		<FormulaRoll formula={formula} label={label}>
+			{(total) => (
+				<div class='apply-damage'>
+					<label>
+						Cible
+						<select value={chosen} onChange={(e) => setTarget(e.currentTarget.value)}>
+							<option value=''>Choisir une cible</option>
+							{targets.map((t) => (
+								<option value={t.id}>{t.label}</option>
+							))}
+						</select>
+					</label>
+					<button type='button' disabled={!chosen || total < 1} onClick={() => onApply(chosen, total)}>
+						Appliquer {frPlural(total, 'dégât', 'dégâts')}
+					</button>
+				</div>
+			)}
+		</FormulaRoll>
+	)
+}
+function MonsterActions({
+	monster,
+	attacker,
+	state,
+	track,
+	announce,
+}: {
+	monster: Monster
+	attacker: Combatant
+	state: GameState
+	track: Track
+	announce: (message: string) => void
+}) {
+	// Single target, never the attacker; removed and dead participants are not offered.
+	const targets = (state.combat?.participants ?? [])
+		.filter((p) => p.id !== attacker.id && !['removed', 'dead'].includes(game.getVitals(state, p).status))
+		.map((p) => ({ id: p.playerId || p.id, label: participantLabel(p, state) }))
+	const applyDamage = (targetId: string, total: number) => {
+		const label = targets.find((t) => t.id === targetId)!.label
+		// announce first: a concentration notice from track() must not be overwritten by it
+		announce(`${frPlural(total, 'dégât appliqué', 'dégâts appliqués')} à ${label}.`)
+		track(
+			targetId,
+			`${frPlural(total, 'dégât', 'dégâts')} à ${label}`,
+			(s) => game.damage(s, targetId, total),
+			total,
+		)
+	}
 	const actions = Array.isArray(monster.details?.actions)
 		? monster.details.actions.filter(
 				(a): a is Record<string, unknown> => !!a && typeof a === 'object' && !Array.isArray(a),
@@ -949,7 +1246,13 @@ function MonsterActions({ monster }: { monster: Monster }) {
 										/>
 									)}
 									{damageFormulas(damage).map((formula, i) => (
-										<FormulaRoll key={i} formula={formula} label={`${name} · dégâts ${i + 1}`} />
+										<DamageRoll
+											key={i}
+											formula={formula}
+											label={`${name} · dégâts ${i + 1}`}
+											targets={targets}
+											onApply={applyDamage}
+										/>
 									))}
 								</div>
 							</div>
@@ -959,7 +1262,13 @@ function MonsterActions({ monster }: { monster: Monster }) {
 						<div class='monster-action' key={index}>
 							<p>{action}</p>
 							{damageFormulas(action).map((formula, i) => (
-								<FormulaRoll key={i} formula={formula} label={`Jet ${i + 1}`} />
+								<DamageRoll
+									key={i}
+									formula={formula}
+									label={`Jet ${i + 1}`}
+									targets={targets}
+									onApply={applyDamage}
+								/>
 							))}
 						</div>
 					))}

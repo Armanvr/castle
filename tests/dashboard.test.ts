@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import { test } from 'node:test'
-import * as game from '../src/services/game.ts'
 import { loadCampaign } from '../src/services/campaignLoader.ts'
+import * as game from '../src/services/game.ts'
 import { exportGame, importGame } from '../src/services/storageService.ts'
 
 test('combat stat edits persist for players and stay isolated for monsters', async () => {

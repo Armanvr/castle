@@ -7,7 +7,16 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!!node_modules", "!!dist", "!!stormwreck-json"]
+		"includes": [
+			"**",
+			"!!node_modules",
+			"!!dist",
+			"!!stormwreck-json",
+			"!!.claude",
+			"!!.impeccable",
+			"!!docs",
+			"!!DESIGN.md"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -18,7 +27,7 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"preset": "recommended"
 		}
 	},
 	"javascript": {

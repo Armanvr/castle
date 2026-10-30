@@ -168,6 +168,45 @@ summary:focus-visible {
 	border-color: #764c46;
 	background: #3a2725;
 }
+/* expired condition: muted and dashed, not red, so it reads as "to be removed" rather than "danger" */
+.tag.is-expired {
+	color: var(--muted);
+	border-style: dashed;
+}
+.condition-duration,
+.apply-damage {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: 10px;
+	margin: 12px 0;
+}
+.condition-duration small {
+	flex-basis: 100%;
+}
+.apply-damage {
+	margin: 8px 0 0;
+}
+.missing-stats {
+	flex-basis: 100%;
+	min-width: 0;
+}
+.missing-stats legend {
+	font-size: var(--fs-control);
+	margin-bottom: 8px;
+}
+.missing-stats small {
+	min-height: 1.4em;
+	color: var(--red);
+}
+.combat-toolbar .shortcut-hint {
+	font-size: var(--fs-meta);
+}
+.undo-button {
+	max-inline-size: 30ch;
+	overflow-wrap: anywhere;
+	text-align: left;
+}
 .heal {
 	color: #b4d1bb;
 }
@@ -2154,4 +2193,80 @@ button.brand {
 .current-scene > div,
 .chapter-card > div {
 	min-width: 0;
+}
+
+/* Scene sections with no content collapse to one compact row. */
+.scene-collapsed {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 16px;
+	margin-bottom: 14px;
+	color: var(--muted);
+}
+.scene-collapsed p {
+	font-size: var(--fs-control);
+}
+
+/* Table mode: combat takes the whole viewport. Declared last so it wins over the responsive shell rules. */
+.table-mode-bar {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 14px;
+}
+.app-shell.table-mode {
+	display: block;
+}
+.table-mode .sidebar,
+.table-mode .topbar,
+.table-mode .context-panel,
+.table-mode .app-footer {
+	display: none;
+}
+.table-mode .main-content {
+	max-width: none;
+	padding: 16px 20px 24px;
+}
+
+/* Global search. */
+.search-dialog {
+	width: min(640px, calc(100vw - 32px));
+	max-height: min(70vh, 560px);
+	margin: 12vh auto 0;
+	padding: 18px;
+	background: var(--panel);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 6px;
+}
+.search-dialog[open] {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.search-dialog::backdrop {
+	background: rgb(0 0 0 / 0.6);
+}
+.search-dialog ul {
+	overflow-y: auto;
+	min-height: 0;
+}
+.search-dialog li button {
+	width: 100%;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	text-align: left;
+	background: transparent;
+	border-color: transparent;
+	overflow-wrap: anywhere;
+}
+.search-dialog li button:focus-visible {
+	background: var(--panel-raised);
+}
+.search-dialog li small {
+	color: var(--muted);
+}
+.search-status {
+	font-size: var(--fs-meta);
 }

@@ -1,11 +1,13 @@
+import type { ComponentChildren } from 'preact'
 import { useState } from 'preact/hooks'
-import { rollFormula, type DiceResult } from '../services/dice'
+import { type DiceResult, rollFormula } from '../services/dice'
 import { Icon } from './icons'
 
 export function RollResult({ result, label }: { result: DiceResult; label?: string }) {
 	return (
 		<div class='dice-result' role='status' aria-live='polite'>
-			{label && <strong>{label}</strong>}
+			{/* trailing space (invisible at line end) so the live region's text does not read "dégâts 11d6" */}
+			{label && <strong>{label} </strong>}
 			<span>
 				{result.rolls.map((g) => `${g.values.length}d${g.sides} : ${g.values.join(', ')}`).join(' · ')}
 				{result.modifier !== 0 && ` · Modificateur ${result.modifier > 0 ? '+' : ''}${result.modifier}`}
@@ -14,7 +16,16 @@ export function RollResult({ result, label }: { result: DiceResult; label?: stri
 		</div>
 	)
 }
-export function FormulaRoll({ formula, label }: { formula: string; label: string }) {
+// children: controls shown under the result that need its total (damage rolls: target picker and apply button).
+export function FormulaRoll({
+	formula,
+	label,
+	children,
+}: {
+	formula: string
+	label: string
+	children?: (total: number) => ComponentChildren
+}) {
 	const [result, setResult] = useState<DiceResult | null>(null)
 	const [error, setError] = useState('')
 	return (
@@ -35,6 +46,7 @@ export function FormulaRoll({ formula, label }: { formula: string; label: string
 			</button>
 			{error && <p role='alert'>{error}</p>}
 			{result && <RollResult result={result} label={label} />}
+			{result && children?.(result.total)}
 		</div>
 	)
 }

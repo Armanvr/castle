@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { rollDice, damageFormulas } from '../src/services/dice.ts'
+import { damageFormulas, rollDice } from '../src/services/dice.ts'
 
 test('mixed dice rolls show individual values and modifier with bounded totals', () => {
 	const dice = [

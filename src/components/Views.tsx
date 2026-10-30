@@ -1,10 +1,12 @@
-import { useLayoutEffect, useRef, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import * as game from '../services/game'
 import { childField, fieldLabel, fieldValue, isTechnicalKey, valueLabel } from '../services/labels'
 import type { Campaign, Choice, GameState, Monster, Scene, Source } from '../types'
 import type { Update } from './CombatView'
 import { Icon } from './icons'
 import { readIntegerInput } from './input'
+
+type Section = 'readAloud' | 'summary' | 'dmNotes' | 'dialogues'
 export function SceneView({
 	campaign,
 	state,
@@ -25,6 +27,20 @@ export function SceneView({
 	}
 	const [dialogue, setDialogue] = useState<string | null>(null)
 	const current = scene.dialogues.find((d) => d.id === dialogue) || scene.dialogues[0]
+	const [revealed, setRevealed] = useState<Partial<Record<Section, boolean>>>({})
+	const added = state.sceneAdditions?.[scene.id]
+	// a section with neither source content nor DM addition collapses to one button; revealed stays true while typing
+	const shown = (section: Section, source: unknown) => source || revealed[section] || added?.[section]
+	const collapsed = (section: Section, addLabel: string, note?: string) => (
+		<div class='scene-collapsed'>
+			{note && <p>{note}</p>}
+			<button type='button' class='text-button' onClick={() => setRevealed((r) => ({ ...r, [section]: true }))}>
+				<Icon name='plus' size={15} /> {addLabel}
+			</button>
+		</div>
+	)
+	const noReadAloud = 'Aucun texte à lire fourni : consultez le livret.'
+	const noDialogue = 'Aucun dialogue pour cette scène.'
 	return (
 		<>
 			<div class='section-heading'>
@@ -56,61 +72,76 @@ export function SceneView({
 					</select>
 				</label>
 			</div>
-			<section class='panel scene-reading'>
-				<span class='eyebrow'>RÉSUMÉ STRUCTURÉ · MJ</span>
-				{scene.summary && <p>{scene.summary}</p>}
-				<SceneAddition
-					scene={scene}
-					state={state}
-					campaign={campaign}
-					update={update}
-					section='summary'
-					label='Résumé structuré · MJ'
-				/>
-			</section>
-			<section class='panel scene-reading'>
-				<span class='eyebrow'>DIALOGUES</span>
-				{current ? (
-					<>
-						<h3>{campaign.npcs.find((n) => n.id === current.speakerId)?.name || current.speakerId}</h3>
-						<p class='dialogue'>« {current.text} »</p>
-						{current.choices.map((c) => (
-							<button type='button' class='choice-button' onClick={() => setDialogue(c.nextDialogueId)}>
-								{c.label}
-								<Icon name='chevron' size={16} />
-							</button>
-						))}
-					</>
-				) : (
-					<p>Aucun dialogue pour cette scène.</p>
-				)}
-				<SceneAddition
-					scene={scene}
-					state={state}
-					campaign={campaign}
-					update={update}
-					section='dialogues'
-					label='Dialogues'
-				/>
-			</section>
-			<div class='read-aloud panel scene-reading'>
-				<span class='eyebrow'>
-					<Icon name='chapters' size={16} /> À LIRE AUX JOUEURS
-				</span>
-				{scene.readAloud ? (
-					<blockquote>{scene.readAloud}</blockquote>
-				) : (
-					<p>Aucun texte à lire fourni : consultez le livret.</p>
-				)}
-				<SceneAddition
-					scene={scene}
-					state={state}
-					campaign={campaign}
-					update={update}
-					section='readAloud'
-					label='À lire aux joueurs'
-				/>
-			</div>
+			{shown('summary', scene.summary) ? (
+				<section class='panel scene-reading'>
+					<span class='eyebrow'>RÉSUMÉ STRUCTURÉ · MJ</span>
+					{scene.summary && <p>{scene.summary}</p>}
+					<SceneAddition
+						scene={scene}
+						state={state}
+						campaign={campaign}
+						update={update}
+						section='summary'
+						label='Résumé structuré · MJ'
+						autoFocus={revealed.summary}
+					/>
+				</section>
+			) : (
+				collapsed('summary', 'Ajouter un résumé (MJ)')
+			)}
+			{shown('dialogues', current) ? (
+				<section class='panel scene-reading'>
+					<span class='eyebrow'>DIALOGUES</span>
+					{current ? (
+						<>
+							<h3>{campaign.npcs.find((n) => n.id === current.speakerId)?.name || current.speakerId}</h3>
+							<p class='dialogue'>« {current.text} »</p>
+							{current.choices.map((c) => (
+								<button
+									type='button'
+									class='choice-button'
+									onClick={() => setDialogue(c.nextDialogueId)}
+								>
+									{c.label}
+									<Icon name='chevron' size={16} />
+								</button>
+							))}
+						</>
+					) : (
+						<p>{noDialogue}</p>
+					)}
+					<SceneAddition
+						scene={scene}
+						state={state}
+						campaign={campaign}
+						update={update}
+						section='dialogues'
+						label='Dialogues'
+						autoFocus={revealed.dialogues}
+					/>
+				</section>
+			) : (
+				collapsed('dialogues', 'Ajouter un dialogue (MJ)', noDialogue)
+			)}
+			{shown('readAloud', scene.readAloud) ? (
+				<div class='read-aloud panel scene-reading'>
+					<span class='eyebrow'>
+						<Icon name='chapters' size={16} /> À LIRE AUX JOUEURS
+					</span>
+					{scene.readAloud ? <blockquote>{scene.readAloud}</blockquote> : <p>{noReadAloud}</p>}
+					<SceneAddition
+						scene={scene}
+						state={state}
+						campaign={campaign}
+						update={update}
+						section='readAloud'
+						label='À lire aux joueurs'
+						autoFocus={revealed.readAloud}
+					/>
+				</div>
+			) : (
+				collapsed('readAloud', 'Ajouter un texte à lire (MJ)', noReadAloud)
+			)}
 			{campaign.locations
 				.filter((l) => l.id === scene.locationId)
 				.map((l) => (
@@ -257,7 +288,7 @@ export function CharactersView({ campaign, state, update }: { campaign: Campaign
 			)}
 			<div class='cards-grid'>
 				{campaign.players.map((p) => (
-					<article class='panel character-sheet'>
+					<article id={`player-${p.id}`} class='panel character-sheet'>
 						<div class='character-heading'>
 							<span class='portrait'>{p.name.slice(0, 2)}</span>
 							<div>
@@ -496,7 +527,7 @@ function NpcCard({ campaign, id }: { campaign: Campaign; id: string }) {
 	const npc = campaign.npcs.find((n) => n.id === id)
 	if (!npc) return <p>PNJ introuvable : {id}</p>
 	return (
-		<details class='panel npc-card'>
+		<details id={`npc-${npc.id}`} class='panel npc-card'>
 			<summary>{npc.name}</summary>
 			<span class='eyebrow'>INFORMATIONS RÉSERVÉES AU MJ</span>
 			<p>{npc.description}</p>
@@ -647,7 +678,7 @@ export function ItemsView({ campaign, state, update }: { campaign: Campaign; sta
 			)}
 			<div class='cards-grid'>
 				{campaign.items.map((item) => (
-					<article class='panel' key={item.id}>
+					<article id={`item-${item.id}`} class='panel' key={item.id}>
 						<span class='eyebrow'>
 							{item.category} · {item.rarity}
 						</span>
@@ -701,14 +732,20 @@ function SceneAddition({
 	update,
 	section,
 	label,
+	autoFocus,
 }: {
 	scene: Scene
 	state: GameState
 	campaign: Campaign
 	update: Update
-	section: 'readAloud' | 'summary' | 'dmNotes' | 'dialogues'
+	section: Section
 	label: string
+	autoFocus?: boolean
 }) {
+	const area = useRef<HTMLTextAreaElement>(null)
+	useEffect(() => {
+		if (autoFocus) area.current?.focus()
+	}, [])
 	const text = state.sceneAdditions?.[scene.id]?.[section] ?? ''
 	return (
 		<div class='scene-addition'>
@@ -718,11 +755,12 @@ function SceneAddition({
 					<p>{text}</p>
 				</div>
 			)}
-			<details>
+			<details open={autoFocus}>
 				<summary>{text ? 'Modifier mon ajout' : 'Ajouter un texte du MJ'}</summary>
 				<label>
 					Texte supplémentaire · {label}
 					<textarea
+						ref={area}
 						value={text}
 						placeholder='Votre texte pour cette scène…'
 						onInput={(e) => {

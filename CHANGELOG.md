@@ -5,6 +5,26 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 
 ## [Non publié]
 
+### Ajouté
+
+- **Annuler les PV** : bouton « Annuler · … » dans la barre du combat (ou Ctrl+Z / Cmd+Z). Il rétablit PV, PV temporaires, état et sauvegardes contre la mort pour les 20 dernières actions (dégâts, soins, sauvegardes contre la mort, saisies manuelles de PV, dégâts appliqués depuis un jet). La pile reste en mémoire : elle n'est pas sauvegardée et se vide à la fin ou au changement de combat.
+- **Appliquer un jet de dégâts** : sous le résultat d'un jet de dégâts d'une attaque, choix d'une cible (participants actifs, hors attaquant) et bouton « Appliquer N dégâts ». Une seule cible ; l'action est annulable et annoncée.
+- **Raccourcis clavier du combat** : N (tour suivant), D (saisir des dégâts), Ctrl+Z / Cmd+Z (annuler). Ils sont ignorés dans les champs de saisie. Dans la saisie de quantité, Entrée applique les dégâts.
+- **Durée des conditions en rounds** : champ numérique facultatif à l'ajout d'une condition. Le compteur baisse au début du tour de la créature concernée ; à 0 la condition reste affichée « expirée » et le MJ la retire. L'expiration est annoncée (« Condition expirée : … »). Les anciennes durées en texte libre sont conservées et affichées telles quelles.
+- **Mode table** : bouton « Mode table » au-dessus du combat. Il masque la navigation, la barre du haut et le panneau de contexte pour donner tout l'écran au combat. « Quitter le mode table » ou Échap (hors saisie et hors recherche) en sort ; quitter les rencontres ou terminer le combat aussi.
+- **Recherche globale** : Ctrl+K / Cmd+K ou le bouton « Rechercher » de la barre du haut. Elle couvre scènes, PNJ, monstres, objets et PJ personnalisés, sans tenir compte des accents ni de la casse ; les titres passent avant le texte. ↑/↓ parcourent les résultats, Entrée ouvre. Le choix mène à la vue concernée et fait défiler jusqu'à la fiche.
+- **Récapitulatif de fin de combat** : l'entrée du journal indique le nombre de rounds, les PJ à terre (0 PV, stables ou morts), les créatures vaincues et les participants retirés. Le récapitulatif décrit l'état à la fin du combat : un PJ tombé puis soigné n'y figure pas.
+- **Rappel de concentration** : nouvelle condition « Concentration ». Quand son porteur subit des dégâts en combat, l'application annonce le jet de sauvegarde de Constitution à faire (DD = max(10, moitié des dégâts)), ou la rupture de la concentration s'il tombe à 0 PV. Le jet et le retrait de la condition restent à la main du MJ.
+
+### Modifié
+
+- **Scènes** : une section vide (résumé, dialogues, texte à lire) se replie en bouton « ＋ Ajouter … (MJ) » qui ouvre l'éditeur. Les mentions de texte source manquant restent affichées.
+- **Choix de la scène** : les scènes sont regroupées par chapitre dans la liste.
+- **Lint** : `biome.json` ignore `.claude/`, `.impeccable/`, `docs/` et `DESIGN.md`, et utilise `preset` au lieu de l'option dépréciée `recommended`.
+
+- **Fenêtres `prompt` supprimées** : la durée d'une condition et les statistiques inconnues d'une créature (PV maximum, CA, bonus d'initiative) se saisissent dans des champs intégrés, avec libellés et messages de validation. « Ajouter une créature » reste désactivé tant que ces valeurs sont invalides ; les statistiques connues ne sont pas redemandées.
+- **Format de sauvegarde** : les conditions acceptent un champ facultatif `rounds` (entier ≥ 0). Les sauvegardes existantes se chargent sans changement.
+
 ## [0.1.0] — 2026-10-30
 
 Première version versionnée. Elle regroupe le travail mené du 23 au 28 octobre 2026.

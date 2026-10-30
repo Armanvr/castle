@@ -97,7 +97,12 @@ test('unknown monster quantities require explicit instance stats and overrides l
 
 test('custom selected player and manual stats for an incomplete monster survive save restoration', async () => {
 	const c = await campaign()
-	const incompleteMonster = { ...c.indexes!.monsters.zombie!, id: 'incomplete-monster', maxHp: null, armorClass: null }
+	const incompleteMonster = {
+		...c.indexes!.monsters.zombie!,
+		id: 'incomplete-monster',
+		maxHp: null,
+		armorClass: null,
+	}
 	c.monsters.push(incompleteMonster)
 	c.indexes!.monsters[incompleteMonster.id] = incompleteMonster
 	let state = addCustomPlayer(createInitialState(c), c, {

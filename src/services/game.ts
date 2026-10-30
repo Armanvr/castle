@@ -1,5 +1,6 @@
-import type { Campaign, Character, Choice, Combatant, GameState, Vitals } from '../types.ts'
+import type { Campaign, Character, Choice, Combat, Combatant, GameState, Vitals } from '../types.ts'
 import { rollDice } from './dice.ts'
+import { frPlural } from './labels.ts'
 
 export const CONDITIONS = [
 	'Aveuglé',
@@ -16,6 +17,7 @@ export const CONDITIONS = [
 	'Entravé',
 	'Étourdi',
 	'Inconscient',
+	'Concentration',
 ]
 export const uid = () => crypto.randomUUID()
 export function freshVitals(maxHp: number): Vitals {
@@ -73,14 +75,49 @@ export function addJournal(state: GameState, title: string, description = '', ty
 	})
 	return next
 }
+// Same numbering as the combat view: "Nom · n" among the participants sharing a monsterId.
+export function participantLabel(p: Combatant, state: GameState) {
+	if (p.type === 'player') return p.name
+	const same = state.combat?.participants.filter((x) => x.monsterId === p.monsterId) ?? []
+	return `${p.name} · ${same.findIndex((x) => x.id === p.id) + 1}`
+}
+const downLabels: Record<string, string> = { unconscious: '0 PV', stable: 'stable', dead: 'mort' }
+// shortcut: the recap reads the END state only, so a PJ who fell and was healed back is not listed; upgrade: track downs during the combat.
+function combatRecap(state: GameState, combat: Combat): string {
+	const ps = combat.participants.map((p) => ({ p, status: getVitals(state, p).status }))
+	const part = (title: string, items: string[]) => (items.length ? `${title} : ${items.join(', ')}.` : '')
+	return [
+		`${frPlural(combat.round, 'round', 'rounds')}.`,
+		part(
+			'PJ à terre',
+			ps
+				.filter(({ p, status }) => p.type === 'player' && status in downLabels)
+				.map(({ p, status }) => `${p.name} (${downLabels[status]})`),
+		),
+		part(
+			'Créatures vaincues',
+			ps
+				.filter(({ p, status }) => p.type !== 'player' && status === 'dead')
+				.map(({ p }) => participantLabel(p, state)),
+		),
+		part(
+			'Retirés',
+			ps.filter(({ status }) => status === 'removed').map(({ p }) => participantLabel(p, state)),
+		),
+	]
+		.filter(Boolean)
+		.join(' ')
+}
 export function finishEncounter(state: GameState): GameState {
 	if (!state.combat || state.combat.status === 'finished') return state
-	return addJournal(
+	const next = addJournal(
 		{ ...state, combat: { ...state.combat, status: 'finished' } },
 		`Rencontre terminée : ${state.combat.name}`,
-		'',
+		combatRecap(state, state.combat),
 		'encounter',
 	)
+	next.journal.at(-1)!.participants = state.combat.participants.map((p) => p.name)
+	return next
 }
 export function navigateScene(state: GameState, campaign: Campaign, sceneId: string): GameState {
 	if (!campaign.chapters.some((c) => c.scenes.some((s) => s.id === sceneId)))
@@ -322,6 +359,20 @@ export function damage(state: GameState, targetId: string, value: number): GameS
 	v.hp = Math.max(0, v.hp - remainder)
 	return next
 }
+// DM reminder only: never rolls the save nor removes the tag. Null when there is nothing to say.
+export function concentrationNotice(
+	before: GameState,
+	after: GameState,
+	targetId: string,
+	damage: number,
+	label: string,
+): string | null {
+	const was = resolve(before, targetId).vitals
+	const now = resolve(after, targetId).vitals
+	if (damage <= 0 || was.hp <= 0 || !was.conditions.some((c) => c.name === 'Concentration')) return null
+	if (now.hp <= 0) return `${label} tombe à 0 PV : concentration rompue.`
+	return `Concentration de ${label} : jet de sauvegarde de Constitution DD ${Math.max(10, Math.floor(damage / 2))}.`
+}
 export function heal(state: GameState, targetId: string, value: number, maxHp?: number): GameState {
 	const target = resolve(state, targetId)
 	if (target.vitals.status === 'dead')
@@ -342,9 +393,24 @@ export function nextTurn(state: GameState): GameState {
 	const next = copy(state)
 	const index = order.findIndex((p) => p.id === state.combat!.activeId)
 	const following = (index + 1) % order.length
-	next.combat!.activeId = order[following]!.id
+	const active = order[following]!
+	next.combat!.activeId = active.id
 	if (index >= 0 && following === 0) next.combat!.round++
+	// An expired condition (rounds 0) stays so the DM removes it knowingly.
+	for (const c of getVitals(next, next.combat!.participants.find((p) => p.id === active.id)!).conditions)
+		if (c.rounds && c.rounds > 0) c.rounds--
 	return next
+}
+// Conditions that reached 0 rounds between two states (nextTurn only ever decrements by one).
+export function expiredConditions(before: GameState, after: GameState): { participantId: string; condition: string }[] {
+	return (after.combat?.participants ?? []).flatMap((p) => {
+		const old = before.combat?.participants.find((x) => x.id === p.id)
+		if (!old) return []
+		const was = getVitals(before, old).conditions
+		return getVitals(after, p)
+			.conditions.filter((c) => c.rounds === 0 && was.some((w) => w.name === c.name && w.rounds))
+			.map((c) => ({ participantId: p.id, condition: c.name }))
+	})
 }
 export function setInitiative(state: GameState, id: string, value: number): GameState {
 	if (!Number.isFinite(value)) throw new Error('Initiative invalide.')
@@ -393,12 +459,25 @@ export function rollCreatureInitiatives(state: GameState, random = Math.random):
 		p.initiative = rollDice([{ sides: 20, count: 1 }], p.initiativeBonus, random).total
 	return next
 }
-export function setCondition(state: GameState, id: string, name: string, duration?: string): GameState {
+export function setCondition(state: GameState, id: string, name: string, rounds?: number): GameState {
 	const next = copy(state)
 	const v = resolve(next, id).vitals
 	const index = v.conditions.findIndex((c) => c.name === name)
 	if (index >= 0) v.conditions.splice(index, 1)
-	else v.conditions.push({ name, ...(duration ? { duration } : {}) })
+	else v.conditions.push({ name, ...(rounds ? { rounds } : {}) })
+	return next
+}
+export type VitalsSnapshot = Pick<Vitals, 'hp' | 'tempHp' | 'status' | 'deathSaves'>
+export function vitalsSnapshot(state: GameState, targetId: string): VitalsSnapshot {
+	const { hp, tempHp, status, deathSaves } = resolve(state, targetId).vitals
+	return structuredClone({ hp, tempHp, status, deathSaves })
+}
+// Undo support: puts back only the four HP-related fields, leaving conditions, resources and exhaustion alone.
+export function restoreVitals(state: GameState, targetId: string, before: VitalsSnapshot): GameState {
+	const next = copy(state)
+	const { vitals } = resolve(next, targetId)
+	const { hp, tempHp, status, deathSaves } = structuredClone(before)
+	Object.assign(vitals, { hp, tempHp, status, deathSaves })
 	return next
 }
 export function deathSave(

@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'preact/hooks'
 import type { Update } from './components/CombatView'
 import { CombatView } from './components/CombatView'
 import { Icon } from './components/icons'
+import { isTyping } from './components/input'
+import { SearchDialog } from './components/Search'
 import { BestiaryView, CampaignInfo, CharactersView, ItemsView, SceneView } from './components/Views'
 import { BUNDLED_CAMPAIGN_URL, loadCampaign } from './services/campaignLoader'
 import * as game from './services/game'
 import { journalTypeLabel } from './services/labels'
+import type { SearchResult } from './services/search'
 import {
 	cleanupLegacyDemoStorage,
 	exportGame,
@@ -45,6 +48,10 @@ export function App() {
 	const opening = useRef(false)
 	const importPending = useRef(false)
 	const [importing, setImporting] = useState(false)
+	const [searching, setSearching] = useState(false)
+	const [table, setTable] = useState(false)
+	// entry to scroll to once the picked search result's view has rendered
+	const [scrollTarget, setScrollTarget] = useState<string | null>(null)
 	const [failedSlot, setFailedSlot] = useState<string | null>(null)
 	const submittedNote = useRef<{ id: string; note: string; title: string } | null>(null)
 	useEffect(() => {
@@ -55,6 +62,31 @@ export function App() {
 			submittedNote.current = null
 		}
 	}, [state?.journal])
+	const canTable = view === 'encounters' && !!state?.combat && state.combat.status !== 'finished'
+	const tableMode = table && canTable
+	useEffect(() => {
+		if (table && !canTable) setTable(false)
+	}, [table, canTable])
+	useEffect(() => {
+		const onKey = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+				e.preventDefault()
+				setSearching(true)
+			} else if (e.key === 'Escape' && tableMode && !e.defaultPrevented) {
+				if (isTyping(e.target) || document.querySelector('dialog[open]')) return
+				setTable(false)
+			}
+		}
+		window.addEventListener('keydown', onKey)
+		return () => window.removeEventListener('keydown', onKey)
+	}, [tableMode])
+	useEffect(() => {
+		if (!scrollTarget) return
+		const el = document.getElementById(scrollTarget)
+		if (el instanceof HTMLDetailsElement) el.open = true
+		el?.scrollIntoView({ block: 'start' })
+		setScrollTarget(null)
+	}, [scrollTarget])
 	const openCampaign = async (nextSlot = slot) => {
 		if (opening.current || importPending.current) return
 		if (state && !blocked) {
@@ -154,6 +186,11 @@ export function App() {
 		update((s) => game.navigateScene(s, campaign, id))
 		setView('campaign')
 	}
+	const pickResult = (r: SearchResult) => {
+		if (r.kind === 'scene') return navigate(r.id)
+		setView({ npc: 'players', player: 'players', monster: 'bestiary', item: 'items' }[r.kind])
+		setScrollTarget(`${r.kind}-${r.id}`)
+	}
 	const download = () => {
 		let data = exportGame(state)
 		if (blocked) {
@@ -172,7 +209,7 @@ export function App() {
 		URL.revokeObjectURL(url)
 	}
 	return (
-		<div class={`app-shell ${context ? '' : 'context-hidden'}`}>
+		<div class={`app-shell ${context ? '' : 'context-hidden'} ${tableMode ? 'table-mode' : ''}`}>
 			<a class='skip-link' href='#main-content'>
 				Aller au contenu
 			</a>
@@ -250,6 +287,16 @@ export function App() {
 											? 'Enregistré sur cet appareil'
 											: 'Sauvegarde non confirmée'}
 						</span>
+						<button
+							type='button'
+							class='icon-button'
+							aria-label='Rechercher'
+							aria-keyshortcuts='Control+K Meta+K'
+							title='Rechercher (Ctrl+K)'
+							onClick={() => setSearching(true)}
+						>
+							<Icon name='search' />
+						</button>
 						<button
 							type='button'
 							class='icon-button'
@@ -467,8 +514,12 @@ export function App() {
 								<label>
 									Scène
 									<select value={scene?.id} onChange={(e) => navigate(e.currentTarget.value)}>
-										{scenes.map((s) => (
-											<option value={s.id}>{s.title}</option>
+										{campaign.chapters.map((c) => (
+											<optgroup label={c.title}>
+												{c.scenes.map((s) => (
+													<option value={s.id}>{s.title}</option>
+												))}
+											</optgroup>
 										))}
 									</select>
 								</label>
@@ -536,6 +587,17 @@ export function App() {
 					{view === 'items' && <ItemsView campaign={campaign} state={state} update={update} />}
 
 					{view === 'players' && <CharactersView campaign={campaign} state={state} update={update} />}
+					{canTable && (
+						<div class='table-mode-bar'>
+							<button
+								type='button'
+								aria-keyshortcuts={tableMode ? 'Escape' : undefined}
+								onClick={() => setTable(!tableMode)}
+							>
+								{tableMode ? 'Quitter le mode table' : 'Mode table'}
+							</button>
+						</div>
+					)}
 					{view === 'encounters' && (
 						<CombatView
 							key={campaign.manifest.id}
@@ -860,6 +922,12 @@ export function App() {
 					</section>
 				</aside>
 			)}
+			<SearchDialog
+				campaign={campaign}
+				open={searching}
+				onClose={() => setSearching(false)}
+				onPick={pickResult}
+			/>
 		</div>
 	)
 }

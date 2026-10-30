@@ -95,7 +95,10 @@ test('DM-confirmed missing group quantities initialize independent persistent pa
 	}
 	assert.deepEqual(
 		campaign.encounters.find((e) => e.id === 'enc-wreck-lower').participants.map((p) => [p.monsterId, p.count]),
-		[['goule', 1], ['zombie', 1]],
+		[
+			['goule', 1],
+			['zombie', 1],
+		],
 	)
 	assert.equal(campaign.indexes.monsters['mort-vivant'], undefined)
 	assert.deepEqual(

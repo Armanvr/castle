@@ -4,17 +4,23 @@ import { test } from 'node:test'
 import { validateCampaign } from '../src/services/campaignLoader.ts'
 import {
 	applyChoice,
+	CONDITIONS,
 	canChoose,
+	concentrationNotice,
 	createInitialState,
 	creaturesAwaitingInitiative,
 	damage,
 	deathSave,
+	expiredConditions,
+	finishEncounter,
 	getVitals,
 	heal,
 	nextTurn,
+	participantLabel,
 	promoteTie,
 	removeParticipant,
 	restoreParticipant,
+	restoreVitals,
 	rollCreatureInitiatives,
 	setCondition,
 	setInitiative,
@@ -22,9 +28,10 @@ import {
 	startEncounter,
 	undoChoice,
 	updateVitals,
+	vitalsSnapshot,
 } from '../src/services/game.ts'
 import { exportGame, importGame, loadGame, saveGame, storageKey } from '../src/services/storageService.ts'
-import type { Campaign } from '../src/types.ts'
+import type { Campaign, Combatant, GameState } from '../src/types.ts'
 
 async function fixture(): Promise<Campaign> {
 	const root = new URL('./fixtures/demo-campaign/', import.meta.url)
@@ -170,11 +177,12 @@ test('combat tie order is stable; removing the active participant skips forward 
 	)
 })
 
-test('conditions retain their duration and can be removed', async () => {
+test('conditions retain their rounds and can be removed', async () => {
 	const c = await fixture()
 	let state = startEncounter(createInitialState(c), c, c.encounters[0]!.id)
 	const player = state.combat!.participants.find((p) => p.playerId)!
-	state = setCondition(state, player.id, 'Aveuglé', '1 round')
+	state = setCondition(state, player.id, 'Aveuglé', 3)
+	assert.deepEqual(getVitals(state, player).conditions, [{ name: 'Aveuglé', rounds: 3 }])
 	state = setCondition(state, player.id, 'Aveuglé')
 	assert.deepEqual(getVitals(state, player).conditions, [])
 })
@@ -194,14 +202,14 @@ test('a player removed from one combat can join a later encounter with HP preser
 	let state = startEncounter(createInitialState(c), c, c.encounters[0]!.id)
 	const player = state.combat!.participants.find((p) => p.playerId)!
 	state = damage(state, player.id, 2)
-	state = setCondition(state, player.id, 'Aveuglé', '1 round')
+	state = setCondition(state, player.id, 'Aveuglé', 1)
 	state = removeParticipant(state, player.id)
 	state = { ...state, combat: { ...state.combat!, status: 'finished' } }
 	state = startEncounter(state, c)
 	const returning = state.combat!.participants.find((p) => p.playerId === player.playerId)!
 	assert.ok(sortedParticipants(state).some((p) => p.id === returning.id))
 	assert.equal(getVitals(state, returning).hp, player.maxHp - 2)
-	assert.deepEqual(getVitals(state, returning).conditions, [{ name: 'Aveuglé', duration: '1 round' }])
+	assert.deepEqual(getVitals(state, returning).conditions, [{ name: 'Aveuglé', rounds: 1 }])
 	assert.equal(getVitals(state, returning).status, 'active')
 })
 
@@ -505,4 +513,248 @@ test('startEncounter rolls creature initiative and leaves players at 0', async (
 	assert.equal(activeId, sortedParticipants(state)[0]!.id)
 	assert.equal(participants.find((p) => p.id === activeId)!.playerId, undefined)
 	assert.equal(creaturesAwaitingInitiative(state), 0)
+})
+
+// getVitals reads participant.vitals, so the participant must come from the state being inspected
+const vit = (s: GameState, p: Combatant) => getVitals(s, s.combat!.participants.find((x) => x.id === p.id)!)
+test('restoreVitals resets only hp, tempHp, status and deathSaves, for a player and a creature', async () => {
+	const { state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	const creature = start.combat!.participants.find((p) => !p.playerId)!
+	for (const target of [player, creature]) {
+		const id = target.playerId ?? target.id
+		let state = setCondition(start, id, 'Aveuglé', 2)
+		state = updateVitals(state, id, { tempHp: 4, exhaustion: 2 })
+		const before = (() => {
+			const { hp, tempHp, status, deathSaves } = vit(state, target)
+			return { hp, tempHp, status, deathSaves }
+		})()
+		state = damage(state, id, target.maxHp + 4)
+		assert.notEqual(vit(state, target).hp, before.hp)
+		state = updateVitals(state, id, { exhaustion: 3 })
+		assert.deepEqual(
+			vitalsSnapshot(start, id),
+			vitalsSnapshot(restoreVitals(state, id, vitalsSnapshot(start, id)), id),
+		)
+		state = restoreVitals(state, id, before)
+		const v = vit(state, target)
+		assert.deepEqual({ hp: v.hp, tempHp: v.tempHp, status: v.status, deathSaves: v.deathSaves }, before)
+		assert.equal(v.exhaustion, 3)
+		assert.deepEqual(v.conditions, [{ name: 'Aveuglé', rounds: 2 }])
+	}
+})
+
+test('restoreVitals brings a dead participant back and rejects an unknown target', async () => {
+	const { state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	const dying = damage(start, player.id, player.maxHp)
+	const dead = deathSave(
+		deathSave(deathSave(dying, player.id, 'failure'), player.id, 'failure'),
+		player.id,
+		'failure',
+	)
+	assert.equal(vit(dead, player).status, 'dead')
+	const restored = restoreVitals(dead, player.id, {
+		hp: player.maxHp,
+		tempHp: 0,
+		status: 'active',
+		deathSaves: { successes: 0, failures: 0 },
+	})
+	assert.equal(vit(restored, player).status, 'active')
+	assert.equal(vit(restored, player).hp, player.maxHp)
+	assert.throws(() => restoreVitals(dead, 'nobody', vit(dead, player)), /inconnu/)
+})
+
+test('nextTurn decrements rounds only on the participant whose turn begins; zero stays as expired', async () => {
+	const { state: start } = await training()
+	const order = sortedParticipants(start)
+	const current = order.find((p) => p.id === start.combat!.activeId)!
+	const upcoming = order[(order.indexOf(current) + 1) % order.length]!
+	const idOf = (p: typeof current) => p.playerId ?? p.id
+	let state = setCondition(start, idOf(current), 'Agrippé', 2)
+	state = setCondition(state, idOf(upcoming), 'Empoisonné', 1)
+	state = setCondition(state, idOf(upcoming), 'Étourdi', 3)
+	state = updateVitals(state, idOf(upcoming), {
+		conditions: [...vit(state, upcoming).conditions, { name: 'Effrayé', duration: '1 minute' }],
+	})
+	const after = nextTurn(state)
+	assert.equal(after.combat!.activeId, upcoming.id)
+	assert.deepEqual(vit(after, current).conditions, [{ name: 'Agrippé', rounds: 2 }])
+	assert.deepEqual(vit(after, upcoming).conditions, [
+		{ name: 'Empoisonné', rounds: 0 },
+		{ name: 'Étourdi', rounds: 2 },
+		{ name: 'Effrayé', duration: '1 minute' },
+	])
+	assert.deepEqual(expiredConditions(state, after), [{ participantId: upcoming.id, condition: 'Empoisonné' }])
+	assert.deepEqual(expiredConditions(after, after), [])
+	assert.equal(state.combat!.activeId, current.id)
+	assert.deepEqual(vit(state, upcoming).conditions[0], { name: 'Empoisonné', rounds: 1 })
+})
+
+test('nextTurn skips removed participants without touching their conditions; suspended combat does not advance', async () => {
+	const { state: start } = await training()
+	const order = sortedParticipants(start)
+	const current = order.find((p) => p.id === start.combat!.activeId)!
+	const skipped = order[(order.indexOf(current) + 1) % order.length]!
+	const target = order[(order.indexOf(current) + 2) % order.length]!
+	const idOf = (p: typeof current) => p.playerId ?? p.id
+	let state = setCondition(start, idOf(skipped), 'Entravé', 2)
+	state = setCondition(state, idOf(target), 'À terre', 2)
+	state = removeParticipant(state, idOf(skipped))
+	const after = nextTurn(state)
+	assert.equal(after.combat!.activeId, target.id)
+	assert.deepEqual(vit(after, skipped).conditions, [{ name: 'Entravé', rounds: 2 }])
+	assert.deepEqual(vit(after, target).conditions, [{ name: 'À terre', rounds: 1 }])
+	const suspended = { ...state, combat: { ...state.combat!, status: 'suspended' as const } }
+	assert.equal(nextTurn(suspended), suspended)
+})
+
+test('rounds on conditions are validated on import and legacy durations still load', async () => {
+	const c = await fixture()
+	const state = createInitialState(c)
+	const id = c.players[0]!.id
+	const withConditions = (conditions: unknown[]) =>
+		JSON.stringify({ ...state, players: { ...state.players, [id]: { ...state.players[id]!, conditions } } })
+	const ok = importGame(
+		withConditions([
+			{ name: 'Aveuglé', rounds: 0 },
+			{ name: 'Effrayé', duration: '1 minute' },
+			{ name: 'Charmé', rounds: 3 },
+		]),
+		c,
+	)
+	assert.deepEqual(ok.players[id]!.conditions, [
+		{ name: 'Aveuglé', rounds: 0 },
+		{ name: 'Effrayé', duration: '1 minute' },
+		{ name: 'Charmé', rounds: 3 },
+	])
+	for (const rounds of [-1, 1.5, '2', null, Number.MAX_SAFE_INTEGER + 1])
+		assert.throws(() => importGame(withConditions([{ name: 'Aveuglé', rounds }]), c), /invalide|incompatible/)
+})
+
+test('nextTurn wrapping to the first participant starts round + 1 and decrements that participant', async () => {
+	const { state: start } = await training()
+	const order = sortedParticipants(start)
+	const first = order[0]!
+	const last = order.at(-1)!
+	const idOf = (p: typeof first) => p.playerId ?? p.id
+	let state = setCondition(start, idOf(first), 'Étourdi', 2)
+	state = { ...state, combat: { ...state.combat!, activeId: last.id } }
+	const round = state.combat!.round
+	const after = nextTurn(state)
+	assert.equal(after.combat!.activeId, first.id)
+	assert.equal(after.combat!.round, round + 1)
+	assert.deepEqual(vit(after, first).conditions, [{ name: 'Étourdi', rounds: 1 }])
+})
+
+test('setCondition toggling off an existing condition ignores the rounds argument', async () => {
+	const { state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	let state = setCondition(start, player.id, 'Aveuglé', 3)
+	state = setCondition(state, player.id, 'Aveuglé', 5)
+	assert.deepEqual(vit(state, player).conditions, [])
+	state = setCondition(state, player.id, 'Aveuglé', 0)
+	assert.deepEqual(vit(state, player).conditions, [{ name: 'Aveuglé' }])
+})
+
+test('a no-op damage or heal leaves the HP snapshot unchanged (no undo entry to record)', async () => {
+	const { state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	const snap = vitalsSnapshot(start, player.id)
+	assert.deepEqual(vitalsSnapshot(damage(start, player.id, 0), player.id), snap)
+	assert.deepEqual(vitalsSnapshot(heal(start, player.id, 5), player.id), snap)
+	const dead = restoreVitals(start, player.id, { ...snap, hp: 0, status: 'dead' })
+	assert.deepEqual(vitalsSnapshot(damage(dead, player.id, 3), player.id), vitalsSnapshot(dead, player.id))
+})
+
+test('restoreVitals undoes massive-damage death of a player and the sheet (state.players) sees it', async () => {
+	const { state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	const before = vitalsSnapshot(start, player.id)
+	const dead = damage(start, player.id, player.maxHp * 3)
+	assert.equal(dead.players[player.playerId!]!.status, 'dead')
+	const back = restoreVitals(dead, player.playerId!, before)
+	assert.deepEqual(back.players[player.playerId!]!.hp, player.maxHp)
+	assert.equal(back.players[player.playerId!]!.status, 'active')
+	assert.equal(vit(back, player).hp, player.maxHp)
+})
+
+test('player condition rounds persist after the encounter ends and into the next encounter', async () => {
+	const { c, state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	let state = setCondition(start, player.id, 'Aveuglé', 2)
+	state = finishEncounter(state)
+	assert.deepEqual(state.players[player.playerId!]!.conditions, [{ name: 'Aveuglé', rounds: 2 }])
+	state = startEncounter(state, c, 'demo-training', { random: half })
+	const again = state.combat!.participants.find((p) => p.playerId === player.playerId)!
+	assert.deepEqual(vit(state, again).conditions, [{ name: 'Aveuglé', rounds: 2 }])
+})
+
+test('save roundtrip keeps condition rounds in a live combat', async () => {
+	const { c, state: start } = await training()
+	const player = start.combat!.participants.find((p) => p.playerId)!
+	const state = setCondition(setCondition(start, player.id, 'Aveuglé', 2), player.id, 'Charmé', 1)
+	const back = importGame(exportGame(state), c)
+	assert.deepEqual(back.players[player.playerId!]!.conditions, [
+		{ name: 'Aveuglé', rounds: 2 },
+		{ name: 'Charmé', rounds: 1 },
+	])
+})
+
+test('finishEncounter journals a French recap of the end state and the participant names', async () => {
+	const { state: start } = await training()
+	const [iris, mael, nox] = start.combat!.participants.filter((p) => p.playerId)
+	const [s1, s2] = start.combat!.participants.filter((p) => !p.playerId)
+	let state = damage(start, iris!.id, iris!.maxHp)
+	state = damage(state, mael!.id, mael!.maxHp)
+	for (const result of ['success', 'success', 'success'] as const) state = deathSave(state, mael!.id, result)
+	state = damage(state, nox!.id, nox!.maxHp * 3)
+	state = damage(state, s1!.id, s1!.maxHp)
+	state = removeParticipant(state, s2!.id)
+	state.combat!.round = 3
+	const entry = finishEncounter(state).journal.at(-1)!
+	assert.equal(
+		entry.description,
+		'3 rounds. PJ à terre : Iris Valombre (0 PV), Maël Aubeclaire (stable), Nox Brindepied (mort). ' +
+			'Créatures vaincues : Sentinelle de cuivre · 1. Retirés : Sentinelle de cuivre · 2.',
+	)
+	assert.deepEqual(
+		entry.participants,
+		state.combat!.participants.map((p) => p.name),
+	)
+	// numbering stays stable when an earlier duplicate is removed
+	assert.equal(participantLabel(s2!, removeParticipant(start, s1!.id)), 'Sentinelle de cuivre · 2')
+})
+
+test('finishEncounter recap omits empty parts and keeps a healed PJ out of the list', async () => {
+	const { state: start } = await training()
+	const iris = start.combat!.participants.find((p) => p.playerId)!
+	const state = heal(damage(start, iris.id, iris.maxHp), iris.id, 1)
+	assert.equal(finishEncounter(state).journal.at(-1)!.description, '1 round.')
+	const empty = finishEncounter({ ...start, combat: { ...start.combat!, participants: [] } }).journal.at(-1)!
+	assert.equal(empty.description, '1 round.')
+	assert.deepEqual(empty.participants, [])
+})
+
+test('concentrationNotice: DC, temp HP, drop to 0, no tag, dead target', async () => {
+	const { state: start } = await training()
+	const iris = start.combat!.participants.find((p) => p.playerId)!
+	const tagged = setCondition(start, iris.id, 'Concentration')
+	const notice = (before: GameState, dmg: number) =>
+		concentrationNotice(before, damage(before, iris.id, dmg), iris.id, dmg, 'Iris')
+	assert.equal(notice(tagged, 5), 'Concentration de Iris : jet de sauvegarde de Constitution DD 10.')
+	const shielded = updateVitals(tagged, iris.id, { tempHp: 30 })
+	assert.equal(notice(shielded, 24), 'Concentration de Iris : jet de sauvegarde de Constitution DD 12.')
+	assert.equal(notice(tagged, 11), 'Concentration de Iris : jet de sauvegarde de Constitution DD 10.')
+	assert.equal(notice(tagged, 0), null)
+	assert.equal(notice(start, 5), null)
+	assert.equal(notice(tagged, iris.maxHp), 'Iris tombe à 0 PV : concentration rompue.')
+	const down = damage(tagged, iris.id, iris.maxHp)
+	assert.equal(concentrationNotice(down, damage(down, iris.id, 4), iris.id, 4, 'Iris'), null)
+	const dead = damage(tagged, iris.id, iris.maxHp * 3)
+	assert.equal(concentrationNotice(dead, damage(dead, iris.id, 4), iris.id, 4, 'Iris'), null)
+})
+
+test('Concentration is a selectable condition', () => {
+	assert.equal(CONDITIONS.at(-1), 'Concentration')
 })

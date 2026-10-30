@@ -53,7 +53,8 @@ function validateVitals(
 			!object(cond) ||
 			typeof cond.name !== 'string' ||
 			!cond.name ||
-			(cond.duration !== undefined && typeof cond.duration !== 'string')
+			(cond.duration !== undefined && typeof cond.duration !== 'string') ||
+			(cond.rounds !== undefined && !integer(cond.rounds))
 		)
 			invalid()
 	if (

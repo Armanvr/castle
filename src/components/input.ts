@@ -7,3 +7,6 @@ export function readIntegerInput(input: HTMLInputElement): number | null {
 	}
 	return value
 }
+// Single-key shortcuts must not fire while the DM types in a field.
+export const isTyping = (target: EventTarget | null) =>
+	!!(target as HTMLElement | null)?.closest('input, textarea, select, [contenteditable]:not([contenteditable=false])')
