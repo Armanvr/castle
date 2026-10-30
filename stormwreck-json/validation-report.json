@@ -1,0 +1,21 @@
+{
+  "sourcePdfCount": 24,
+  "chapters": 4,
+  "scenes": 44,
+  "characters": 27,
+  "encounterTemplates": 13,
+  "monstersPending": 2,
+  "crossReferenceIssues": [],
+  "limitations": [
+    "Les scans contiennent du texte non indexable; certains passages, surtout sur les pages de droite, restent à vérifier visuellement.",
+    "Dialogue officiel non reproduit; champ readAloud=null.",
+    "Les choix proposés pour faciliter la navigation ne sont pas tous des choix explicitement listés par le livret.",
+    "Tests détaillés, trésors et quantités de certaines rencontres demandent validation.",
+    "Certains blocs de créatures restent partiels car les pages de droite des doubles pages sont coupées.",
+    "Les noms de catalogues existants ont été préservés pour compatibilité avec les rencontres.",
+    "Champs non lisibles laissés à null ; aucune règle de combat manquante n’a été déduite de mémoire."
+  ],
+  "monstersCataloged": 18,
+  "itemsCataloged": 6,
+  "annexesIntegrated": 7
+}

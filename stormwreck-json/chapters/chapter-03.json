@@ -1,0 +1,387 @@
+{
+  "id": "chapter-03",
+  "title": "L’Épave maudite",
+  "sourceFiles": [
+    {
+      "file": "Chapitre 3-0.pdf",
+      "printedPages": [
+        22,
+        23
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 3-1.pdf",
+      "printedPages": [
+        24,
+        25
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 3-2.pdf",
+      "printedPages": [
+        26,
+        27
+      ],
+      "basis": "lecture visuelle du scan"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ch03-approach",
+      "title": "Approche de la Rose des Vents",
+      "locationId": "rose-des-vents",
+      "summary": "L’épave de la Rose des Vents est liée à une harpie et aux marins morts-vivants qui s’échouent sur la côte.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        22,
+        23
+      ],
+      "dmNotes": [
+        "La barque du cloître permet de rejoindre l’épave.",
+        "Accès par les flancs ou le pont du navire."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "wreck-board",
+          "label": "Monter à bord",
+          "nextSceneId": "ch03-upper",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch03-upper",
+      "title": "Pont supérieur",
+      "locationId": "rose-upper-deck",
+      "summary": "Le pont supérieur présente des zones d’exploration et ouvre vers les cabines et le pont inférieur.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        23,
+        24
+      ],
+      "dmNotes": [],
+      "characters": [],
+      "encounterIds": [
+        "enc-wreck-zombies"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-c3",
+        "ch03-c4",
+        "ch03-c8"
+      ]
+    },
+    {
+      "id": "ch03-c1",
+      "title": "Zone C1 – accès depuis le pont",
+      "locationId": "rose-c1",
+      "summary": "Zone de pont liée aux déplacements de la harpie et aux approches du navire.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        23,
+        27
+      ],
+      "dmNotes": [
+        "Description détaillée partiellement visible; consulter la double page originale avant de compléter."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-upper"
+      ]
+    },
+    {
+      "id": "ch03-c2",
+      "title": "Zone C2 – pont",
+      "locationId": "rose-c2",
+      "summary": "Seconde zone supérieure liée à l’organisation du navire.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        23,
+        24
+      ],
+      "dmNotes": [
+        "Description détaillée non fiabilisée dans les aperçus; laissée volontairement non développée."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-upper"
+      ]
+    },
+    {
+      "id": "ch03-c3",
+      "title": "Château arrière (C3)",
+      "locationId": "rose-c3",
+      "summary": "Une barre de gouvernail instable peut tomber; sa chute attire les zombies du navire.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        24
+      ],
+      "dmNotes": [
+        "La barre peut tomber lorsqu’elle est manipulée; possible bruit attirant les zombies."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [
+        {
+          "skill": "Dextérité (Sauvegarde)",
+          "dc": 10,
+          "onSuccess": "Éviter la chute de la barre",
+          "onFailure": null,
+          "sourceStatus": "from_source"
+        }
+      ],
+      "choices": [],
+      "transitions": [
+        "ch03-c4"
+      ]
+    },
+    {
+      "id": "ch03-c4",
+      "title": "Quartiers du capitaine (C4)",
+      "locationId": "rose-c4",
+      "summary": "La cabine du capitaine contient un trou béant menant à la cale ainsi que des biens et équipements.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        24
+      ],
+      "dmNotes": [
+        "Accès verrouillé; les objets exacts sont décrits dans le livret."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-wreck-zombies"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-c9"
+      ]
+    },
+    {
+      "id": "ch03-c5",
+      "title": "Coquerie (C5)",
+      "locationId": "rose-c5",
+      "summary": "Un squelette sans tête s’effondre et semble bouger lorsqu’on le dérange.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        24
+      ],
+      "dmNotes": [
+        "Effet d’ambiance inquiétant."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-c6"
+      ]
+    },
+    {
+      "id": "ch03-c6",
+      "title": "Quartiers de l’équipage (C6)",
+      "locationId": "rose-c6",
+      "summary": "Une cabine encombrée abrite un portrait et un piège qui se déclenche uniquement lorsqu’un personnage joueur tente de soulever le plancher pour fouiller la cachette.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        24
+      ],
+      "dmNotes": [
+        "Piège de fléchette, avec jet de sauvegarde et dégâts décrits sur la page."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [
+        {
+          "skill": "Sagesse (Perception)",
+          "dc": 10,
+          "onSuccess": "Repérer l’anomalie du plancher",
+          "onFailure": null,
+          "sourceStatus": "from_source"
+        }
+      ],
+      "choices": [],
+      "transitions": [
+        "ch03-c7"
+      ]
+    },
+    {
+      "id": "ch03-c7",
+      "title": "Mess (C7)",
+      "locationId": "rose-c7",
+      "summary": "L’ancien mess des marins est désormais désert et sans élément majeur.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        24
+      ],
+      "dmNotes": [
+        "Pièce essentiellement atmosphérique."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-c8"
+      ]
+    },
+    {
+      "id": "ch03-c8",
+      "title": "Pont inférieur (C8)",
+      "locationId": "rose-c8",
+      "summary": "Le pont inférieur est inondé; un zombie et une goule peuvent engager un combat dans l’eau.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        25
+      ],
+      "dmNotes": [
+        "Conditions de déplacement dans l’eau et combat sous-marin."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-wreck-lower"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch03-c9"
+      ]
+    },
+    {
+      "id": "ch03-c9",
+      "title": "Cale (C9)",
+      "locationId": "rose-c9",
+      "summary": "La cale noyée contient le coffre et le journal du capitaine avec une histoire de talisman et de malédiction.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        26
+      ],
+      "dmNotes": [
+        "Le journal décrit un talisman lié à des cheveux et au navire.",
+        "Le coffre peut permettre de comprendre comment apaiser la harpie."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "open-chest",
+          "label": "Examiner le coffre et le journal",
+          "nextSceneId": "ch03-harpy",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "captain_journal_found",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch03-harpy",
+      "title": "Retour de la harpie",
+      "locationId": "rose-upper-deck",
+      "summary": "La harpie revient à bord; les aventuriers peuvent tenter une négociation grâce aux découvertes dans le navire ou la combattre.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        26,
+        27
+      ],
+      "dmNotes": [
+        "Le scénario propose une possibilité de dialogue et de résolution non violente."
+      ],
+      "characters": [
+        "harpy"
+      ],
+      "encounterIds": [
+        "enc-harpy"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "harpy-talk",
+          "label": "Négocier avec la harpie",
+          "nextSceneId": "ch03-conclusion",
+          "effects": [],
+          "origin": "editorial_navigation",
+          "conditions": [
+            {
+              "type": "flag",
+              "key": "captain_journal_found",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "id": "harpy-fight",
+          "label": "Combattre la harpie",
+          "nextSceneId": "ch03-conclusion",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch03-conclusion",
+      "title": "Fin de l’exploration de l’épave",
+      "locationId": "rose-des-vents",
+      "summary": "Les personnages peuvent retourner au sanctuaire avec leurs découvertes; la menace de l’épave peut être résolue.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        27
+      ],
+      "dmNotes": [],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "wreck-return",
+          "label": "Rentrer au Repos du Dragon",
+          "nextSceneId": "ch01-runara",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "quest_shipwreck_completed",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    }
+  ]
+}

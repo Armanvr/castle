@@ -1,0 +1,24 @@
+[
+	{
+		"id": "demo-training",
+		"name": "Les sentinelles du quai",
+		"description": "Rencontre fictive d’entraînement : deux instances distinctes de la même créature.",
+		"participants": [
+			{
+				"monsterId": "demo-sentinel",
+				"count": 2
+			}
+		]
+	},
+	{
+		"id": "demo-fog",
+		"name": "Brumes de démonstration",
+		"description": "Rencontre originale, sans lien avec le livret.",
+		"participants": [
+			{
+				"monsterId": "demo-mist",
+				"count": 3
+			}
+		]
+	}
+]

@@ -1,0 +1,341 @@
+[
+  {
+    "id": "runara",
+    "name": "Runara",
+    "description": "Dragonne de bronze adulte métamorphosée en femme âgée; dirige le Repos du Dragon, pacifiste.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      8,
+      9
+    ],
+    "statBlockId": "runara-dragon-bronze-adulte",
+    "statBlockStatus": "available",
+    "dialogues": []
+  },
+  {
+    "id": "tarak",
+    "name": "Tarak",
+    "description": "Clerc du cloître, anciennement lié au milieu criminel; compatissant.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9,
+      12,
+      13
+    ],
+    "statBlockId": "tarak",
+    "statBlockStatus": "partial_requires_verification",
+    "dialogues": []
+  },
+  {
+    "id": "varnoth",
+    "name": "Varnoth",
+    "description": "Ancienne guerrière retirée au cloître; enseigne les arts martiaux et porte un lourd passé.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      10,
+      13
+    ],
+    "statBlockId": "varnoth",
+    "statBlockStatus": "available",
+    "dialogues": []
+  },
+  {
+    "id": "myla",
+    "name": "Myla",
+    "description": "Kobolde studieuse, passionnée de magie et d’expériences.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9,
+      13
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "kobolds-rest",
+    "name": "Kobolds du Repos",
+    "description": "Résidents kobolds alliés du sanctuaire, susceptibles de nouer des liens avec les PJ.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      8,
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "blepp",
+    "name": "Blepp",
+    "description": "Jeune kobold enthousiaste attiré par les héros.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9,
+      12
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "agga",
+    "name": "Agga",
+    "description": "Kobolde faisant partie des habitants du Repos.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "baron",
+    "name": "Baron",
+    "description": "Kobold convaincu d’un destin exceptionnel et intéressé par la magie.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "frub",
+    "name": "Frub",
+    "description": "Kobold au tempérament impulsif et enthousiaste.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "kilnip",
+    "name": "Kilnip",
+    "description": "Kobolde souffrant d’insomnies.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "mumpo",
+    "name": "Mumpo",
+    "description": "Kobold peu sûr de lui, attaché à Runara.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "rix",
+    "name": "Rix",
+    "description": "Kobolde curieuse des étrangers.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "zark",
+    "name": "Zark",
+    "description": "Kobold irritable et méfiant.",
+    "sourceChapter": "chapter-01",
+    "sourcePages": [
+      9
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "sinensa",
+    "name": "Sinensa",
+    "description": "Cheffe myconide malade; sa colonie souffre d’une contamination.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      16,
+      20
+    ],
+    "statBlockId": "sinensa",
+    "statBlockStatus": "partial_requires_verification",
+    "dialogues": []
+  },
+  {
+    "id": "auranta",
+    "name": "Auranta",
+    "description": "Myconide veillant sur Sinensa.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "enok",
+    "name": "Enok",
+    "description": "Myconide veillant sur Sinensa.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "agric",
+    "name": "Agric",
+    "description": "Myconide adulte du cercle, impliqué dans les soins.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "omphalo",
+    "name": "Omphalo",
+    "description": "Myconide adulte du cercle, impliqué dans les soins.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "craterel",
+    "name": "Craterel",
+    "description": "Myconide adulte du cercle.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "pleuro",
+    "name": "Pleuro",
+    "description": "Myconide adulte du cercle.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "sorifus",
+    "name": "Sorifus",
+    "description": "Myconide participant à la fusion collective.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "virosa",
+    "name": "Virosa",
+    "description": "Myconide participant à la fusion collective.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      20
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "myconids",
+    "name": "Myconides",
+    "description": "Peuple fongique de Poussemer, communiquant grâce à des spores.",
+    "sourceChapter": "chapter-02",
+    "sourcePages": [
+      16,
+      19
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  },
+  {
+    "id": "harpy",
+    "name": "Harpie de la Rose des Vents",
+    "description": "Créature maudissant l’épave, ouverte à une résolution diplomatique dans certaines circonstances.",
+    "sourceChapter": "chapter-03",
+    "sourcePages": [
+      22,
+      26,
+      27
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "annex_pending",
+    "dialogues": []
+  },
+  {
+    "id": "vrilleclair",
+    "name": "Vrilléclair",
+    "description": "Jeune dragon bleu ambitieux cherchant à utiliser la magie des dragons morts.",
+    "sourceChapter": "chapter-04",
+    "sourcePages": [
+      28,
+      32,
+      34
+    ],
+    "statBlockId": "dragon-bleu-jeune",
+    "statBlockStatus": "partial_requires_verification",
+    "dialogues": []
+  },
+  {
+    "id": "aidron",
+    "name": "Aidron",
+    "description": "Jeune dragon de bronze capturé, petit-fils de Runara.",
+    "sourceChapter": "chapter-04",
+    "sourcePages": [
+      28,
+      34
+    ],
+    "statBlockId": "dragonnet-bronze",
+    "statBlockStatus": "available",
+    "dialogues": []
+  },
+  {
+    "id": "kobolds-vrilleclair",
+    "name": "Kobolds de Vrilléclair",
+    "description": "Kobolds au service du dragon bleu dans les ruines de l’observatoire.",
+    "sourceChapter": "chapter-04",
+    "sourcePages": [
+      30,
+      31
+    ],
+    "statBlockId": null,
+    "statBlockStatus": "not_applicable_or_pending",
+    "dialogues": []
+  }
+]

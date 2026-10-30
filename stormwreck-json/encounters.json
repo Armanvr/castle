@@ -1,0 +1,453 @@
+[
+  {
+    "id": "enc-drowned-sailors",
+    "title": "Marins noyés",
+    "sceneId": "ch01-drowned",
+    "combatants": [
+      {
+        "monsterId": "zombie",
+        "quantity": 3,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "zombie",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 8,
+        "statsSource": {
+          "file": "Annexe 7.pdf",
+          "printedPage": 48,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      7
+    ],
+    "recommendedLevel": 1,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-hot-springs",
+    "title": "Chaos aux sources chaudes",
+    "sceneId": "ch01-hot-springs",
+    "combatants": [
+      {
+        "monsterId": "guivre-follette",
+        "quantity": 3,
+        "statsStatus": "partial_requires_verification",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "guivre-follette",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 3.pdf",
+          "printedPage": 41,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      14
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-owlbear",
+    "title": "Hibours",
+    "sceneId": "ch01-owlbear",
+    "combatants": [
+      {
+        "monsterId": "hibours",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "hibours",
+        "defaultMaxHp": 59,
+        "defaultArmorClass": 13,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 42,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      14,
+      15
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-hostile-kobolds",
+    "title": "Embuscade de kobolds",
+    "sceneId": "ch01-kobolds",
+    "combatants": [
+      {
+        "monsterId": "kobold",
+        "quantity": 4,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "kobold",
+        "defaultMaxHp": 5,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 43,
+          "section": "Annexe B - Créatures"
+        }
+      },
+      {
+        "monsterId": "kobold-aile",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "kobold-aile",
+        "defaultMaxHp": 10,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 43,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      15
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-cave-stirges",
+    "title": "Striges du tunnel",
+    "sceneId": "ch02-b1",
+    "combatants": [
+      {
+        "monsterId": "strige",
+        "quantity": 2,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "strige",
+        "defaultMaxHp": 2,
+        "defaultArmorClass": 14,
+        "statsSource": {
+          "file": "Annexe 6.pdf",
+          "printedPage": 46,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      19
+    ],
+    "recommendedLevel": 2,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-violet-fungi",
+    "title": "Champignons dangereux",
+    "sceneId": "ch02-b2",
+    "combatants": [
+      {
+        "monsterId": "thallophyte-violette",
+        "quantity": 3,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "thallophyte-violette",
+        "defaultMaxHp": 18,
+        "defaultArmorClass": 5,
+        "statsSource": {
+          "file": "Annexe 5.pdf",
+          "printedPage": 45,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      19
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-crystal-cave",
+    "title": "Cristal et guivres-follettes",
+    "sceneId": "ch02-b6",
+    "combatants": [
+      {
+        "monsterId": "guivre-follette",
+        "quantity": 2,
+        "statsStatus": "partial_requires_verification",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "guivre-follette",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 3.pdf",
+          "printedPage": 41,
+          "section": "Annexe B - Créatures"
+        }
+      },
+      {
+        "monsterId": "serpent-de-feu",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "serpent-de-feu",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 14,
+        "statsSource": {
+          "file": "Annexe 6.pdf",
+          "printedPage": 46,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      20,
+      21
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-wreck-zombies",
+    "title": "Marins zombies de l’épave",
+    "sceneId": "ch03-upper",
+    "combatants": [
+      {
+        "monsterId": "zombie",
+        "quantity": 2,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "zombie",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 8,
+        "statsSource": {
+          "file": "Annexe 7.pdf",
+          "printedPage": 48,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      23,
+      24
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-wreck-lower",
+    "title": "Morts-vivants du pont inférieur",
+    "sceneId": "ch03-c8",
+    "combatants": [
+      {
+        "monsterId": "goule",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "goule",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 3.pdf",
+          "printedPage": 41,
+          "section": "Annexe B - Créatures"
+        }
+      },
+      {
+        "monsterId": "zombie",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "zombie",
+        "defaultMaxHp": 22,
+        "defaultArmorClass": 8,
+        "statsSource": {
+          "file": "Annexe 7.pdf",
+          "printedPage": 48,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      25
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-harpy",
+    "title": "Retour de la harpie",
+    "sceneId": "ch03-harpy",
+    "combatants": [
+      {
+        "monsterId": "harpie",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "harpie",
+        "defaultMaxHp": 38,
+        "defaultArmorClass": 11,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 42,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      27
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-observatory-rotunda",
+    "title": "Défense des ruines",
+    "sceneId": "ch04-d2",
+    "combatants": [
+      {
+        "monsterId": "kobold",
+        "quantity": 3,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "kobold",
+        "defaultMaxHp": 5,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 43,
+          "section": "Annexe B - Créatures"
+        }
+      },
+      {
+        "monsterId": "strige",
+        "quantity": 3,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "strige",
+        "defaultMaxHp": 2,
+        "defaultArmorClass": 14,
+        "statsSource": {
+          "file": "Annexe 6.pdf",
+          "printedPage": 46,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      31
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-vrilleclair",
+    "title": "Confrontation avec Vrilléclair",
+    "sceneId": "ch04-confrontation",
+    "combatants": [
+      {
+        "monsterId": "dragon-bleu-jeune",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "dragon-bleu-jeune",
+        "defaultMaxHp": 52,
+        "defaultArmorClass": 17,
+        "statsSource": {
+          "file": "Annexe 3.pdf",
+          "printedPage": 41,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      33
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  },
+  {
+    "id": "enc-vrilleclair-ritual",
+    "title": "Combat rituel",
+    "sceneId": "ch04-ritual",
+    "combatants": [
+      {
+        "monsterId": "dragon-bleu-jeune",
+        "quantity": 1,
+        "statsStatus": "available",
+        "quantityStatus": "source_or_visual_estimate",
+        "statBlockId": "dragon-bleu-jeune",
+        "defaultMaxHp": 52,
+        "defaultArmorClass": 17,
+        "statsSource": {
+          "file": "Annexe 3.pdf",
+          "printedPage": 41,
+          "section": "Annexe B - Créatures"
+        }
+      },
+      {
+        "monsterId": "kobold",
+        "quantity": 3,
+        "statsStatus": "available",
+        "quantityStatus": "dm_confirmed",
+        "statBlockId": "kobold",
+        "defaultMaxHp": 5,
+        "defaultArmorClass": 12,
+        "statsSource": {
+          "file": "Annexe 4.pdf",
+          "printedPage": 43,
+          "section": "Annexe B - Créatures"
+        }
+      }
+    ],
+    "sourcePages": [
+      34,
+      35
+    ],
+    "recommendedLevel": null,
+    "status": "template_not_active",
+    "notes": [
+      "Quantités, PV, CA, actions, FP et variantes de niveau à confirmer depuis les annexes et la totalité de la scène."
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+[
+	{
+		"id": "demo-sentinel",
+		"name": "Sentinelle de cuivre",
+		"type": "Créature fictive de démonstration",
+		"size": "M",
+		"armorClass": 13,
+		"maxHp": 11,
+		"initiativeBonus": 1,
+		"speed": "9 m",
+		"abilities": {
+			"strength": 14,
+			"dexterity": 12,
+			"constitution": 14,
+			"intelligence": 10,
+			"wisdom": 12,
+			"charisma": 10
+		},
+		"savingThrows": [],
+		"skills": [],
+		"resistances": [],
+		"immunities": [],
+		"vulnerabilities": [],
+		"senses": "Perception passive 11",
+		"languages": "Aucune",
+		"challenge": "Non évalué (démo)",
+		"actions": ["Déplacement et une attaque, à arbitrer."],
+		"attacks": ["Frappe fictive : +3 au toucher, portée 1,5 m ; 1d4 + 1 dégâts."],
+		"features": ["Statistiques originales destinées uniquement à tester l’outil."],
+		"source": {
+			"type": "fictional_demo",
+			"pages": []
+		}
+	},
+	{
+		"id": "demo-mist",
+		"name": "Éclat de brume",
+		"type": "Créature fictive de démonstration",
+		"size": "M",
+		"armorClass": 12,
+		"maxHp": 7,
+		"initiativeBonus": 1,
+		"speed": "9 m",
+		"abilities": {
+			"strength": 14,
+			"dexterity": 12,
+			"constitution": 14,
+			"intelligence": 10,
+			"wisdom": 12,
+			"charisma": 10
+		},
+		"savingThrows": [],
+		"skills": [],
+		"resistances": [],
+		"immunities": [],
+		"vulnerabilities": [],
+		"senses": "Perception passive 11",
+		"languages": "Aucune",
+		"challenge": "Non évalué (démo)",
+		"actions": ["Déplacement et une attaque, à arbitrer."],
+		"attacks": ["Frappe fictive : +3 au toucher, portée 1,5 m ; 1d4 + 1 dégâts."],
+		"features": ["Statistiques originales destinées uniquement à tester l’outil."],
+		"source": {
+			"type": "fictional_demo",
+			"pages": []
+		}
+	}
+]

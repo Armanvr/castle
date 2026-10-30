@@ -1,0 +1,102 @@
+{
+	"id": "chapter-01",
+	"title": "Le Repos du Dragon",
+	"description": "Titre de chapitre fourni par le MJ. Les scènes ci-dessous sont fictives et seront remplacées après lecture du livret.",
+	"scenes": [
+		{
+			"id": "demo-scene-1",
+			"chapterId": "chapter-01",
+			"title": "Un accueil sur le quai · démo",
+			"locationId": "demo-location-1",
+			"recommendedLevel": 1,
+			"source": {
+				"type": "fictional_demo",
+				"pages": []
+			},
+			"readAloud": "Une lanterne de cuivre oscille au-dessus du quai. Une archiviste vous fait signe et déploie une carte sans noms.",
+			"dmNotes": [
+				"Scène entièrement fictive : aucune transcription du livret officiel.",
+				"Les chapitres peuvent être explorés librement. Le moteur ne bloque pas les décisions du MJ."
+			],
+			"characters": ["demo-selia"],
+			"dialogues": [
+				{
+					"id": "demo-welcome",
+					"speakerId": "demo-selia",
+					"text": "J’ai besoin de voyageurs curieux. Voulez-vous vérifier les fanaux de la côte ?",
+					"choices": [
+						{
+							"id": "demo-ask",
+							"label": "Pourquoi les fanaux ?",
+							"nextDialogueId": "demo-explain"
+						}
+					]
+				},
+				{
+					"id": "demo-explain",
+					"speakerId": "demo-selia",
+					"text": "Ils nous aident à retrouver notre chemin. Ceci est une mission fictive pour découvrir le tableau de bord.",
+					"choices": []
+				}
+			],
+			"checks": [],
+			"choices": [
+				{
+					"id": "demo-accept",
+					"label": "Accepter la mission des fanaux",
+					"conditions": [],
+					"important": true,
+					"effects": [
+						{
+							"type": "set_flag",
+							"key": "demo_mission",
+							"value": true
+						},
+						{
+							"type": "set_quest",
+							"key": "Les fanaux de la côte",
+							"value": "active"
+						},
+						{
+							"type": "unlock_scene",
+							"sceneId": "demo-scene-2"
+						},
+						{
+							"type": "unlock_scene",
+							"sceneId": "demo-scene-3"
+						},
+						{
+							"type": "relationship",
+							"npcId": "demo-selia",
+							"value": 1
+						},
+						{
+							"type": "add_item",
+							"itemId": "demo-token"
+						},
+						{
+							"type": "journal",
+							"title": "Une mission fictive commence",
+							"description": "Sélia confie aux aventuriers le contrôle des fanaux."
+						}
+					]
+				}
+			],
+			"encounterIds": ["demo-training"],
+			"transitions": [
+				{
+					"sceneId": "demo-scene-2",
+					"label": "Les échos sous la roche"
+				},
+				{
+					"sceneId": "demo-scene-3",
+					"label": "Une lumière au large"
+				},
+				{
+					"sceneId": "demo-scene-4",
+					"label": "Le dernier signal"
+				}
+			]
+		}
+	]
+}

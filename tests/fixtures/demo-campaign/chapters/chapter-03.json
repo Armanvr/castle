@@ -1,0 +1,71 @@
+{
+	"id": "chapter-03",
+	"title": "L’Épave maudite",
+	"description": "Titre de chapitre fourni par le MJ. Les scènes ci-dessous sont fictives et seront remplacées après lecture du livret.",
+	"scenes": [
+		{
+			"id": "demo-scene-3",
+			"chapterId": "chapter-03",
+			"title": "Une lumière au large · démo",
+			"locationId": "demo-location-3",
+			"recommendedLevel": 1,
+			"source": {
+				"type": "fictional_demo",
+				"pages": []
+			},
+			"readAloud": "Un fanal clignote au large. Sur le ponton désert, une petite boîte attend les voyageurs.",
+			"dmNotes": [
+				"Scène entièrement fictive : aucune transcription du livret officiel.",
+				"Les chapitres peuvent être explorés librement. Le moteur ne bloque pas les décisions du MJ."
+			],
+			"characters": [],
+			"dialogues": [],
+			"checks": [],
+			"choices": [
+				{
+					"id": "demo-finish-3",
+					"label": "Vérifier ce fanal",
+					"conditions": [
+						{
+							"type": "flag",
+							"key": "demo_mission",
+							"operator": "equals",
+							"value": true
+						}
+					],
+					"effects": [
+						{
+							"type": "set_flag",
+							"key": "demo_beacon_3",
+							"value": true
+						},
+						{
+							"type": "journal",
+							"title": "Fanal 3 vérifié",
+							"description": "Événement de démonstration enregistré."
+						},
+						{
+							"type": "unlock_scene",
+							"sceneId": "demo-scene-4"
+						}
+					]
+				}
+			],
+			"encounterIds": [],
+			"transitions": [
+				{
+					"sceneId": "demo-scene-1",
+					"label": "Un accueil sur le quai"
+				},
+				{
+					"sceneId": "demo-scene-2",
+					"label": "Les échos sous la roche"
+				},
+				{
+					"sceneId": "demo-scene-4",
+					"label": "Le dernier signal"
+				}
+			]
+		}
+	]
+}

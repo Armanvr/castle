@@ -1,0 +1,122 @@
+{
+  "items": [
+    {
+      "id": "arme-plus-1",
+      "name": "Arme +1",
+      "type": "arme magique",
+      "rarity": "peu courant",
+      "mechanics": {
+        "attackBonus": 1,
+        "damageBonus": 1
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    },
+    {
+      "id": "bottes-elfiques",
+      "name": "Bottes elfiques",
+      "type": "objet merveilleux",
+      "rarity": "peu courant",
+      "mechanics": {
+        "movementSilence": true,
+        "stealthAdvantageSound": true
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    },
+    {
+      "id": "elixir-de-sante",
+      "name": "Élixir de santé",
+      "type": "potion",
+      "rarity": "rare",
+      "mechanics": {
+        "removes": [
+          "maladies",
+          "aveuglé",
+          "assourdi",
+          "paralysé",
+          "empoisonné"
+        ]
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    },
+    {
+      "id": "parchemin-de-sort",
+      "name": "Parchemin de sort",
+      "type": "parchemin",
+      "rarity": "variable",
+      "mechanics": {
+        "castingAbilityRule": "sort sur la liste de classe ; test si niveau plus élevé",
+        "spellConsumedOnCast": true,
+        "saveDCBySpellLevel": {
+          "0": 13,
+          "1": 13,
+          "2": 13
+        },
+        "attackBonusBySpellLevel": {
+          "0": 5,
+          "1": 5,
+          "2": 5
+        }
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    },
+    {
+      "id": "potion-de-guerison",
+      "name": "Potion de guérison",
+      "type": "potion",
+      "rarity": "courant",
+      "mechanics": {
+        "healingDice": "2d4+2"
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    },
+    {
+      "id": "potion-de-resistance",
+      "name": "Potion de résistance",
+      "type": "potion",
+      "rarity": "peu courant",
+      "mechanics": {
+        "durationHours": 1,
+        "damageResistanceType": "choisi à l’acquisition / déterminé au d10",
+        "d10DamageTable": [
+          "acide",
+          "feu",
+          "force",
+          "foudre",
+          "froid",
+          "nécrotique",
+          "poison",
+          "psychique",
+          "radiant",
+          "tonnerre"
+        ]
+      },
+      "source": {
+        "file": "Annexe 1.pdf",
+        "printedPage": 36
+      }
+    }
+  ],
+  "pending": [
+    "Récompenses des quêtes",
+    "Trésor du capitaine",
+    "Talisman de la harpie",
+    "Clef de Runara",
+    "Récompenses et artéfacts de l’observatoire"
+  ],
+  "status": "annex_a_complete_visible_page; quest_specific_rewards_pending_review"
+}

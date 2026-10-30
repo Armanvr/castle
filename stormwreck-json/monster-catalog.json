@@ -1,0 +1,1368 @@
+[
+  {
+    "id": "dragon-bleu-jeune",
+    "statBlock": {
+      "name": "Vrilleclair / dragonnet bleu",
+      "source": {
+        "file": "Annexe 3.pdf",
+        "printedPage": 41,
+        "section": "Annexe B - Créatures"
+      },
+      "type": null,
+      "alignment": "Loyal Mauvais",
+      "armorClass": 17,
+      "hitPoints": 52,
+      "hitDice": "8d8",
+      "speedMeters": {
+        "walk": 9,
+        "fly": 18
+      },
+      "abilities": {
+        "STR": 17,
+        "DEX": 10,
+        "CON": 15,
+        "INT": 12,
+        "WIS": 11,
+        "CHA": 15
+      },
+      "challengeRating": 3,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Morsure",
+          "attackBonus": 5,
+          "damage": "1d10+3 tranchants et 1d6 dégâts de foudre",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+		{
+			"name": "Souffle de foudre",
+			"attackBonus": null,
+			"damage": "4d10 dégâts de foudre",
+			"reachMeters": null,
+			"rangeMeters": 9,
+			"description": "La cible doit réussir un jet de sauvegarde de Dextérité DD 12, sinon elle subit 4d10 dégâts de foudre en cas d'échec, la moitié en cas de succès.",
+			"recharge": null,
+			"saveDC": 12
+		}
+      ],
+      "traits": [],
+      "skills": {},
+      "senses": {},
+      "languages": null,
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [
+        "Armure naturelle.",
+        "La fiche statistique de la page droite n’est pas suffisamment visible dans les fichiers transmis. À compléter depuis un nouveau scan."
+      ],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 3.pdf",
+      "printedPage": 41,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "guivre-follette",
+    "statBlock": {
+      "name": "Guivre-follette",
+      "source": {
+        "file": "Annexe 3.pdf",
+        "printedPage": 41,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "créature",
+      "alignment": "Généralement neutre",
+      "armorClass": 12,
+      "hitPoints": 22,
+      "hitDice": "5d6",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 6,
+        "DEX": 14,
+        "CON": 12,
+        "INT": 6,
+        "WIS": 10,
+        "CHA": 11
+      },
+      "challengeRating": "1/4",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Morsure",
+          "attackBonus": 4,
+          "damage": "1d4+2 dégâts de feu",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+		{
+			"name": "Souffle bouillant",
+			"attackBonus": null,
+			"damage": null,
+			"reachMeters": null,
+			"rangeMeters": 4.5,
+			"description": "Chaque créature prise dans la zone d'effet effecture un jet de sauvegarde de Dextérité DD 11, sinon elle subit 1d8 dégâts de feu en cas d'échec, la moitié en cas de succès.",
+			"recharge": null,
+			"saveDC": 11
+		}
+      ],
+      "traits": [
+		"Déflagration funèbre : Lorsqu'une guivre-follette meurt, elle explose dans un nuage toxique. Toutes les créatures à 1,50 m de la guivre-follette doivent effectuer un jet de sauvegarde de Constitution DD 11, sinon elles subissent 1d8 dégâts de poison en cas d'échec, la moitié en cas de succès.",
+		"Être singulier : La guivre-follette peut se passer de nourriture, d'eau et de sommeil"
+	  ],
+      "skills": {},
+      "senses": {},
+      "languages": null,
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [
+        "Statistiques situées sur une page de droite non lisible sur les scans fournis."
+      ],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 3.pdf",
+      "printedPage": 41,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "harpie",
+    "statBlock": {
+      "name": "Harpie",
+      "source": {
+        "file": "Annexe 4.pdf",
+        "printedPage": 42,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "monstruosité de taille M",
+      "alignment": "Chaotique Mauvais",
+      "armorClass": 11,
+      "hitPoints": 38,
+      "hitDice": "7d8+7",
+      "speedMeters": {
+        "walk": 6,
+        "fly": 12
+      },
+      "abilities": {
+        "STR": 12,
+        "DEX": 13,
+        "CON": 12,
+        "INT": 7,
+        "WIS": 10,
+        "CHA": 13
+      },
+      "challengeRating": 1,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Griffe",
+          "attackBonus": 3,
+          "damage": "2d4+1 tranchants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Gourdin",
+          "attackBonus": 3,
+          "damage": "1d4+1 contondants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Chant captivant",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Créatures humanoïdes et géants à 90 m : sauvegarde de Sagesse DD 11 ; en échec charmés et attirés par la harpie. Nouvel essai sous conditions précisées dans le profil.",
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Attaques multiples : une attaque de Griffe et une de Gourdin."
+      ],
+      "skills": {},
+      "senses": {
+        "passivePerception": 10
+      },
+      "languages": "Commun",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 4.pdf",
+      "printedPage": 42,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "hibours",
+    "statBlock": {
+      "name": "Hibours",
+      "source": {
+        "file": "Annexe 4.pdf",
+        "printedPage": 42,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "monstruosité de taille G",
+      "alignment": "non aligné",
+      "armorClass": 13,
+      "hitPoints": 59,
+      "hitDice": "7d10+21",
+      "speedMeters": {
+        "walk": 12
+      },
+      "abilities": {
+        "STR": 20,
+        "DEX": 12,
+        "CON": 17,
+        "INT": 3,
+        "WIS": 12,
+        "CHA": 7
+      },
+      "challengeRating": 3,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Bec",
+          "attackBonus": 7,
+          "damage": "1d10+5 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Griffe",
+          "attackBonus": 7,
+          "damage": "2d8+5 tranchants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Attaques multiples : une attaque de Bec et une de Griffe.",
+        "Odorat et vue aiguisés : avantage aux tests de Sagesse (Perception) reposant sur ces sens."
+      ],
+      "skills": {
+        "Perception": 3
+      },
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 13
+      },
+      "languages": "—",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 4.pdf",
+      "printedPage": 42,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "kobold",
+    "statBlock": {
+      "name": "Kobold",
+      "source": {
+        "file": "Annexe 4.pdf",
+        "printedPage": 43,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "humanoïde de taille P",
+      "alignment": "tout alignement",
+      "armorClass": 12,
+      "hitPoints": 5,
+      "hitDice": "2d6-2",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 7,
+        "DEX": 15,
+        "CON": 9,
+        "INT": 8,
+        "WIS": 7,
+        "CHA": 8
+      },
+      "challengeRating": "1/8",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Dague",
+          "attackBonus": 4,
+          "damage": "1d4+2 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Fronde",
+          "attackBonus": 4,
+          "damage": "1d4+2 contondants",
+          "reachMeters": null,
+          "rangeMeters": 36,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Sensibilité au soleil : désavantage aux jets d’attaque et à la Perception basée sur la vue à la lumière directe.",
+        "Tactique de meute : avantage aux attaques contre une cible si un allié non incapable d’agir est à 1,50 m de celle-ci."
+      ],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 8
+      },
+      "languages": "Commun, draconique",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 4.pdf",
+      "printedPage": 43,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "kobold-aile",
+    "statBlock": {
+      "name": "Bricoleur kobold",
+      "source": {
+        "file": "Annexe 4.pdf",
+        "printedPage": 43,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "humanoïde de taille P",
+      "alignment": "tout alignement",
+      "armorClass": 12,
+      "hitPoints": 10,
+      "hitDice": "3d6",
+      "speedMeters": {
+        "walk": 9,
+        "fly": 9
+      },
+      "abilities": {
+        "STR": 7,
+        "DEX": 16,
+        "CON": 9,
+        "INT": 8,
+		"WIS": 7,
+		"CHA": 8
+      },
+      "challengeRating": "1/4",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Dague",
+          "attackBonus": 5,
+          "damage": "1d4+2 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+		{
+			"name": "Lâcher de rocher",
+			"attackBonus": 5,
+			"damage": "1d6+3 contondants",
+			"reachMeters": null,
+			"rangeMeters": 36,
+			"description": null,
+			"recharge": null,
+			"saveDC": null
+		}
+      ],
+      "traits": [
+        "Sensibilité au soleil.",
+        "Tactique de meute."
+      ],
+      "skills": {
+        "Arcanes": 4,
+        "Perception": 0
+      },
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 10
+      },
+      "languages": "Commun, draconique",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [
+        "Le livret nomme le profil « Bricoleur kobold », et non simplement « kobold ailé ».",
+        "Certains attributs et le détail des flammes sont coupés dans le scan."
+      ],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 4.pdf",
+      "printedPage": 43,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "serpent-de-feu",
+    "statBlock": {
+      "name": "Serpent de feu",
+      "source": {
+        "file": "Annexe 6.pdf",
+        "printedPage": 46,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "élémentaire de taille M",
+      "alignment": "Neutre Mauvais",
+      "armorClass": 14,
+      "hitPoints": 22,
+      "hitDice": "5d8",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 12,
+        "DEX": 14,
+        "CON": 11,
+        "INT": 7,
+        "WIS": 10,
+        "CHA": 8
+      },
+      "challengeRating": 1,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Morsure",
+          "attackBonus": 3,
+          "damage": "1d4+1 perforants + 1d6 feu",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Queue",
+          "attackBonus": 3,
+          "damage": "1d4+1 contondants + 1d6 feu",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Corps brûlant : créature touchant le serpent ou le frappant au corps à corps à 1,5 m subit 1d6 dégâts de feu.",
+        "Attaques multiples : Morsure et Queue."
+      ],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 10
+      },
+      "languages": "Igné, mais ne parle pas",
+      "damageTraits": {
+        "vulnerabilities": [
+          "froid"
+        ],
+        "resistances": [
+          "contondants/perforants/tranchants non magiques"
+        ],
+        "immunities": [
+          "feu"
+        ]
+      },
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 6.pdf",
+      "printedPage": 46,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "strige",
+    "statBlock": {
+      "name": "Strige",
+      "source": {
+        "file": "Annexe 6.pdf",
+        "printedPage": 46,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "bête de taille TP",
+      "alignment": "non aligné",
+      "armorClass": 14,
+      "hitPoints": 2,
+      "hitDice": "1d4",
+      "speedMeters": {
+        "walk": 3,
+        "fly": 12
+      },
+      "abilities": {
+        "STR": 4,
+        "DEX": 16,
+        "CON": 11,
+        "INT": 2,
+        "WIS": 8,
+        "CHA": 6
+      },
+      "challengeRating": "1/8",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Succion du sang",
+          "attackBonus": 5,
+          "damage": "1d4+3 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": "Sur une touche, la strige se fixe sur sa cible et inflige ensuite 1d4+3 dégâts au début de chacun de ses tours ; se détache après avoir absorbé 10 PV, si la cible meurt ou si une action la retire.",
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 9
+      },
+      "languages": "—",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 6.pdf",
+      "printedPage": 46,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "thallophyte-violette",
+    "statBlock": {
+      "name": "Thallophyte violette",
+      "source": {
+        "file": "Annexe 5.pdf",
+        "printedPage": 45,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "Plante de taille M",
+      "alignment": "Neutre Mauvais",
+      "armorClass": 5,
+      "hitPoints": 18,
+      "hitDice": "4d8",
+      "speedMeters": {
+        "walk": 1.5
+      },
+      "abilities": {
+        "STR": 3,
+        "DEX": 1,
+        "CON": 10,
+        "INT": 1,
+        "WIS": 3,
+        "CHA": 1
+      },
+      "challengeRating": "1/4",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Contact putréfiant",
+          "attackBonus": 2,
+          "damage": "1d8 nécortiques",
+          "reachMeters": 3,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+		"Faux-semblant : Si la thallophyte violette est immobile au début du combat, elle est avantagée à son jet d'initiative. De plus, une créature qui n'a pas vu la thallophyte violette bouger ou agir doit réussir un test d'Intelligence (Investigation) DD 18 pour la reconnaître."
+	  ],
+      "skills": {},
+      "senses": {},
+      "languages": null,
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [
+        "Profil vraisemblablement situé sur la page de droite coupée, nécessite un scan complet."
+      ],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 5.pdf",
+      "printedPage": 45,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "zombie",
+    "statBlock": {
+      "name": "Zombi",
+      "source": {
+        "file": "Annexe 7.pdf",
+        "printedPage": 48,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "mort-vivant de taille M",
+      "alignment": "Neutre Mauvais",
+      "armorClass": 8,
+      "hitPoints": 22,
+      "hitDice": "3d8+9",
+      "speedMeters": {
+        "walk": 6
+      },
+      "abilities": {
+        "STR": 13,
+        "DEX": 6,
+        "CON": 16,
+        "INT": 3,
+        "WIS": 6,
+        "CHA": 5
+      },
+      "challengeRating": "1/4",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Coup",
+          "attackBonus": 3,
+          "damage": "1d6+1 contondants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Robustesse de la non-vie : quand des dégâts le font tomber à 0 PV, sauvegarde de Constitution DD 5 + dégâts subis, sauf dégâts radiants ou coup critique ; en réussite reste à 1 PV."
+      ],
+      "skills": {
+        "saveWIS": 0
+      },
+      "senses": {
+        "darkvisionMeters": 18,
+        "passivePerception": 8
+      },
+      "languages": "Langues connues de son vivant, mais ne parle pas",
+      "damageTraits": {
+        "immunities": [
+          "poison"
+        ]
+      },
+      "conditionImmunities": [
+        "empoisonné"
+      ],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 7.pdf",
+      "printedPage": 48,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "goule",
+    "statBlock": {
+      "name": "Goule",
+      "source": {
+        "file": "Annexe 3.pdf",
+        "printedPage": 41,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "mort-vivant de taille M",
+      "alignment": "Chaotique Mauvais",
+      "armorClass": 12,
+      "hitPoints": 22,
+      "hitDice": "5d8",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 13,
+        "DEX": 15,
+        "CON": 10,
+        "INT": 7,
+		"WIS": 10,
+		"CHA": 6
+      },
+      "challengeRating": 1,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Griffe",
+          "attackBonus": 4,
+          "damage": "2d4+2 tranchants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": "Attaque au corps à corps ; si la cible est autre qu'un elfe ou un mort-vivant, jets de Constitution DD 10 sous peine d'être paralysée pendant 1min.",
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Morsure",
+          "attackBonus": 2,
+          "damage": "2d6+2 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 18
+      },
+      "languages": "Commun",
+      "damageTraits": {
+        "immunities": [
+          "poison"
+        ]
+      },
+      "conditionImmunities": [
+        "charmé",
+        "empoisonné",
+        "épuisement"
+      ],
+      "notes": [],
+      "completeness": "dm_confirmed",
+      "requiresVerification": false
+    },
+    "status": "dm_confirmed",
+    "source": {
+      "file": "Annexe 3.pdf",
+      "printedPage": 41,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "myconide-pousse",
+    "statBlock": {
+      "name": "Pousse de myconide",
+      "source": {
+        "file": "Annexe 5.pdf",
+        "printedPage": 44,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "plante de taille P",
+      "alignment": "Loyal Neutre",
+      "armorClass": 10,
+      "hitPoints": 7,
+      "hitDice": "2d6",
+      "speedMeters": {
+        "walk": 3
+      },
+      "abilities": {
+        "STR": 8,
+        "DEX": 10,
+        "CON": 10,
+        "INT": 8,
+        "WIS": 11,
+        "CHA": 5
+      },
+      "challengeRating": 0,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Poing",
+          "attackBonus": 1,
+          "damage": "1d4-1 contondants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Spores de communication",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Communication télépathique facilitée par des spores, rayon 3 m, durée 1 h.",
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Soleillite aiguë : désavantage en plein soleil ; meurt après plus d’une heure d’exposition.",
+        "Spores de détresse : les autres myconides dans un rayon de 72 m sentent sa douleur."
+      ],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 36,
+        "passivePerception": 10
+      },
+      "languages": "—",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 5.pdf",
+      "printedPage": 44,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "myconide-adulte",
+    "statBlock": {
+      "name": "Myconide adulte",
+      "source": {
+        "file": "Annexe 5.pdf",
+        "printedPage": 44,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "plante de taille M",
+      "alignment": "Loyal Neutre",
+      "armorClass": 12,
+      "hitPoints": 24,
+      "hitDice": "4d8+4",
+      "speedMeters": {
+        "walk": 6
+      },
+      "abilities": {
+        "STR": 10,
+        "DEX": 10,
+        "CON": 12,
+        "INT": 10,
+        "WIS": 13,
+        "CHA": 7
+      },
+      "challengeRating": "1/2",
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Poing",
+          "attackBonus": 2,
+          "damage": "2d4 contondants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Spores de communication",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Communication télépathique par spores, rayon 9 m, durée 1 h.",
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Spores pacificatrices",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Créature à 1,50 m : sauvegarde de Constitution DD 11 ou étourdie pendant 1 minute, nouvelle sauvegarde en fin de tour ; recharge sur 5-6.",
+          "recharge": "5-6",
+          "saveDC": 11
+        }
+      ],
+      "traits": [
+        "Soleillite aiguë.",
+        "Spores de détresse (rayon 72 m)."
+      ],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 36,
+        "passivePerception": 11
+      },
+      "languages": "—",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 5.pdf",
+      "printedPage": 44,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "sinensa",
+    "statBlock": {
+      "name": "Sinensa",
+      "source": {
+        "file": "Annexe 5.pdf",
+        "printedPage": 45,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "plante myconide de taille G",
+      "alignment": "Loyal Neutre",
+      "armorClass": 13,
+      "hitPoints": 60,
+      "hitDice": "8d10+16",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 12,
+        "DEX": 10,
+        "CON": 14,
+        "INT": 13
+      },
+      "challengeRating": 2,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Poing",
+          "attackBonus": 3,
+          "damage": "2d4+1 contondants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Spores de communication",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Rayon 9 m.",
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Spores hallucinogènes",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Sauvegarde de Constitution et hallucinations ; les détails en bord de page nécessitent validation.",
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Attaques multiples : action de Poing et usage de Spores hallucinogènes.",
+        "Soleillite aiguë.",
+        "Spores de détresse."
+      ],
+      "skills": {},
+      "senses": {
+        "darkvisionMeters": 36
+      },
+      "languages": "—",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "partial_scan",
+      "requiresVerification": true
+    },
+    "status": "partial_from_annex",
+    "source": {
+      "file": "Annexe 5.pdf",
+      "printedPage": 45,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "tarak",
+    "statBlock": {
+      "name": "Tarak",
+      "source": {
+        "file": "Annexe 6.pdf",
+        "printedPage": 47,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "humanoïde humain de taille M",
+      "alignment": "Loyal Neutre",
+      "armorClass": 13,
+      "hitPoints": 27,
+      "hitDice": "6d8",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 10,
+        "DEX": 16,
+        "CON": 10,
+        "INT": 12,
+        "WIS": 14
+      },
+      "challengeRating": 1,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Dague",
+          "attackBonus": 5,
+          "damage": "1d4+3 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Attaques multiples : trois attaques de Dague.",
+        "Ruse : action bonus pour Foncer, Se cacher ou Se désengager."
+      ],
+      "skills": {
+        "Intuition": 4,
+        "Médecine": 4,
+        "Nature": 3
+      },
+      "senses": {
+        "passivePerception": 12
+      },
+      "languages": "Commun, draconique, argot des voleurs",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "partial_scan",
+      "requiresVerification": true
+    },
+    "status": "partial_from_annex",
+    "source": {
+      "file": "Annexe 6.pdf",
+      "printedPage": 47,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "varnoth",
+    "statBlock": {
+      "name": "Varnoth",
+      "source": {
+        "file": "Annexe 7.pdf",
+        "printedPage": 48,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "humanoïde humain de taille M",
+      "alignment": "Neutre Bon",
+      "armorClass": 17,
+      "hitPoints": 39,
+      "hitDice": "6d8+12",
+      "speedMeters": {
+        "walk": 9
+      },
+      "abilities": {
+        "STR": 16,
+        "DEX": 13,
+        "CON": 14,
+        "INT": 10,
+        "WIS": 11,
+        "CHA": 10
+      },
+      "challengeRating": 2,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Épée courte",
+          "attackBonus": 5,
+          "damage": "1d6+3 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Attaques multiples : trois attaques d’Épée courte."
+      ],
+      "skills": {
+        "Athlétisme": 5,
+        "Histoire": 2,
+        "Perception": 2,
+        "Religion": 2
+      },
+      "senses": {
+        "passivePerception": 12
+      },
+      "languages": "Commun",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 7.pdf",
+      "printedPage": 48,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "dragonnet-bronze",
+    "statBlock": {
+      "name": "Dragonnet de bronze",
+      "source": {
+        "file": "Annexe 3.pdf",
+        "printedPage": 40,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "dragon de taille M",
+      "alignment": "Loyal Bon",
+      "armorClass": 17,
+      "hitPoints": 32,
+      "hitDice": "5d8+10",
+      "speedMeters": {
+        "walk": 9,
+        "fly": 18,
+        "swim": 9
+      },
+      "abilities": {
+        "STR": 17,
+        "DEX": 10,
+        "CON": 15,
+        "INT": 12,
+        "WIS": 11,
+        "CHA": 15
+      },
+      "challengeRating": 2,
+      "proficiencyBonus": 2,
+      "actions": [
+        {
+          "name": "Morsure",
+          "attackBonus": 5,
+          "damage": "1d10+3 perforants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Souffle de foudre",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Ligne de 12 m de long et 1,50 m de large ; sauvegarde de Dextérité DD 12 ; 3d6 foudre en échec, moitié en réussite.",
+          "recharge": "5-6",
+          "saveDC": 12
+        },
+        {
+          "name": "Souffle répulsif",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Cône de 9 m ; sauvegarde de Force DD 12 ; en échec, repoussé de 9 m.",
+          "recharge": "5-6",
+          "saveDC": 12
+        }
+      ],
+      "traits": [
+        "Amphibie : respire dans l’air et l’eau.",
+        "Immunité aux dégâts de foudre."
+      ],
+      "skills": {
+        "saveDEX": 2,
+        "saveCON": 4,
+        "saveWIS": 2,
+        "saveCHA": 4,
+        "Perception": 4
+      },
+      "senses": {
+        "blindsightMeters": 3,
+        "darkvisionMeters": 18,
+        "passivePerception": 14
+      },
+      "languages": "Draconique",
+      "damageTraits": {
+        "immunities": [
+          "foudre"
+        ]
+      },
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 3.pdf",
+      "printedPage": 40,
+      "section": "Annexe B - Créatures"
+    }
+  },
+  {
+    "id": "runara-dragon-bronze-adulte",
+    "statBlock": {
+      "name": "Runara (dragon de bronze adulte)",
+      "source": {
+        "file": "Annexe 3.pdf",
+        "printedPage": 40,
+        "section": "Annexe B - Créatures"
+      },
+      "type": "dragon métallique de taille TG",
+      "alignment": "Loyal Bon",
+      "armorClass": 19,
+      "hitPoints": 212,
+      "hitDice": "17d12+102",
+      "speedMeters": {
+        "walk": 12,
+        "fly": 24,
+        "swim": 12
+      },
+      "abilities": {
+        "STR": 25,
+        "DEX": 10,
+        "CON": 23,
+        "INT": 16,
+        "WIS": 15,
+        "CHA": 19
+      },
+      "challengeRating": 13,
+      "proficiencyBonus": 5,
+      "actions": [
+        {
+          "name": "Griffe",
+          "attackBonus": 12,
+          "damage": "2d6+7 tranchants",
+          "reachMeters": 1.5,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Morsure",
+          "attackBonus": 12,
+          "damage": "2d10+7 perforants + 1d10 foudre",
+          "reachMeters": 3,
+          "rangeMeters": null,
+          "description": null,
+          "recharge": null,
+          "saveDC": null
+        },
+        {
+          "name": "Souffle de foudre",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Ligne 27 m × 1,50 m ; sauvegarde de Dextérité DD 19 ; 16d10 foudre en échec, moitié en réussite.",
+          "recharge": "5-6",
+          "saveDC": 19
+        },
+        {
+          "name": "Souffle répulsif",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Cône 9 m ; sauvegarde de Force DD 19 ; créatures repoussées jusqu’à 18 m.",
+          "recharge": "5-6",
+          "saveDC": 19
+        },
+        {
+          "name": "Changement de forme",
+          "attackBonus": null,
+          "damage": null,
+          "reachMeters": null,
+          "rangeMeters": null,
+          "description": "Transformation magique en humanoïde ou bête de taille M ou P ; conserve certains éléments du profil.",
+          "recharge": null,
+          "saveDC": null
+        }
+      ],
+      "traits": [
+        "Amphibie.",
+        "Résistance légendaire (3/jour).",
+        "Attaques multiples : une Morsure et deux Griffes."
+      ],
+      "skills": {
+        "saveDEX": 5,
+        "saveCON": 11,
+        "saveWIS": 7,
+        "saveCHA": 9,
+        "Discrétion": 5,
+        "Intuition": 7,
+        "Perception": 12
+      },
+      "senses": {
+        "blindsightMeters": 18,
+        "darkvisionMeters": 36,
+        "passivePerception": 22
+      },
+      "languages": "Commun, draconique",
+      "damageTraits": {},
+      "conditionImmunities": [],
+      "notes": [],
+      "completeness": "verified_visible",
+      "requiresVerification": false
+    },
+    "status": "filled_from_annex",
+    "source": {
+      "file": "Annexe 3.pdf",
+      "printedPage": 40,
+      "section": "Annexe B - Créatures"
+    }
+  }
+]

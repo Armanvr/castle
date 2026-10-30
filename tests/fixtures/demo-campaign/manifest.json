@@ -1,0 +1,20 @@
+{
+	"id": "stormwreck-isle",
+	"title": "Les Dragons de l’Île aux Tempêtes",
+	"subtitle": "Atelier de démonstration · contenu fictif",
+	"version": 1,
+	"rules": "2014",
+	"demo": true,
+	"chapters": [
+		"chapters/chapter-01.json",
+		"chapters/chapter-02.json",
+		"chapters/chapter-03.json",
+		"chapters/chapter-04.json"
+	],
+	"players": "players.json",
+	"monsters": "monsters.json",
+	"encounters": "encounters.json",
+	"locations": "locations.json",
+	"items": "items.json",
+	"npcs": "characters.json"
+}

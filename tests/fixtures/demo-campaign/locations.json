@@ -1,0 +1,22 @@
+[
+	{
+		"id": "demo-location-1",
+		"name": "Le quai des lanternes",
+		"description": "Lieu original de démonstration ; contenu officiel à intégrer depuis les documents."
+	},
+	{
+		"id": "demo-location-2",
+		"name": "La chambre des échos",
+		"description": "Lieu original de démonstration ; contenu officiel à intégrer depuis les documents."
+	},
+	{
+		"id": "demo-location-3",
+		"name": "Le ponton silencieux",
+		"description": "Lieu original de démonstration ; contenu officiel à intégrer depuis les documents."
+	},
+	{
+		"id": "demo-location-4",
+		"name": "La terrasse du phare",
+		"description": "Lieu original de démonstration ; contenu officiel à intégrer depuis les documents."
+	}
+]

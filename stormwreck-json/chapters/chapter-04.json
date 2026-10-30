@@ -1,0 +1,352 @@
+{
+  "id": "chapter-04",
+  "title": "L’Observatoire de la falaise",
+  "sourceFiles": [
+    {
+      "file": "Chapitre 4-0.pdf",
+      "printedPages": [
+        28,
+        29
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 4-1.pdf",
+      "printedPages": [
+        30,
+        31
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 4-2.pdf",
+      "printedPages": [
+        32,
+        33
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 4-3.pdf",
+      "printedPages": [
+        34,
+        35
+      ],
+      "basis": "lecture visuelle du scan"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ch04-approach",
+      "title": "Approche de l’observatoire",
+      "locationId": "cliff-observatory",
+      "summary": "Après les grottes et l’épave, les aventuriers se rendent à l’observatoire occupé par Vrilléclair et ses kobolds.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        28,
+        29
+      ],
+      "dmNotes": [
+        "Progression prévue vers le niveau 3.",
+        "L’accès peut se faire par bateau ou par voie terrestre."
+      ],
+      "characters": [
+        "vrilleclair",
+        "aidron"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "obs-land",
+          "label": "Passer par la côte",
+          "nextSceneId": "ch04-d1",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "obs-sea",
+          "label": "Passer par la mer",
+          "nextSceneId": "ch04-d1",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch04-d1",
+      "title": "Promontoire (D1)",
+      "locationId": "observatory-d1",
+      "summary": "Un promontoire sculpté porte une statue de dragon, un socle hexagonal et un mécanisme de clef.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        30,
+        31
+      ],
+      "dmNotes": [
+        "Une clef détenue par Runara peut activer des éléments magiques et révéler un accès ou une vision."
+      ],
+      "characters": [
+        "kobolds-vrilleclair"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch04-d2"
+      ]
+    },
+    {
+      "id": "ch04-d2",
+      "title": "Ruines de la rotonde (D2)",
+      "locationId": "observatory-d2",
+      "summary": "Une place ruinée accueille des kobolds et plusieurs striges; une sculpture centrale est liée au rituel draconique.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        31
+      ],
+      "dmNotes": [
+        "Kobolds susceptibles de combattre ou de réagir selon les événements."
+      ],
+      "characters": [
+        "kobolds-vrilleclair"
+      ],
+      "encounterIds": [
+        "enc-observatory-rotunda"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch04-d3",
+        "ch04-d4",
+        "ch04-d5"
+      ]
+    },
+    {
+      "id": "ch04-d3",
+      "title": "Dépendance (D3)",
+      "locationId": "observatory-d3",
+      "summary": "Bâtiment ancien utilisé par les kobolds pour surveiller et conserver des provisions et des biens.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        30,
+        31
+      ],
+      "dmNotes": [
+        "Le descriptif complet de D3 doit être confirmé sur le scan original."
+      ],
+      "characters": [
+        "kobolds-vrilleclair"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch04-d2"
+      ]
+    },
+    {
+      "id": "ch04-d4",
+      "title": "Étude isolée (D4)",
+      "locationId": "observatory-d4",
+      "summary": "Un bâtiment séparé abrite des vestiges d’étude et des indices donnant accès à la tour.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        32
+      ],
+      "dmNotes": [
+        "Plusieurs solutions astucieuses permettent de franchir l’obstacle vers la tour.",
+        "Le passage et les effets des pièges magiques sont décrits dans le livret."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [
+        {
+          "skill": "Sagesse (Perception)",
+          "dc": 15,
+          "onSuccess": "Déceler une ouverture ou un détail dissimulé",
+          "onFailure": null,
+          "sourceStatus": "from_source"
+        },
+        {
+          "skill": "Intelligence (Arcanes)",
+          "dc": 11,
+          "onSuccess": "Comprendre le mécanisme magique",
+          "onFailure": null,
+          "sourceStatus": "from_source"
+        }
+      ],
+      "choices": [],
+      "transitions": [
+        "ch04-d5"
+      ]
+    },
+    {
+      "id": "ch04-d5",
+      "title": "Tour de l’observatoire (D5)",
+      "locationId": "observatory-d5",
+      "summary": "La tour comprend des statues des anciens érudits, une sculpture draconique et l’accès à une bibliothèque secrète et à la confrontation.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        32,
+        33
+      ],
+      "dmNotes": [
+        "Vrilléclair occupe la tour; Aidron est détenu dans les environs.",
+        "Les personnages peuvent tenter plusieurs approches y compris la ruse et la négociation."
+      ],
+      "characters": [
+        "vrilleclair",
+        "aidron"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "tower-negotiate",
+          "label": "Parler à Vrilléclair",
+          "nextSceneId": "ch04-confrontation",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "tower-free",
+          "label": "Chercher et libérer Aidron",
+          "nextSceneId": "ch04-aidron",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch04-aidron",
+      "title": "Libérer Aidron",
+      "locationId": "observatory-d6",
+      "summary": "Aidron, jeune dragon de bronze, est captif; le libérer lui permet d’aider contre Vrilléclair.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        34,
+        35
+      ],
+      "dmNotes": [
+        "Aidron peut suggérer la bibliothèque secrète et un moyen de contrer le rituel."
+      ],
+      "characters": [
+        "aidron"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "aidron-free",
+          "label": "Libérer le dragon de bronze",
+          "nextSceneId": "ch04-ritual",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "aidron_freed",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch04-confrontation",
+      "title": "Rencontre avec Vrilléclair",
+      "locationId": "observatory-d5",
+      "summary": "Le jeune dragon bleu tente de convaincre, intimider ou combattre les aventuriers afin de poursuivre ses ambitions.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        32,
+        33
+      ],
+      "dmNotes": [
+        "Conversation, menace, tromperie et combat possibles selon les initiatives du MJ et des joueurs."
+      ],
+      "characters": [
+        "vrilleclair"
+      ],
+      "encounterIds": [
+        "enc-vrilleclair"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "vrilleclair-ritual",
+          "label": "Interrompre le rituel",
+          "nextSceneId": "ch04-ritual",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch04-ritual",
+      "title": "Le rituel de Vrilléclair",
+      "locationId": "observatory-d2",
+      "summary": "Le rituel destiné à absorber l’énergie des dragons morts peut être perturbé; les personnages peuvent l’affronter et manipuler les effigies.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        34,
+        35
+      ],
+      "dmNotes": [
+        "Table des esprits draconiques au d10; plusieurs effets sont décrits dans le livret, à vérifier et transcrire de façon structurée.",
+        "Les kobolds survivants peuvent intervenir.",
+        "La libération d’Aidron modifie les possibilités d’aide."
+      ],
+      "characters": [
+        "vrilleclair",
+        "aidron"
+      ],
+      "encounterIds": [
+        "enc-vrilleclair-ritual"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "ritual-end",
+          "label": "Résoudre la confrontation",
+          "nextSceneId": "ch04-conclusion",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch04-conclusion",
+      "title": "Conclusion de l’aventure",
+      "locationId": "cliff-observatory",
+      "summary": "Fin de l’affrontement contre Vrilléclair; conséquences pour Aidron, Runara et le Repos du Dragon.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        35
+      ],
+      "dmNotes": [
+        "La conclusion après la page 35 n’est pas présente dans les fichiers transmis; ne pas présumer des résultats."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": []
+    }
+  ]
+}

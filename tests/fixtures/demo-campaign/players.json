@@ -1,0 +1,116 @@
+[
+	{
+		"id": "demo-iris",
+		"name": "Iris Valombre",
+		"race": "Humaine",
+		"class": "Guerrière",
+		"level": 1,
+		"abilities": {
+			"strength": 14,
+			"dexterity": 12,
+			"constitution": 14,
+			"intelligence": 10,
+			"wisdom": 12,
+			"charisma": 10
+		},
+		"combat": {
+			"maxHp": 12,
+			"armorClass": 16,
+			"speed": 9,
+			"initiativeBonus": 1
+		},
+		"skills": ["Perception +3"],
+		"savingThrows": ["Sagesse +3"],
+		"attacks": ["Arme de démonstration : +4, 1d6 + 2 dégâts"],
+		"features": ["Second souffle : ressource de démonstration"],
+		"spells": [],
+		"inventory": ["Sac de voyage fictif"],
+		"resources": [
+			{
+				"id": "demo-resource",
+				"name": "Capacité de démonstration",
+				"max": 1
+			}
+		],
+		"source": {
+			"type": "fictional_demo",
+			"pages": []
+		}
+	},
+	{
+		"id": "demo-mael",
+		"name": "Maël Aubeclaire",
+		"race": "Elfe",
+		"class": "Clerc",
+		"level": 1,
+		"abilities": {
+			"strength": 14,
+			"dexterity": 12,
+			"constitution": 14,
+			"intelligence": 10,
+			"wisdom": 12,
+			"charisma": 10
+		},
+		"combat": {
+			"maxHp": 10,
+			"armorClass": 15,
+			"speed": 9,
+			"initiativeBonus": 1
+		},
+		"skills": ["Perception +3"],
+		"savingThrows": ["Sagesse +3"],
+		"attacks": ["Arme de démonstration : +4, 1d6 + 2 dégâts"],
+		"features": ["Soins : arbitrage manuel"],
+		"spells": ["Mot de guérison (démo)"],
+		"inventory": ["Sac de voyage fictif"],
+		"resources": [
+			{
+				"id": "demo-resource",
+				"name": "Capacité de démonstration",
+				"max": 1
+			}
+		],
+		"source": {
+			"type": "fictional_demo",
+			"pages": []
+		}
+	},
+	{
+		"id": "demo-nox",
+		"name": "Nox Brindepied",
+		"race": "Halfelin",
+		"class": "Roublard",
+		"level": 1,
+		"abilities": {
+			"strength": 14,
+			"dexterity": 12,
+			"constitution": 14,
+			"intelligence": 10,
+			"wisdom": 12,
+			"charisma": 10
+		},
+		"combat": {
+			"maxHp": 9,
+			"armorClass": 14,
+			"speed": 9,
+			"initiativeBonus": 1
+		},
+		"skills": ["Perception +3"],
+		"savingThrows": ["Sagesse +3"],
+		"attacks": ["Arme de démonstration : +4, 1d6 + 2 dégâts"],
+		"features": ["Attaque sournoise : arbitrage manuel"],
+		"spells": [],
+		"inventory": ["Sac de voyage fictif"],
+		"resources": [
+			{
+				"id": "demo-resource",
+				"name": "Capacité de démonstration",
+				"max": 1
+			}
+		],
+		"source": {
+			"type": "fictional_demo",
+			"pages": []
+		}
+	}
+]

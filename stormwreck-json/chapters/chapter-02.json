@@ -1,0 +1,272 @@
+{
+  "id": "chapter-02",
+  "title": "Les Grottes de Poussemer",
+  "sourceFiles": [
+    {
+      "file": "Chapitre 2-0.pdf",
+      "printedPages": [
+        16,
+        17
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 2-1.pdf",
+      "printedPages": [
+        18,
+        19
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 2-2.pdf",
+      "printedPages": [
+        20,
+        21
+      ],
+      "basis": "lecture visuelle du scan"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ch02-approach",
+      "title": "Approche des grottes",
+      "locationId": "poussemer-entrance",
+      "summary": "Les grottes marines du sud-ouest abritent une colonie de myconides affectée par des vapeurs toxiques.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        16,
+        17
+      ],
+      "dmNotes": [
+        "Approche par bateau ou par les hauteurs de la falaise.",
+        "Le chapitre est prévu au niveau 1, mais devient plus difficile sans progression préalable."
+      ],
+      "characters": [
+        "sinensa"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "caves-boat",
+          "label": "Arriver en bateau",
+          "nextSceneId": "ch02-b1",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "caves-land",
+          "label": "Descendre depuis la falaise",
+          "nextSceneId": "ch02-b1",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch02-b1",
+      "title": "Tunnel d’entrée (B1)",
+      "locationId": "poussemer-b1",
+      "summary": "Un tunnel marin, partiellement submergé selon la marée, traverse une colonie de champignons lumineux.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        18,
+        19
+      ],
+      "dmNotes": [
+        "Des striges peuvent attaquer dans le tunnel.",
+        "L’eau et le niveau de marée modifient l’approche."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-cave-stirges"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch02-b2"
+      ]
+    },
+    {
+      "id": "ch02-b2",
+      "title": "Champignonnière (B2)",
+      "locationId": "poussemer-b2",
+      "summary": "Caverne haute et lumineuse contenant champignons, bassin et myconides; des thallophytes violettes menacent la colonie.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        19
+      ],
+      "dmNotes": [
+        "Les spores de communication permettent d’échanger avec les myconides."
+      ],
+      "characters": [
+        "myconids"
+      ],
+      "encounterIds": [
+        "enc-violet-fungi"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch02-b3",
+        "ch02-b4"
+      ]
+    },
+    {
+      "id": "ch02-b3",
+      "title": "Passages intérieurs (B3)",
+      "locationId": "poussemer-b3",
+      "summary": "Zone de liaison entre la champignonnière et les salles profondes.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        18,
+        19
+      ],
+      "dmNotes": [
+        "Carte B3 visible; descriptif complet à vérifier dans la zone de la double page."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch02-b4",
+        "ch02-b2"
+      ]
+    },
+    {
+      "id": "ch02-b4",
+      "title": "Salle du cercle (B4)",
+      "locationId": "poussemer-b4",
+      "summary": "Six myconides adultes s’organisent en cercle; deux soignent les autres et deux participent à une fusion collective.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        20
+      ],
+      "dmNotes": [
+        "Les myconides contaminés peuvent répondre violemment à l’agression."
+      ],
+      "characters": [
+        "agric",
+        "omphalo",
+        "craterel",
+        "pleuro",
+        "sorifus",
+        "virosa"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch02-b5",
+        "ch02-b6"
+      ]
+    },
+    {
+      "id": "ch02-b5",
+      "title": "Sanctuaire de Sinensa (B5)",
+      "locationId": "poussemer-b5",
+      "summary": "Deux myconides veillent sur Sinensa, cheffe de la colonie, profondément malade.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        20,
+        21
+      ],
+      "dmNotes": [
+        "La maladie est liée aux spores et aux vapeurs contaminant les grottes.",
+        "Un remède ou l’élimination de la source de corruption permet une issue favorable."
+      ],
+      "characters": [
+        "sinensa",
+        "auranta",
+        "enok"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch02-b6"
+      ]
+    },
+    {
+      "id": "ch02-b6",
+      "title": "Grotte au cristal (B6)",
+      "locationId": "poussemer-b6",
+      "summary": "Dans une grotte suffocante, un cristal orange condamne une fissure et retient les vapeurs toxiques; des guivres-follettes se cachent parmi des cristaux violets.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        20,
+        21
+      ],
+      "dmNotes": [
+        "Le cristal est formé près des vestiges du dragon rouge Sharruth.",
+        "Briser le cristal rétablit l’évacuation des vapeurs mais libère une créature élémentaire; les détails de l’élémentaire sont dans l’annexe absente."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-crystal-cave"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "crystal-break",
+          "label": "Briser le cristal",
+          "nextSceneId": "ch02-conclusion",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "orange_crystal_broken",
+              "value": true
+            }
+          ],
+          "origin": "source_based_action"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch02-conclusion",
+      "title": "Conclusion des grottes",
+      "locationId": "poussemer-b5",
+      "summary": "Après la destruction du cristal, les vapeurs s’échappent, les myconides reprennent leurs esprits et Sinensa peut remercier les personnages.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        21
+      ],
+      "dmNotes": [
+        "Une récompense et un objet décrits en annexe sont à compléter ultérieurement."
+      ],
+      "characters": [
+        "sinensa"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "cave-return",
+          "label": "Retourner au Repos du Dragon",
+          "nextSceneId": "ch01-runara",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "quest_mushroom_caves_completed",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+[
+  {
+    "id": "stormwreck-coast",
+    "name": "Stormwreck Coast",
+    "descriptions": [
+      "Les PJ approchent du Repos du Dragon en bateau et découvrent le cloître sur la falaise.",
+      "Trois zombies issus de marins morts surgissent des vagues; combat initial avec règles de surprise et d’initiative."
+    ],
+    "sourcePages": [
+      6,
+      7,
+      12
+    ]
+  },
+  {
+    "id": "dragons-rest-a1",
+    "name": "Dragons Rest A1",
+    "descriptions": [
+      "Un sentier en marches conduit vers une statue de dragon puis les cellules des résidents."
+    ],
+    "sourcePages": [
+      10,
+      11
+    ]
+  },
+  {
+    "id": "dragons-rest-a2",
+    "name": "Dragons Rest A2",
+    "descriptions": [
+      "Bâtiment abritant un treuil et une plateforme reliant le bas de la falaise au cloître."
+    ],
+    "sourcePages": [
+      10,
+      11
+    ]
+  },
+  {
+    "id": "dragons-rest-a3",
+    "name": "Dragons Rest A3",
+    "descriptions": [
+      "Réfectoire commun où les résidents préparent et prennent leurs repas."
+    ],
+    "sourcePages": [
+      10,
+      11
+    ]
+  },
+  {
+    "id": "dragons-rest-a4",
+    "name": "Dragons Rest A4",
+    "descriptions": [
+      "Pièce d’étude contenant livres et parchemins; Myla y trouve un lieu calme pour travailler."
+    ],
+    "sourcePages": [
+      10,
+      11
+    ]
+  },
+  {
+    "id": "dragons-rest-a5",
+    "name": "Dragons Rest A5",
+    "descriptions": [
+      "Petit temple ouvert au sommet de la falaise, dédié au dragon de platine Bahamut."
+    ],
+    "sourcePages": [
+      11,
+      12
+    ]
+  },
+  {
+    "id": "dragons-rest",
+    "name": "Dragons Rest",
+    "descriptions": [
+      "Runara, ancienne dragonne de bronze métamorphosée, accueille les personnages au sanctuaire et propose repos et secours.",
+      "Les résidents orientent le groupe vers les grottes de Poussemer, l’épave et plusieurs intrigues personnelles."
+    ],
+    "sourcePages": [
+      8,
+      9,
+      12,
+      13
+    ]
+  },
+  {
+    "id": "stormwreck-isle",
+    "name": "Stormwreck Isle",
+    "descriptions": [
+      "Déplacements entre sites et éventuelles rencontres supplémentaires en extérieur.",
+      "Un hibours surgit sur la côte et représente un danger à éviter ou combattre.",
+      "Un groupe de kobolds hostiles surprend les aventuriers dans la végétation."
+    ],
+    "sourcePages": [
+      14,
+      15
+    ]
+  },
+  {
+    "id": "stormwreck-hot-springs",
+    "name": "Stormwreck Hot Springs",
+    "descriptions": [
+      "Une source thermale est infestée de spores et de guivres-follettes hostiles."
+    ],
+    "sourcePages": [
+      14,
+      15
+    ]
+  },
+  {
+    "id": "poussemer-entrance",
+    "name": "Poussemer Entrance",
+    "descriptions": [
+      "Les grottes marines du sud-ouest abritent une colonie de myconides affectée par des vapeurs toxiques."
+    ],
+    "sourcePages": [
+      16,
+      17
+    ]
+  },
+  {
+    "id": "poussemer-b1",
+    "name": "Poussemer B1",
+    "descriptions": [
+      "Un tunnel marin, partiellement submergé selon la marée, traverse une colonie de champignons lumineux."
+    ],
+    "sourcePages": [
+      18,
+      19
+    ]
+  },
+  {
+    "id": "poussemer-b2",
+    "name": "Poussemer B2",
+    "descriptions": [
+      "Caverne haute et lumineuse contenant champignons, bassin et myconides; des thallophytes violettes menacent la colonie."
+    ],
+    "sourcePages": [
+      19
+    ]
+  },
+  {
+    "id": "poussemer-b3",
+    "name": "Poussemer B3",
+    "descriptions": [
+      "Zone de liaison entre la champignonnière et les salles profondes."
+    ],
+    "sourcePages": [
+      18,
+      19
+    ]
+  },
+  {
+    "id": "poussemer-b4",
+    "name": "Poussemer B4",
+    "descriptions": [
+      "Six myconides adultes s’organisent en cercle; deux soignent les autres et deux participent à une fusion collective."
+    ],
+    "sourcePages": [
+      20
+    ]
+  },
+  {
+    "id": "poussemer-b5",
+    "name": "Poussemer B5",
+    "descriptions": [
+      "Deux myconides veillent sur Sinensa, cheffe de la colonie, profondément malade.",
+      "Après la destruction du cristal, les vapeurs s’échappent, les myconides reprennent leurs esprits et Sinensa peut remercier les personnages."
+    ],
+    "sourcePages": [
+      20,
+      21
+    ]
+  },
+  {
+    "id": "poussemer-b6",
+    "name": "Poussemer B6",
+    "descriptions": [
+      "Dans une grotte suffocante, un cristal orange condamne une fissure et retient les vapeurs toxiques; des guivres-follettes se cachent parmi des cristaux violets."
+    ],
+    "sourcePages": [
+      20,
+      21
+    ]
+  },
+  {
+    "id": "rose-des-vents",
+    "name": "Rose Des Vents",
+    "descriptions": [
+      "L’épave de la Rose des Vents est liée à une harpie et aux marins morts-vivants qui s’échouent sur la côte.",
+      "Les personnages peuvent retourner au sanctuaire avec leurs découvertes; la menace de l’épave peut être résolue."
+    ],
+    "sourcePages": [
+      22,
+      23,
+      27
+    ]
+  },
+  {
+    "id": "rose-upper-deck",
+    "name": "Rose Upper Deck",
+    "descriptions": [
+      "Le pont supérieur présente des zones d’exploration et ouvre vers les cabines et le pont inférieur.",
+      "La harpie revient à bord; les aventuriers peuvent tenter une négociation grâce aux découvertes dans le navire ou la combattre."
+    ],
+    "sourcePages": [
+      23,
+      24,
+      26,
+      27
+    ]
+  },
+  {
+    "id": "rose-c1",
+    "name": "Rose C1",
+    "descriptions": [
+      "Zone de pont liée aux déplacements de la harpie et aux approches du navire."
+    ],
+    "sourcePages": [
+      23,
+      27
+    ]
+  },
+  {
+    "id": "rose-c2",
+    "name": "Rose C2",
+    "descriptions": [
+      "Seconde zone supérieure liée à l’organisation du navire."
+    ],
+    "sourcePages": [
+      23,
+      24
+    ]
+  },
+  {
+    "id": "rose-c3",
+    "name": "Rose C3",
+    "descriptions": [
+      "Une barre de gouvernail instable peut tomber; sa chute attire les zombies du navire."
+    ],
+    "sourcePages": [
+      24
+    ]
+  },
+  {
+    "id": "rose-c4",
+    "name": "Rose C4",
+    "descriptions": [
+      "La cabine du capitaine contient un trou béant menant à la cale ainsi que des biens et équipements."
+    ],
+    "sourcePages": [
+      24
+    ]
+  },
+  {
+    "id": "rose-c5",
+    "name": "Rose C5",
+    "descriptions": [
+      "Un squelette sans tête s’effondre et semble bouger lorsqu’on le dérange."
+    ],
+    "sourcePages": [
+      24
+    ]
+  },
+  {
+    "id": "rose-c6",
+    "name": "Rose C6",
+    "descriptions": [
+      "Une cabine encombrée abrite un portrait et un piège déclenché par une lame de plancher."
+    ],
+    "sourcePages": [
+      24
+    ]
+  },
+  {
+    "id": "rose-c7",
+    "name": "Rose C7",
+    "descriptions": [
+      "L’ancien mess des marins est désormais désert et sans élément majeur."
+    ],
+    "sourcePages": [
+      24
+    ]
+  },
+  {
+    "id": "rose-c8",
+    "name": "Rose C8",
+    "descriptions": [
+      "Le pont inférieur est inondé; un zombie et une goule peuvent engager un combat dans l’eau."
+    ],
+    "sourcePages": [
+      25
+    ]
+  },
+  {
+    "id": "rose-c9",
+    "name": "Rose C9",
+    "descriptions": [
+      "La cale noyée contient le coffre et le journal du capitaine avec une histoire de talisman et de malédiction."
+    ],
+    "sourcePages": [
+      26
+    ]
+  },
+  {
+    "id": "cliff-observatory",
+    "name": "Cliff Observatory",
+    "descriptions": [
+      "Après les grottes et l’épave, les aventuriers se rendent à l’observatoire occupé par Vrilléclair et ses kobolds.",
+      "Fin de l’affrontement contre Vrilléclair; conséquences pour Aidron, Runara et le Repos du Dragon."
+    ],
+    "sourcePages": [
+      28,
+      29,
+      35
+    ]
+  },
+  {
+    "id": "observatory-d1",
+    "name": "Observatory D1",
+    "descriptions": [
+      "Un promontoire sculpté porte une statue de dragon, un socle hexagonal et un mécanisme de clef."
+    ],
+    "sourcePages": [
+      30,
+      31
+    ]
+  },
+  {
+    "id": "observatory-d2",
+    "name": "Observatory D2",
+    "descriptions": [
+      "Une place ruinée accueille des kobolds et plusieurs striges; une sculpture centrale est liée au rituel draconique.",
+      "Le rituel destiné à absorber l’énergie des dragons morts peut être perturbé; les personnages peuvent l’affronter et manipuler les effigies."
+    ],
+    "sourcePages": [
+      31,
+      34,
+      35
+    ]
+  },
+  {
+    "id": "observatory-d3",
+    "name": "Observatory D3",
+    "descriptions": [
+      "Bâtiment ancien utilisé par les kobolds pour surveiller et conserver des provisions et des biens."
+    ],
+    "sourcePages": [
+      30,
+      31
+    ]
+  },
+  {
+    "id": "observatory-d4",
+    "name": "Observatory D4",
+    "descriptions": [
+      "Un bâtiment séparé abrite des vestiges d’étude et des indices donnant accès à la tour."
+    ],
+    "sourcePages": [
+      32
+    ]
+  },
+  {
+    "id": "observatory-d5",
+    "name": "Observatory D5",
+    "descriptions": [
+      "La tour comprend des statues des anciens érudits, une sculpture draconique et l’accès à une bibliothèque secrète et à la confrontation.",
+      "Le jeune dragon bleu tente de convaincre, intimider ou combattre les aventuriers afin de poursuivre ses ambitions."
+    ],
+    "sourcePages": [
+      32,
+      33
+    ]
+  },
+  {
+    "id": "observatory-d6",
+    "name": "Observatory D6",
+    "descriptions": [
+      "Aidron, jeune dragon de bronze, est captif; le libérer lui permet d’aider contre Vrilléclair."
+    ],
+    "sourcePages": [
+      34,
+      35
+    ]
+  }
+]

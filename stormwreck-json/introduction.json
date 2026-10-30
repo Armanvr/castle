@@ -1,0 +1,40 @@
+{
+  "title": "Mener l’aventure",
+  "sourceFiles": [
+    {
+      "file": "Intro 1.pdf",
+      "printedPages": [
+        2,
+        3
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Intro 2.pdf",
+      "printedPages": [
+        4,
+        5
+      ],
+      "basis": "lecture visuelle du scan"
+    }
+  ],
+  "world": "Forgotten Realms (Royaumes Oubliés)",
+  "premise": "Sur une île au passé draconique violent, le retour de phénomènes surnaturels réveille le conflit entre dragons métalliques et chromatiques.",
+  "dmGuidance": [
+    "Les textes encadrés sont destinés à la lecture aux joueurs; les descriptions ici sont des reformulations non verbatim.",
+    "Partager l’histoire, être juste et s’adapter aux décisions des joueurs.",
+    "Ne pas révéler les informations secrètes en avance.",
+    "Prévu pour quatre à cinq joueurs; adaptation possible en groupe plus petit."
+  ],
+  "campaignLocations": [
+    "stormwreck-isle",
+    "dragons-rest",
+    "poussemer-entrance",
+    "rose-des-vents",
+    "cliff-observatory"
+  ],
+  "notes": [
+    "La carte de l’île est visible dans Intro 2.",
+    "Le texte de présentation et les conseils MJ figurent dans Intro 1 et Intro 2."
+  ]
+}

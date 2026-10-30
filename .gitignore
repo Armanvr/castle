@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Dist
+dist/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Mac OS X
+.DS_Store
+
+# Ignore all IA files
+.impeccable/
+.claude/
+.planning/

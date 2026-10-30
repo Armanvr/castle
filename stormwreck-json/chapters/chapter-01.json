@@ -1,0 +1,490 @@
+{
+  "id": "chapter-01",
+  "title": "Le Repos du Dragon",
+  "sourceFiles": [
+    {
+      "file": "Chapitre 1-0.pdf",
+      "printedPages": [
+        6,
+        7
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 1-1.pdf",
+      "printedPages": [
+        8,
+        9
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 1-2.pdf",
+      "printedPages": [
+        10,
+        11
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 1-3.pdf",
+      "printedPages": [
+        12,
+        13
+      ],
+      "basis": "lecture visuelle du scan"
+    },
+    {
+      "file": "Chapitre 1-4.pdf",
+      "printedPages": [
+        14,
+        15
+      ],
+      "basis": "lecture visuelle du scan"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "ch01-arrival",
+      "title": "Arrivée sur la plage",
+      "locationId": "stormwreck-coast",
+      "summary": "Les PJ approchent du Repos du Dragon en bateau et découvrent le cloître sur la falaise.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        6,
+        7
+      ],
+      "dmNotes": [
+        "Le texte encadré officiel décrit le voyage et la vue depuis la côte.",
+        "Laisser les joueurs se présenter et préciser leurs motivations."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-drowned-sailors"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "c1a",
+          "label": "Affronter les marins noyés",
+          "nextSceneId": "ch01-drowned",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "c1b",
+          "label": "Monter au sanctuaire",
+          "nextSceneId": "ch01-path",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch01-drowned",
+      "title": "Marins noyés",
+      "locationId": "stormwreck-coast",
+      "summary": "Trois zombies issus de marins morts surgissent des vagues; combat initial avec règles de surprise et d’initiative.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        7,
+        12
+      ],
+      "dmNotes": [
+        "La scène enseigne l’initiative, les tours et le combat.",
+        "Les résidents commentent ensuite le retour des zombies."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-drowned-sailors"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-path"
+      ]
+    },
+    {
+      "id": "ch01-path",
+      "title": "Sentier et cellules monastiques (A1)",
+      "locationId": "dragons-rest-a1",
+      "summary": "Un sentier en marches conduit vers une statue de dragon puis les cellules des résidents.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        10,
+        11
+      ],
+      "dmNotes": [
+        "Statue associée à Astalagan, dragon de bronze mort sur l’île.",
+        "Les cellules sont des lieux de repos et d’interaction."
+      ],
+      "characters": [
+        "runara",
+        "tarak",
+        "varnoth",
+        "myla",
+        "kobolds-rest"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-winch",
+        "ch01-kitchen",
+        "ch01-library",
+        "ch01-temple"
+      ]
+    },
+    {
+      "id": "ch01-winch",
+      "title": "Abri du treuil (A2)",
+      "locationId": "dragons-rest-a2",
+      "summary": "Bâtiment abritant un treuil et une plateforme reliant le bas de la falaise au cloître.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        10,
+        11
+      ],
+      "dmNotes": [
+        "Plateforme suspendue et manutention; les risques de chute peuvent entraîner des dégâts."
+      ],
+      "characters": [],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-path"
+      ]
+    },
+    {
+      "id": "ch01-kitchen",
+      "title": "Cuisine et réfectoire (A3)",
+      "locationId": "dragons-rest-a3",
+      "summary": "Réfectoire commun où les résidents préparent et prennent leurs repas.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        10,
+        11
+      ],
+      "dmNotes": [
+        "Lieu adapté aux conversations et au repos."
+      ],
+      "characters": [
+        "tarak",
+        "varnoth",
+        "myla",
+        "kobolds-rest"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-runara"
+      ]
+    },
+    {
+      "id": "ch01-library",
+      "title": "Bibliothèque (A4)",
+      "locationId": "dragons-rest-a4",
+      "summary": "Pièce d’étude contenant livres et parchemins; Myla y trouve un lieu calme pour travailler.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        10,
+        11
+      ],
+      "dmNotes": [
+        "Tarak et Varnoth lisent parfois ici; bibliothèque consultable."
+      ],
+      "characters": [
+        "myla"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-runara"
+      ]
+    },
+    {
+      "id": "ch01-temple",
+      "title": "Temple de Bahamut (A5)",
+      "locationId": "dragons-rest-a5",
+      "summary": "Petit temple ouvert au sommet de la falaise, dédié au dragon de platine Bahamut.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        11,
+        12
+      ],
+      "dmNotes": [
+        "Runara peut y être rencontrée; lieu spirituel principal du cloître."
+      ],
+      "characters": [
+        "runara"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [],
+      "transitions": [
+        "ch01-runara"
+      ]
+    },
+    {
+      "id": "ch01-runara",
+      "title": "Accueil par Runara",
+      "locationId": "dragons-rest",
+      "summary": "Runara, ancienne dragonne de bronze métamorphosée, accueille les personnages au sanctuaire et propose repos et secours.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        8,
+        9
+      ],
+      "dmNotes": [
+        "Runara cache sa véritable identité et demeure non violente sauf circonstances graves.",
+        "Sa mission consiste à aider les personnes victimes de violences et encourager la paix entre dragons.",
+        "Elle ne révèle pas spontanément sa nature draconique."
+      ],
+      "characters": [
+        "runara",
+        "kobolds-rest"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "runara-grotto",
+          "label": "Enquêter sur les grottes",
+          "nextSceneId": "ch02-approach",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "quest_mushroom_caves_started",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "runara-wreck",
+          "label": "Examiner l’épave",
+          "nextSceneId": "ch03-approach",
+          "effects": [
+            {
+              "type": "set_flag",
+              "key": "quest_shipwreck_started",
+              "value": true
+            }
+          ],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "runara-rest",
+          "label": "Prendre un repos au cloître",
+          "nextSceneId": "ch01-kitchen",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch01-quests",
+      "title": "Quêtes du cloître",
+      "locationId": "dragons-rest",
+      "summary": "Les résidents orientent le groupe vers les grottes de Poussemer, l’épave et plusieurs intrigues personnelles.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        12,
+        13
+      ],
+      "dmNotes": [
+        "Les chapitres 2 et 3 peuvent être abordés dans un ordre libre.",
+        "La quête des zombies relie l’attaque initiale aux menaces surnaturelles."
+      ],
+      "characters": [
+        "runara",
+        "tarak",
+        "varnoth",
+        "myla",
+        "blepp",
+        "agga",
+        "baron",
+        "frub",
+        "kilnip",
+        "mumpo",
+        "rix",
+        "zark"
+      ],
+      "encounterIds": [],
+      "checks": [],
+      "choices": [
+        {
+          "id": "q-grotto",
+          "label": "Aller aux grottes",
+          "nextSceneId": "ch02-approach",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "q-wreck",
+          "label": "Aller à l’épave",
+          "nextSceneId": "ch03-approach",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "q-island",
+          "label": "Explorer librement l’île",
+          "nextSceneId": "ch01-explore",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch01-explore",
+      "title": "Explorer l’île",
+      "locationId": "stormwreck-isle",
+      "summary": "Déplacements entre sites et éventuelles rencontres supplémentaires en extérieur.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        14,
+        15
+      ],
+      "dmNotes": [
+        "Les rencontres supplémentaires sont facultatives et dépendent du niveau.",
+        "Les déplacements terrestres et maritimes sont possibles."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-hot-springs",
+        "enc-owlbear",
+        "enc-hostile-kobolds"
+      ],
+      "checks": [],
+      "choices": [
+        {
+          "id": "explore-hot",
+          "label": "Sources chaudes",
+          "nextSceneId": "ch01-hot-springs",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "explore-owl",
+          "label": "Rencontre du hibours",
+          "nextSceneId": "ch01-owlbear",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "explore-kobolds",
+          "label": "Kobolds hostiles",
+          "nextSceneId": "ch01-kobolds",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "explore-caves",
+          "label": "Grottes de Poussemer",
+          "nextSceneId": "ch02-approach",
+          "effects": [],
+          "origin": "editorial_navigation"
+        },
+        {
+          "id": "explore-wreck",
+          "label": "Épave de la Rose des Vents",
+          "nextSceneId": "ch03-approach",
+          "effects": [],
+          "origin": "editorial_navigation"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "ch01-hot-springs",
+      "title": "Chaos aux sources chaudes",
+      "locationId": "stormwreck-hot-springs",
+      "summary": "Une source thermale est infestée de spores et de guivres-follettes hostiles.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        14,
+        15
+      ],
+      "dmNotes": [
+        "L’exposition aux spores peut entraîner des conséquences et une contamination."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-hot-springs"
+      ],
+      "checks": [
+        {
+          "skill": "Nature",
+          "dc": 15,
+          "onSuccess": "Identifier les champignons associés aux spores",
+          "onFailure": null,
+          "sourceStatus": "from_source"
+        }
+      ],
+      "choices": [],
+      "transitions": []
+    },
+    {
+      "id": "ch01-owlbear",
+      "title": "Il court, il court, le hibours",
+      "locationId": "stormwreck-isle",
+      "summary": "Un hibours surgit sur la côte et représente un danger à éviter ou combattre.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        14,
+        15
+      ],
+      "dmNotes": [
+        "Rencontre particulièrement dangereuse; adaptée à un groupe de niveau supérieur."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-owlbear"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": []
+    },
+    {
+      "id": "ch01-kobolds",
+      "title": "Rencontre de kobolds",
+      "locationId": "stormwreck-isle",
+      "summary": "Un groupe de kobolds hostiles surprend les aventuriers dans la végétation.",
+      "readAloud": null,
+      "readAloudStatus": "non_transcrit",
+      "sourcePages": [
+        14,
+        15
+      ],
+      "dmNotes": [
+        "Embuscade et possible surprise."
+      ],
+      "characters": [],
+      "encounterIds": [
+        "enc-hostile-kobolds"
+      ],
+      "checks": [],
+      "choices": [],
+      "transitions": []
+    }
+  ]
+}

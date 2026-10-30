@@ -1,0 +1,72 @@
+{
+	"id": "chapter-04",
+	"title": "L’Observatoire de la falaise",
+	"description": "Titre de chapitre fourni par le MJ. Les scènes ci-dessous sont fictives et seront remplacées après lecture du livret.",
+	"scenes": [
+		{
+			"id": "demo-scene-4",
+			"chapterId": "chapter-04",
+			"title": "Le dernier signal · démo",
+			"locationId": "demo-location-4",
+			"recommendedLevel": 1,
+			"source": {
+				"type": "fictional_demo",
+				"pages": []
+			},
+			"readAloud": "Depuis la terrasse, les quatre fanaux répondent à votre signal. Le voyage de démonstration touche à sa fin.",
+			"dmNotes": [
+				"Scène entièrement fictive : aucune transcription du livret officiel.",
+				"Les chapitres peuvent être explorés librement. Le moteur ne bloque pas les décisions du MJ."
+			],
+			"characters": [],
+			"dialogues": [],
+			"checks": [],
+			"choices": [
+				{
+					"id": "demo-finish-4",
+					"label": "Vérifier ce fanal",
+					"conditions": [
+						{
+							"type": "flag",
+							"key": "demo_mission",
+							"operator": "equals",
+							"value": true
+						}
+					],
+					"effects": [
+						{
+							"type": "set_flag",
+							"key": "demo_beacon_4",
+							"value": true
+						},
+						{
+							"type": "journal",
+							"title": "Fanal 4 vérifié",
+							"description": "Événement de démonstration enregistré."
+						},
+						{
+							"type": "set_quest",
+							"key": "Les fanaux de la côte",
+							"value": "completed"
+						}
+					]
+				}
+			],
+			"encounterIds": [],
+			"transitions": [
+				{
+					"sceneId": "demo-scene-1",
+					"label": "Un accueil sur le quai"
+				},
+				{
+					"sceneId": "demo-scene-2",
+					"label": "Les échos sous la roche"
+				},
+				{
+					"sceneId": "demo-scene-3",
+					"label": "Une lumière au large"
+				}
+			]
+		}
+	]
+}
