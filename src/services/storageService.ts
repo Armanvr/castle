@@ -293,6 +293,28 @@ export function loadGame(campaign: Campaign, slot = '1'): { state: GameState; er
 		}
 	}
 }
+// Kept beside the save, not inside GameState: no save-format change.
+const exportKey = (campaignId: string, slot: string) => `${storageKey(campaignId, slot)}:last-export`
+export function lastExportAt(campaignId: string, slot: string): number | null {
+	try {
+		const at = Number(localStorage.getItem(exportKey(campaignId, slot)))
+		return Number.isFinite(at) && at > 0 ? at : null
+	} catch {
+		return null
+	}
+}
+export function markExported(campaignId: string, slot: string, now: number): void {
+	try {
+		localStorage.setItem(exportKey(campaignId, slot), String(now))
+	} catch {
+		/* Le rappel reviendra : l'export lui-même a réussi. */
+	}
+}
+const EXPORT_REMINDER_DAYS = 7
+export function exportReminderDue(state: GameState, lastExport: number | null, now = Date.now()): boolean {
+	const progress = state.journal.length > 0 || Object.keys(state.sceneStatus).length > 0
+	return progress && (lastExport === null || now - lastExport > EXPORT_REMINDER_DAYS * 86_400_000)
+}
 export function saveGame(state: GameState, slot = '1'): string | null {
 	try {
 		localStorage.setItem(storageKey(state.campaignId, slot), exportGame(state))

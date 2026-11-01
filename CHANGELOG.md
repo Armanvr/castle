@@ -15,6 +15,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 - **Recherche globale** : Ctrl+K / Cmd+K ou le bouton « Rechercher » de la barre du haut. Elle couvre scènes, PNJ, monstres, objets et PJ personnalisés, sans tenir compte des accents ni de la casse ; les titres passent avant le texte. ↑/↓ parcourent les résultats, Entrée ouvre. Le choix mène à la vue concernée et fait défiler jusqu'à la fiche.
 - **Récapitulatif de fin de combat** : l'entrée du journal indique le nombre de rounds, les PJ à terre (0 PV, stables ou morts), les créatures vaincues et les participants retirés. Le récapitulatif décrit l'état à la fin du combat : un PJ tombé puis soigné n'y figure pas.
 - **Rappel de concentration** : nouvelle condition « Concentration ». Quand son porteur subit des dégâts en combat, l'application annonce le jet de sauvegarde de Constitution à faire (DD = max(10, moitié des dégâts)), ou la rupture de la concentration s'il tombe à 0 PV. Le jet et le retrait de la condition restent à la main du MJ.
+- **Rappel d'export** : bandeau non bloquant (« Exporter maintenant » / « Plus tard ») après la fin d'un combat, puis au chargement si la partie a de la progression (journal ou scène explorée) et que le dernier export date de plus de 7 jours ou n'existe pas. Il n'apparaît ni en mode table ni pendant une sauvegarde protégée, un chargement ou un import. La date du dernier export est conservée par campagne et emplacement dans une clé séparée (pas dans la sauvegarde) et affichée dans Paramètres.
 
 ### Modifié
 
@@ -24,6 +25,8 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 
 - **Fenêtres `prompt` supprimées** : la durée d'une condition et les statistiques inconnues d'une créature (PV maximum, CA, bonus d'initiative) se saisissent dans des champs intégrés, avec libellés et messages de validation. « Ajouter une créature » reste désactivé tant que ces valeurs sont invalides ; les statistiques connues ne sont pas redemandées.
 - **Format de sauvegarde** : les conditions acceptent un champ facultatif `rounds` (entier ≥ 0). Les sauvegardes existantes se chargent sans changement.
+- **Barre du combat sur téléphone (≤ 650 px)** : « Annuler » et « Tour suivant » forment une rangée compacte qui reste épinglée en haut de l'écran ; le titre, le tour en cours et les autres boutons défilent normalement. L'ordre de tabulation est inchangé.
+- **Tableau de bord** : la tuile « Combat en cours » ouvre les rencontres quand un combat est actif ou suspendu (légende « Combat suspendu » dans ce cas). « Reprendre l'aventure » devient « Reprendre le combat » et mène aux rencontres tant qu'un combat est actif ou suspendu.
 
 ## [0.1.0] — 2026-10-30
 

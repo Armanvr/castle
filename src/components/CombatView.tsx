@@ -627,6 +627,7 @@ export function CombatView({
 	const removedSummary = useRef<HTMLElement>(null)
 	const nextTurnButton = useRef<HTMLButtonElement>(null)
 	const toolbar = useRef<HTMLDivElement>(null)
+	const quick = useRef<HTMLDivElement>(null)
 	// No deps on purpose: keep the target until the render that contains it has happened.
 	useEffect(() => {
 		const target = pendingFocus.current
@@ -659,8 +660,10 @@ export function CombatView({
 		// shortcut: stacked layout puts the sheet below the list; scroll it in when it is below the half fold
 		const panel = document.getElementById('combat-focus')
 		if (panel && toolbar.current && panel.getBoundingClientRect().top > window.innerHeight / 2) {
-			// the sticky toolbar wraps to a variable height: .combat-focus reads it for scroll-margin-top
-			panel.style.setProperty('--combat-toolbar-h', `${toolbar.current.offsetHeight}px`)
+			// the pinned part wraps to a variable height: .combat-focus reads it for scroll-margin-top.
+			// On phones the toolbar is display: contents (height 0) and only the quick actions are pinned.
+			const pinned = toolbar.current.offsetHeight || (quick.current?.offsetHeight ?? 0)
+			panel.style.setProperty('--combat-toolbar-h', `${pinned}px`)
 			panel.scrollIntoView({ block: 'start' })
 		}
 	}
@@ -723,7 +726,7 @@ export function CombatView({
 						{notice}
 					</div>
 					<div class='combat-toolbar panel' ref={toolbar}>
-						<div>
+						<div class='combat-info'>
 							<span class='eyebrow'>
 								{combat.status === 'active' ? 'COMBAT EN COURS' : 'COMBAT SUSPENDU'}
 							</span>
@@ -741,25 +744,41 @@ export function CombatView({
 							</p>
 						</div>
 						<div class='button-row'>
-							<button
-								type='button'
-								disabled={awaiting === 0}
-								title={awaiting === 0 ? initiativeHint : undefined}
-								aria-describedby={awaiting === 0 ? 'initiative-hint' : undefined}
-								onClick={() => {
-									// the button disables itself once every creature has rolled: keep focus in the toolbar
-									pendingFocus.current = 'next'
-									update((s) => game.rollCreatureInitiatives(s))
-								}}
-							>
-								<Icon name='dice' /> Initiatives des créatures
-							</button>
-							{awaiting === 0 && (
-								<span id='initiative-hint' class='sr-only'>
-									{initiativeHint}
-								</span>
-							)}
-							{combat.round === 1 && combat.status === 'active' && (
+							<div class='combat-tools'>
+								<button
+									type='button'
+									disabled={awaiting === 0}
+									title={awaiting === 0 ? initiativeHint : undefined}
+									aria-describedby={awaiting === 0 ? 'initiative-hint' : undefined}
+									onClick={() => {
+										// the button disables itself once every creature has rolled: keep focus in the toolbar
+										pendingFocus.current = 'next'
+										update((s) => game.rollCreatureInitiatives(s))
+									}}
+								>
+									<Icon name='dice' /> Initiatives des créatures
+								</button>
+								{awaiting === 0 && (
+									<span id='initiative-hint' class='sr-only'>
+										{initiativeHint}
+									</span>
+								)}
+								{combat.round === 1 && combat.status === 'active' && (
+									<button
+										type='button'
+										onClick={() =>
+											update((s) => ({
+												...s,
+												combat: s.combat && {
+													...s.combat,
+													activeId: game.sortedParticipants(s)[0]?.id ?? null,
+												},
+											}))
+										}
+									>
+										Passer au premier participant
+									</button>
+								)}
 								<button
 									type='button'
 									onClick={() =>
@@ -767,47 +786,36 @@ export function CombatView({
 											...s,
 											combat: s.combat && {
 												...s.combat,
-												activeId: game.sortedParticipants(s)[0]?.id ?? null,
+												status: s.combat.status === 'suspended' ? 'active' : 'suspended',
 											},
 										}))
 									}
 								>
-									Passer au premier participant
+									{combat.status === 'suspended' ? 'Reprendre' : 'Suspendre'}
 								</button>
-							)}
-							<button
-								type='button'
-								onClick={() =>
-									update((s) => ({
-										...s,
-										combat: s.combat && {
-											...s.combat,
-											status: s.combat.status === 'suspended' ? 'active' : 'suspended',
-										},
-									}))
-								}
-							>
-								{combat.status === 'suspended' ? 'Reprendre' : 'Suspendre'}
-							</button>
-							<button
-								type='button'
-								class='undo-button'
-								disabled={!lastUndo}
-								aria-keyshortcuts='Control+Z Meta+Z'
-								onClick={undo}
-							>
-								{lastUndo ? `Annuler · ${lastUndo.label}` : 'Annuler'}
-							</button>
-							<button
-								type='button'
-								class='primary'
-								ref={nextTurnButton}
-								disabled={combat.status !== 'active'}
-								aria-keyshortcuts='N'
-								onClick={advance}
-							>
-								Tour suivant <Icon name='arrow' size={16} />
-							</button>
+							</div>
+							<div class='combat-quick' ref={quick}>
+								<button
+									type='button'
+									class='undo-button'
+									disabled={!lastUndo}
+									title={lastUndo ? `Annuler · ${lastUndo.label}` : undefined}
+									aria-keyshortcuts='Control+Z Meta+Z'
+									onClick={undo}
+								>
+									{lastUndo ? `Annuler · ${lastUndo.label}` : 'Annuler'}
+								</button>
+								<button
+									type='button'
+									class='primary'
+									ref={nextTurnButton}
+									disabled={combat.status !== 'active'}
+									aria-keyshortcuts='N'
+									onClick={advance}
+								>
+									Tour suivant <Icon name='arrow' size={16} />
+								</button>
+							</div>
 						</div>
 					</div>
 					<div class='combat-wrap'>

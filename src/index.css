@@ -203,8 +203,10 @@ summary:focus-visible {
 	font-size: var(--fs-meta);
 }
 .undo-button {
-	max-inline-size: 30ch;
-	overflow-wrap: anywhere;
+	max-inline-size: 22ch;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	text-align: left;
 }
 .heal {
@@ -620,15 +622,28 @@ small {
 	background: #1b1d1f;
 	margin-bottom: 33px;
 }
-.dashboard-stats > div {
+.dashboard-stats > :is(div, button) {
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	padding: 18px 16px;
 	border-right: 1px solid var(--border);
 }
-.dashboard-stats > div:last-child {
+.dashboard-stats > :is(div, button):last-child {
 	border: 0;
+}
+/* the open-combat tile is a button: undo the global button chrome so it reads as a tile */
+.dashboard-stats > button {
+	justify-content: flex-start;
+	min-height: 0;
+	border: 0;
+	border-right: 1px solid var(--border);
+	border-radius: 0;
+	background: transparent;
+	text-align: left;
+}
+.dashboard-stats > button:hover {
+	background: var(--panel-raised);
 }
 .stat-icon {
 	color: #bc9878;
@@ -1089,10 +1104,10 @@ meter::-moz-meter-bar {
 	.dashboard-stats {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
-	.dashboard-stats > div:nth-child(-n + 2) {
+	.dashboard-stats > :is(div, button):nth-child(-n + 2) {
 		border-bottom: 1px solid var(--border);
 	}
-	.dashboard-stats > div:nth-child(2) {
+	.dashboard-stats > :is(div, button):nth-child(2) {
 		border-right: 0;
 	}
 }
@@ -1229,6 +1244,11 @@ meter::-moz-meter-bar {
 .combat-toolbar button {
 	font-size: var(--fs-control);
 	padding: 9px 12px;
+}
+/* wrappers only group buttons for the phone layout; on wide screens the buttons stay direct flex items */
+.combat-tools,
+.combat-quick {
+	display: contents;
 }
 .removed-participants {
 	margin-top: 16px;
@@ -1706,6 +1726,17 @@ summary {
 	padding: 3px;
 	min-height: 25px;
 }
+.alert.reminder {
+	flex-wrap: wrap;
+}
+.alert.reminder > span {
+	flex-basis: 30ch;
+}
+.alert.reminder button {
+	border: 1px solid #856348;
+	padding: 6px 12px;
+	min-height: 36px;
+}
 .empty-state {
 	display: flex;
 	flex-direction: column;
@@ -1751,7 +1782,7 @@ summary {
 	.context-panel {
 		padding: 26px;
 	}
-	.dashboard-stats > div {
+	.dashboard-stats > :is(div, button) {
 		padding: 20px 22px;
 	}
 	.hero-content {
@@ -1876,7 +1907,7 @@ summary {
 	.dashboard-columns {
 		gap: 18px;
 	}
-	.dashboard-stats > div {
+	.dashboard-stats > :is(div, button) {
 		padding: 15px 11px;
 		gap: 8px;
 	}
@@ -2003,14 +2034,14 @@ summary {
 	.dashboard-stats {
 		grid-template-columns: 1fr 1fr;
 	}
-	.dashboard-stats > div {
+	.dashboard-stats > :is(div, button) {
 		padding: 16px;
 		border-bottom: 1px solid var(--border);
 	}
-	.dashboard-stats > div:nth-child(2) {
+	.dashboard-stats > :is(div, button):nth-child(2) {
 		border-right: 0;
 	}
-	.dashboard-stats > div:nth-child(3) {
+	.dashboard-stats > :is(div, button):nth-child(3) {
 		border-bottom: 0;
 	}
 	.dashboard-columns {
@@ -2086,15 +2117,57 @@ summary {
 	.chapter-card h3 {
 		font-size: 22px;
 	}
-	/* Wrapped toolbar is ~200px on phones: too tall to pin. */
-	.combat-toolbar {
-		position: static;
+	/* Wrapped toolbar is ~200px on phones: too tall to pin. Its parts become siblings of the list:
+	   the info and secondary tools scroll away as one card, the quick row (Annuler, Tour suivant) stays pinned.
+	   Top, not bottom: a sticky bottom bar must come after the list in the DOM, which would reorder keyboard focus. */
+	.combat-toolbar,
+	.combat-toolbar .button-row {
+		display: contents;
+	}
+	.combat-info,
+	.combat-tools {
+		padding: 14px 18px;
+		background: var(--panel);
+		border: 1px solid var(--border);
+	}
+	.combat-info {
+		border-bottom: 0;
+		border-radius: 6px 6px 0 0;
+	}
+	.combat-tools {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding-top: 0;
+		margin-bottom: 10px;
+		border-top: 0;
+		border-radius: 0 0 6px 6px;
+	}
+	.combat-quick {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		display: flex;
+		gap: 8px;
+		padding: 8px;
+		margin-bottom: 20px;
+		background: var(--panel);
+		border: 1px solid var(--border);
+		border-radius: 6px;
+		box-shadow: 0 6px 12px rgb(0 0 0 / 0.35);
+	}
+	.combat-quick .undo-button {
+		flex: 1 1 0;
+		min-width: 0;
+		max-inline-size: none;
+		justify-content: flex-start;
+	}
+	.combat-quick .primary {
+		flex: 0 0 auto;
 	}
 	.combat-focus {
-		scroll-margin-top: 16px;
-	}
-	.combat-toolbar .button-row {
-		gap: 6px;
+		/* pinned quick row (set by CombatView before scrolling; ~58px one line) + gap */
+		scroll-margin-top: calc(var(--combat-toolbar-h, 58px) + 16px);
 	}
 	.combatant {
 		padding: 18px;

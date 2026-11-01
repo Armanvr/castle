@@ -7,13 +7,16 @@ import { SearchDialog } from './components/Search'
 import { BestiaryView, CampaignInfo, CharactersView, ItemsView, SceneView } from './components/Views'
 import { BUNDLED_CAMPAIGN_URL, loadCampaign } from './services/campaignLoader'
 import * as game from './services/game'
-import { journalTypeLabel } from './services/labels'
+import { frPlural, journalTypeLabel } from './services/labels'
 import type { SearchResult } from './services/search'
 import {
 	cleanupLegacyDemoStorage,
 	exportGame,
+	exportReminderDue,
 	importGame,
+	lastExportAt,
 	loadGame,
+	markExported,
 	saveGame,
 	storageKey,
 } from './services/storageService'
@@ -53,6 +56,10 @@ export function App() {
 	// entry to scroll to once the picked search result's view has rendered
 	const [scrollTarget, setScrollTarget] = useState<string | null>(null)
 	const [failedSlot, setFailedSlot] = useState<string | null>(null)
+	const [exportedAt, setExportedAt] = useState<number | null>(null)
+	// why the export reminder is up; "Plus tard" clears it until the next trigger
+	const [reminder, setReminder] = useState<'combat' | 'stale' | null>(null)
+	const combatStatus = useRef<string | undefined>(undefined)
 	const submittedNote = useRef<{ id: string; note: string; title: string } | null>(null)
 	useEffect(() => {
 		const submitted = submittedNote.current
@@ -67,6 +74,11 @@ export function App() {
 	useEffect(() => {
 		if (table && !canTable) setTable(false)
 	}, [table, canTable])
+	const status = state?.combat?.status
+	useEffect(() => {
+		if (status === 'finished' && combatStatus.current && combatStatus.current !== 'finished') setReminder('combat')
+		combatStatus.current = status
+	}, [status])
 	useEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -104,6 +116,11 @@ export function App() {
 			const result = loadGame(loaded, nextSlot)
 			setCampaign(loaded)
 			setState(result.state)
+			const last = lastExportAt(loaded.manifest.id, nextSlot)
+			setExportedAt(last)
+			// a slot opened already finished is not a "just finished" trigger
+			combatStatus.current = result.state.combat?.status
+			setReminder(!result.error && exportReminderDue(result.state, last) ? 'stale' : null)
 			setError(result.error || '')
 			setBlocked(Boolean(result.error))
 			setSlot(nextSlot)
@@ -181,6 +198,19 @@ export function App() {
 	const scenes = campaign.chapters.flatMap((c) => c.scenes)
 	const scene = scenes.find((s) => s.id === state.activeSceneId)
 	const chapter = campaign.chapters.find((c) => c.id === scene?.chapterId)
+	const combatOpen = status === 'active' || status === 'suspended'
+	const combatLabel = status === 'suspended' ? 'Combat suspendu' : 'Combat en cours'
+	const combatTile = (
+		<>
+			<span class='stat-icon'>
+				<Icon name='encounters' />
+			</span>
+			<span>
+				<b>{combatOpen ? '1' : '0'}</b>
+				<span class='stat-caption'>{combatLabel}</span>
+			</span>
+		</>
+	)
 	const completed = Object.values(state.sceneStatus).filter((s) => s === 'completed').length
 	const navigate = (id: string) => {
 		update((s) => game.navigateScene(s, campaign, id))
@@ -207,7 +237,17 @@ export function App() {
 		a.download = `${state.campaignId}-sauvegarde-${slot}.json`
 		a.click()
 		URL.revokeObjectURL(url)
+		// a protected (damaged) original is not a backup of the current game
+		if (!blocked) {
+			const now = Date.now()
+			markExported(campaign.manifest.id, slot, now)
+			setExportedAt(now)
+			setReminder(null)
+		}
 	}
+	const reminderShown =
+		reminder && !tableMode && !blocked && !loading && !importing && (reminder === 'stale' || status === 'finished')
+	const exportAgeDays = exportedAt ? Math.floor((Date.now() - exportedAt) / 86_400_000) : 0
 	return (
 		<div class={`app-shell ${context ? '' : 'context-hidden'} ${tableMode ? 'table-mode' : ''}`}>
 			<a class='skip-link' href='#main-content'>
@@ -329,6 +369,22 @@ export function App() {
 							</button>
 						</div>
 					)}
+					{reminderShown && (
+						<div class='alert reminder' role='status'>
+							<span>
+								{reminder === 'combat'
+									? 'Combat terminé. '
+									: `Dernier export : ${exportedAt ? `il y a ${frPlural(exportAgeDays, 'jour', 'jours')}` : 'jamais'}. `}
+								Pensez à exporter une sauvegarde : elle n’existe que dans ce navigateur.
+							</span>
+							<button type='button' onClick={download}>
+								Exporter maintenant
+							</button>
+							<button type='button' onClick={() => setReminder(null)}>
+								Plus tard
+							</button>
+						</div>
+					)}
 					{view === 'dashboard' && (
 						<>
 							<div class='welcome-heading'>
@@ -349,8 +405,13 @@ export function App() {
 										</span>
 										<span>Règles 2014</span>
 									</div>
-									<button type='button' class='primary' onClick={() => setView('campaign')}>
-										Reprendre l'aventure <Icon name='arrow' size={18} />
+									<button
+										type='button'
+										class='primary'
+										onClick={() => setView(combatOpen ? 'encounters' : 'campaign')}
+									>
+										{combatOpen ? 'Reprendre le combat' : "Reprendre l'aventure"}{' '}
+										<Icon name='arrow' size={18} />
 									</button>
 								</div>
 								<div class='hero-bottom'>
@@ -388,15 +449,17 @@ export function App() {
 										<span class='stat-caption'>Aventuriers dans le groupe</span>
 									</span>
 								</div>
-								<div>
-									<span class='stat-icon'>
-										<Icon name='encounters' />
-									</span>
-									<span>
-										<b>{state.combat?.status === 'active' ? '1' : '0'}</b>
-										<span class='stat-caption'>Combat en cours</span>
-									</span>
-								</div>
+								{combatOpen ? (
+									<button
+										type='button'
+										aria-label={`${combatLabel} : ouvrir les rencontres`}
+										onClick={() => setView('encounters')}
+									>
+										{combatTile}
+									</button>
+								) : (
+									<div>{combatTile}</div>
+								)}
 								<div>
 									<span class='stat-icon'>
 										<Icon name='journal' />
@@ -727,6 +790,10 @@ export function App() {
 											? 'Exporter la sauvegarde endommagée originale'
 											: 'Exporter la sauvegarde JSON'}
 									</button>
+									<small>
+										Dernier export :{' '}
+										{exportedAt ? new Date(exportedAt).toLocaleString('fr-FR') : 'jamais'}
+									</small>
 									<label class='button file-button'>
 										Importer une sauvegarde
 										<input
@@ -748,6 +815,8 @@ export function App() {
 													) {
 														setBlocked(false)
 														setError('')
+														// an imported, already finished combat must not trigger the "Combat terminé" reminder
+														combatStatus.current = imported.combat?.status
 														setState(imported)
 													}
 												} catch (e) {
