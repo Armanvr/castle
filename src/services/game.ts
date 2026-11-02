@@ -119,6 +119,28 @@ export function finishEncounter(state: GameState): GameState {
 	next.journal.at(-1)!.participants = state.combat.participants.map((p) => p.name)
 	return next
 }
+// A dead PJ stays dead. Dice, spell slots and the like are the DM's call: only `resources` are refilled.
+export function longRest(state: GameState, campaign: Campaign): GameState {
+	if (state.combat && state.combat.status !== 'finished') throw new Error('Repos long impossible pendant un combat.')
+	const next = copy(state)
+	const names: string[] = []
+	for (const character of campaignWithPlayers(campaign, state).players) {
+		const v = next.players[character.id]
+		if (!v || v.status === 'dead') continue
+		Object.assign(v, {
+			hp: v.maxHp,
+			tempHp: 0,
+			exhaustion: Math.max(0, v.exhaustion - 1),
+			status: 'active',
+			deathSaves: { successes: 0, failures: 0 },
+			resources: Object.fromEntries(character.resources.map((r) => [r.id, r.max])),
+		})
+		names.push(character.name)
+	}
+	const rested = addJournal(next, 'Repos long', names.join(', ') || 'Aucun PJ concerné.', 'rest')
+	rested.journal.at(-1)!.participants = names
+	return rested
+}
 export function navigateScene(state: GameState, campaign: Campaign, sceneId: string): GameState {
 	if (!campaign.chapters.some((c) => c.scenes.some((s) => s.id === sceneId)))
 		throw new Error(`Scène inconnue : ${sceneId}`)
@@ -387,7 +409,7 @@ export function sortedParticipants(state: GameState): Combatant[] {
 		.sort((a, b) => b.initiative - a.initiative)
 }
 export function nextTurn(state: GameState): GameState {
-	if (!state.combat || state.combat.status !== 'active') return state
+	if (state.combat?.status !== 'active') return state
 	const order = sortedParticipants(state)
 	if (!order.length) return state
 	const next = copy(state)

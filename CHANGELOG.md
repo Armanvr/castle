@@ -5,8 +5,14 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 
 ## [Non publié]
 
+## [0.2.0] — 2026-11-01
+
 ### Ajouté
 
+- **Repos long du groupe** : bouton « Repos long » dans le panneau du groupe, avec confirmation. Pour chaque PJ vivant : PV au maximum, PV temporaires à 0, ressources au maximum, épuisement −1 (minimum 0), sauvegardes contre la mort à zéro. Un PJ mort reste mort. Une entrée « Repos long » listant les PJ concernés est ajoutée au journal. Le bouton est désactivé pendant un combat non terminé, et l'action y est refusée.
+- **Export rapide** : Ctrl+S / Cmd+S exporte la sauvegarde JSON (y compris depuis un champ de saisie) et annonce « Sauvegarde exportée. ». Ignoré pendant un chargement, un import ou une sauvegarde protégée ; le bouton d'export de Paramètres déclare le raccourci (`aria-keyshortcuts`).
+- **Dupliquer une créature** : bouton « + 1 » sur chaque créature (hors PJ) de la liste d'initiative pour ajouter un autre exemplaire avec les mêmes PV max, CA et bonus d'initiative, à PV pleins et initiative 0. L'ajout est annoncé (« Kobold · 3 ajouté »).
+- **État du groupe dans la barre de combat** : un segment par PJ (`Alda 12/20`), signalé en rouge avec l'état écrit à 0 PV, stable ou mort ; un clic ouvre sa fiche de combat. Sur téléphone, la ligne est dans la partie qui défile.
 - **Annuler les PV** : bouton « Annuler · … » dans la barre du combat (ou Ctrl+Z / Cmd+Z). Il rétablit PV, PV temporaires, état et sauvegardes contre la mort pour les 20 dernières actions (dégâts, soins, sauvegardes contre la mort, saisies manuelles de PV, dégâts appliqués depuis un jet). La pile reste en mémoire : elle n'est pas sauvegardée et se vide à la fin ou au changement de combat.
 - **Appliquer un jet de dégâts** : sous le résultat d'un jet de dégâts d'une attaque, choix d'une cible (participants actifs, hors attaquant) et bouton « Appliquer N dégâts ». Une seule cible ; l'action est annulable et annoncée.
 - **Raccourcis clavier du combat** : N (tour suivant), D (saisir des dégâts), Ctrl+Z / Cmd+Z (annuler). Ils sont ignorés dans les champs de saisie. Dans la saisie de quantité, Entrée applique les dégâts.
@@ -21,12 +27,18 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 
 - **Scènes** : une section vide (résumé, dialogues, texte à lire) se replie en bouton « ＋ Ajouter … (MJ) » qui ouvre l'éditeur. Les mentions de texte source manquant restent affichées.
 - **Choix de la scène** : les scènes sont regroupées par chapitre dans la liste.
-- **Lint** : `biome.json` ignore `.claude/`, `.impeccable/`, `docs/` et `DESIGN.md`, et utilise `preset` au lieu de l'option dépréciée `recommended`.
-
+- **Lint** : `biome.json` ignore `.claude/`, `.impeccable/`, `docs/`, `DESIGN.md` et les rapports Playwright, utilise `preset` au lieu de l'option dépréciée `recommended` et désactive `noNonNullAssertion` (le code TypeScript strict utilise `!` après des gardes). Avertissements : 449 → 63.
 - **Fenêtres `prompt` supprimées** : la durée d'une condition et les statistiques inconnues d'une créature (PV maximum, CA, bonus d'initiative) se saisissent dans des champs intégrés, avec libellés et messages de validation. « Ajouter une créature » reste désactivé tant que ces valeurs sont invalides ; les statistiques connues ne sont pas redemandées.
 - **Format de sauvegarde** : les conditions acceptent un champ facultatif `rounds` (entier ≥ 0). Les sauvegardes existantes se chargent sans changement.
 - **Barre du combat sur téléphone (≤ 650 px)** : « Annuler » et « Tour suivant » forment une rangée compacte qui reste épinglée en haut de l'écran ; le titre, le tour en cours et les autres boutons défilent normalement. L'ordre de tabulation est inchangé.
 - **Tableau de bord** : la tuile « Combat en cours » ouvre les rencontres quand un combat est actif ou suspendu (légende « Combat suspendu » dans ce cas). « Reprendre l'aventure » devient « Reprendre le combat » et mène aux rencontres tant qu'un combat est actif ou suspendu.
+- **Accessibilité et finitions** : icône dédiée pour « Objets & récompenses » (elle reprenait celle des chapitres) ; le bouton de fermeture du panneau de contexte s'appelle « Fermer le panneau de contexte » (son libellé doublait celui du bouton de la barre du haut) ; le bouton ↑ de départage nomme l'exemplaire (« Zombi · 2 ») ; cases à cocher aux couleurs du thème ; marge au-dessus du titre « Personnages & PNJ ».
+- **Organisation du code** : `CombatView.tsx` est découpé en `CombatSheet`, `InitiativeRow`, `MonsterActions` et `EncounterPreparation`, et le tableau de bord sort d'`app.tsx` dans `Dashboard`, sans changement de comportement.
+- **Documentation** : le README décrit les raccourcis, l'annulation, les jets, les conditions, le mode table, la recherche et le rappel d'export.
+
+### Tests
+
+- Tests de bout en bout Playwright (`npm run test:e2e`, Chromium et WebKit) : combat et raccourcis, conditions et concentration, jets appliqués, mode table, recherche, rappel d'export, téléphone, tableau de bord.
 
 ## [0.1.0] — 2026-10-30
 
@@ -74,5 +86,6 @@ Première version versionnée. Elle regroupe le travail mené du 23 au 28 octobr
 - Les recherches de libellés utilisent `Object.hasOwn` pour qu'une sauvegarde importée ne puisse pas atteindre les propriétés du prototype.
 - L'import de sauvegarde est validé (version, références de campagne, bornes numériques) avant tout remplacement. Aucun `localStorage.clear()`.
 
-[Non publié]: #
-[0.1.0]: #
+[Non publié]: https://github.com/Armanvr/castle/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Armanvr/castle/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/Armanvr/castle/releases/tag/v0.1.0

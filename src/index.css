@@ -143,6 +143,10 @@ button:disabled {
 	opacity: 0.45;
 	cursor: not-allowed;
 }
+input[type="checkbox"],
+input[type="radio"] {
+	accent-color: var(--copper);
+}
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -1091,6 +1095,9 @@ meter::-moz-meter-bar {
 	flex-shrink: 0;
 	font-size: var(--fs-control);
 }
+.cards-grid-heading {
+	margin: 20px 0 12px;
+}
 .cards-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1232,6 +1239,18 @@ meter::-moz-meter-bar {
 .combat-toolbar .tag {
 	margin-left: 8px;
 }
+.party-status {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 6px;
+	margin-top: 6px;
+}
+.party-status .tag {
+	min-height: 32px;
+	margin: 0;
+	padding: 3px 8px;
+	font-size: var(--fs-meta);
+}
 .combat-toolbar p {
 	font-size: var(--fs-control);
 	line-height: 1.4;
@@ -1304,11 +1323,11 @@ meter::-moz-meter-bar {
 	flex-direction: column;
 	gap: 6px;
 }
-/* shortcut: 168px = amount input + −, +, ↑ so rows without the tie-break button still align; upgrade: subgrid */
+/* shortcut: 212px = amount input + −, +, ↑, + 1 so rows without the tie-break button still align; upgrade: subgrid */
 .initiative-row {
 	position: relative;
 	display: grid;
-	grid-template-columns: 34px minmax(0, 1fr) 168px;
+	grid-template-columns: 34px minmax(0, 1fr) 212px;
 	align-items: center;
 	gap: 6px 10px;
 	padding: 8px 10px;
@@ -1415,6 +1434,7 @@ meter::-moz-meter-bar {
 	min-height: 32px;
 	padding: 0 8px;
 	font-size: 14px;
+	white-space: nowrap;
 }
 @container (max-width: 479px) {
 	.initiative-row {

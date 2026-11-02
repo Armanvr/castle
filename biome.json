@@ -15,7 +15,9 @@
 			"!!.claude",
 			"!!.impeccable",
 			"!!docs",
-			"!!DESIGN.md"
+			"!!DESIGN.md",
+			"!!playwright-report",
+			"!!test-results"
 		]
 	},
 	"formatter": {
@@ -26,8 +28,14 @@
 	},
 	"linter": {
 		"enabled": true,
+		"domains": {
+			"playwright": "none"
+		},
 		"rules": {
-			"preset": "recommended"
+			"preset": "recommended",
+			"style": {
+				"noNonNullAssertion": "off"
+			}
 		}
 	},
 	"javascript": {

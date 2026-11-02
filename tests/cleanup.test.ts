@@ -48,11 +48,11 @@ test('legacy cleanup removes only exact demo preferences; all save payloads rema
 	const legacyKey = storage.storageKey('stormwreck-isle')
 	const records = new Map([
 		['dnd-dm:active-manifest', legacyManifest],
-		['dnd-dm:slot:' + legacyManifest, '2'],
+		[`dnd-dm:slot:${legacyManifest}`, '2'],
 		[realKey, '{"real":"saved session"}'],
 		[legacyKey, '{"notes":"MJ notes", "customPlayers":[{"name":"Created by MJ"}]}'],
 		[storage.storageKey('stormwreck-isle', '2'), '{corrupt original'],
-		['dnd-dm:slot:' + BUNDLED_CAMPAIGN_URL, '3'],
+		[`dnd-dm:slot:${BUNDLED_CAMPAIGN_URL}`, '3'],
 		['unrelated-app', 'keep'],
 	])
 	const preserved = new Map(records)
@@ -73,7 +73,7 @@ test('legacy cleanup removes only exact demo preferences; all save payloads rema
 	const result = storage.cleanupLegacyDemoStorage()
 	assert.deepEqual(result, { preservedSaves: 2 })
 	preserved.delete('dnd-dm:active-manifest')
-	preserved.delete('dnd-dm:slot:' + legacyManifest)
+	preserved.delete(`dnd-dm:slot:${legacyManifest}`)
 	assert.deepEqual(records, preserved)
 	records.set('dnd-dm:active-manifest', BUNDLED_CAMPAIGN_URL)
 	storage.cleanupLegacyDemoStorage()

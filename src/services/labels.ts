@@ -148,6 +148,7 @@ const journalTypes: Record<string, string> = {
 	choice: 'Choix',
 	encounter: 'Rencontre',
 	reward: 'Récompense',
+	rest: 'Repos',
 }
 export const journalTypeLabel = (type: string): string =>
 	Object.hasOwn(journalTypes, type) ? journalTypes[type] : type

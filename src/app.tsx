@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'preact/hooks'
-import type { Update } from './components/CombatView'
 import { CombatView } from './components/CombatView'
+import { Dashboard } from './components/Dashboard'
 import { Icon } from './components/icons'
 import { isTyping } from './components/input'
 import { SearchDialog } from './components/Search'
-import { BestiaryView, CampaignInfo, CharactersView, ItemsView, SceneView } from './components/Views'
+import { BestiaryView, CharactersView, ItemsView, SceneView } from './components/Views'
 import { BUNDLED_CAMPAIGN_URL, loadCampaign } from './services/campaignLoader'
 import * as game from './services/game'
 import { frPlural, journalTypeLabel } from './services/labels'
@@ -20,7 +20,7 @@ import {
 	saveGame,
 	storageKey,
 } from './services/storageService'
-import type { Campaign, GameState } from './types'
+import type { Campaign, GameState, Update } from './types'
 
 const NAV = [
 	['dashboard', 'Tableau de bord'],
@@ -59,6 +59,10 @@ export function App() {
 	const [exportedAt, setExportedAt] = useState<number | null>(null)
 	// why the export reminder is up; "Plus tard" clears it until the next trigger
 	const [reminder, setReminder] = useState<'combat' | 'stale' | null>(null)
+	const [exportNotice, setExportNotice] = useState('')
+	// latest export action for the global Ctrl+S listener (download is defined after the early returns)
+	const exportShortcut = useRef<() => void>(() => {})
+	const noticeTimer = useRef<number | undefined>(undefined)
 	const combatStatus = useRef<string | undefined>(undefined)
 	const submittedNote = useRef<{ id: string; note: string; title: string } | null>(null)
 	useEffect(() => {
@@ -84,6 +88,10 @@ export function App() {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
 				e.preventDefault()
 				setSearching(true)
+			} else if ((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 's') {
+				// also inside text fields, like the native Ctrl+S; never opens the browser's save-page dialog
+				e.preventDefault()
+				if (!e.repeat) exportShortcut.current()
 			} else if (e.key === 'Escape' && tableMode && !e.defaultPrevented) {
 				if (isTyping(e.target) || document.querySelector('dialog[open]')) return
 				setTable(false)
@@ -125,7 +133,7 @@ export function App() {
 			setBlocked(Boolean(result.error))
 			setSlot(nextSlot)
 			try {
-				localStorage.setItem('dnd-dm:slot:' + DEFAULT_MANIFEST, nextSlot)
+				localStorage.setItem(`dnd-dm:slot:${DEFAULT_MANIFEST}`, nextSlot)
 			} catch {
 				/* La sauvegarde principale affichera une erreur si le stockage est indisponible. */
 			}
@@ -148,7 +156,7 @@ export function App() {
 			)
 		let initialSlot = '1'
 		try {
-			initialSlot = localStorage.getItem('dnd-dm:slot:' + DEFAULT_MANIFEST) || '1'
+			initialSlot = localStorage.getItem(`dnd-dm:slot:${DEFAULT_MANIFEST}`) || '1'
 		} catch {}
 		void openCampaign(initialSlot)
 	}, [])
@@ -199,19 +207,6 @@ export function App() {
 	const scene = scenes.find((s) => s.id === state.activeSceneId)
 	const chapter = campaign.chapters.find((c) => c.id === scene?.chapterId)
 	const combatOpen = status === 'active' || status === 'suspended'
-	const combatLabel = status === 'suspended' ? 'Combat suspendu' : 'Combat en cours'
-	const combatTile = (
-		<>
-			<span class='stat-icon'>
-				<Icon name='encounters' />
-			</span>
-			<span>
-				<b>{combatOpen ? '1' : '0'}</b>
-				<span class='stat-caption'>{combatLabel}</span>
-			</span>
-		</>
-	)
-	const completed = Object.values(state.sceneStatus).filter((s) => s === 'completed').length
 	const navigate = (id: string) => {
 		update((s) => game.navigateScene(s, campaign, id))
 		setView('campaign')
@@ -243,7 +238,17 @@ export function App() {
 			markExported(campaign.manifest.id, slot, now)
 			setExportedAt(now)
 			setReminder(null)
+			// emptied first, restored next tick, so a second export re-announces the same text
+			clearTimeout(noticeTimer.current)
+			setExportNotice('')
+			noticeTimer.current = window.setTimeout(() => {
+				setExportNotice('Sauvegarde exportée.')
+				noticeTimer.current = window.setTimeout(() => setExportNotice(''), 3000)
+			}, 100)
 		}
+	}
+	exportShortcut.current = () => {
+		if (!blocked && !loading && !importing) download()
 	}
 	const reminderShown =
 		reminder && !tableMode && !blocked && !loading && !importing && (reminder === 'stale' || status === 'finished')
@@ -253,6 +258,9 @@ export function App() {
 			<a class='skip-link' href='#main-content'>
 				Aller au contenu
 			</a>
+			<span class='sr-only' role='status'>
+				{exportNotice}
+			</span>
 			<aside class='sidebar'>
 				<button
 					type='button'
@@ -386,176 +394,15 @@ export function App() {
 						</div>
 					)}
 					{view === 'dashboard' && (
-						<>
-							<div class='welcome-heading'>
-								<div>
-									<h1>Tableau de bord</h1>
-								</div>
-							</div>
-							<section class='campaign-hero'>
-								<div class='hero-content'>
-									<h2>{campaign.manifest.title}</h2>
-									<p>{campaign.manifest.subtitle}</p>
-									<div class='hero-meta'>
-										<span>
-											<Icon name='chapters' size={16} /> {campaign.chapters.length} chapitres
-										</span>
-										<span>
-											<Icon name='players' size={16} /> {campaign.players.length} aventuriers
-										</span>
-										<span>Règles 2014</span>
-									</div>
-									<button
-										type='button'
-										class='primary'
-										onClick={() => setView(combatOpen ? 'encounters' : 'campaign')}
-									>
-										{combatOpen ? 'Reprendre le combat' : "Reprendre l'aventure"}{' '}
-										<Icon name='arrow' size={18} />
-									</button>
-								</div>
-								<div class='hero-bottom'>
-									<span>
-										<i class='status-dot' />{' '}
-										{completed || Object.keys(state.sceneStatus).length
-											? 'En cours'
-											: 'À commencer'}{' '}
-										· {chapter?.title || 'Votre aventure'}
-									</span>
-									<span>
-										{completed} / {scenes.length} scènes terminées
-									</span>
-								</div>
-							</section>
-							<div class='dashboard-stats'>
-								<div>
-									<span class='stat-icon'>
-										<Icon name='chapters' />
-									</span>
-									<span>
-										<b>
-											{Object.keys(state.sceneStatus).length}
-											<small> / {scenes.length}</small>
-										</b>
-										<span class='stat-caption'>Scènes explorées</span>
-									</span>
-								</div>
-								<div>
-									<span class='stat-icon'>
-										<Icon name='players' />
-									</span>
-									<span>
-										<b>{campaign.players.length}</b>
-										<span class='stat-caption'>Aventuriers dans le groupe</span>
-									</span>
-								</div>
-								{combatOpen ? (
-									<button
-										type='button'
-										aria-label={`${combatLabel} : ouvrir les rencontres`}
-										onClick={() => setView('encounters')}
-									>
-										{combatTile}
-									</button>
-								) : (
-									<div>{combatTile}</div>
-								)}
-								<div>
-									<span class='stat-icon'>
-										<Icon name='journal' />
-									</span>
-									<span>
-										<b>{state.journal.length}</b>
-										<span class='stat-caption'>Souvenirs dans le journal</span>
-									</span>
-								</div>
-							</div>
-							<div class='dashboard-columns'>
-								<section>
-									<div class='block-heading'>
-										<h2>Votre prochaine page</h2>
-										<button type='button' class='text-button' onClick={() => setView('chapters')}>
-											Tous les chapitres <Icon name='arrow' size={15} />
-										</button>
-									</div>
-									<article class='current-scene panel'>
-										<div class='scene-illustration' aria-hidden='true'>
-											<span>{chapter ? campaign.chapters.indexOf(chapter) + 1 : '—'}</span>
-											<Icon name='campaign' size={45} />
-										</div>
-										<div>
-											<span class='eyebrow'>{chapter?.title || 'SCÈNE ACTIVE'}</span>
-											<h3>{scene?.title}</h3>
-											<p>{scene?.summary || scene?.readAloud}</p>
-											<button
-												type='button'
-												class='text-button'
-												onClick={() => setView('campaign')}
-											>
-												Ouvrir la scène <Icon name='arrow' size={16} />
-											</button>
-										</div>
-									</article>
-									<div class='block-heading'>
-										<h2>À portée de main</h2>
-									</div>
-									<div class='quick-actions'>
-										{[
-											['encounters', 'Rencontres'],
-											['journal', 'Note de session'],
-											['players', 'Fiches du groupe'],
-										].map(([id, title]) => (
-											<button type='button' class='quick-action' onClick={() => setView(id)}>
-												<Icon name={id} size={23} />
-												<b>{title}</b>
-												<Icon name='arrow' size={16} />
-											</button>
-										))}
-									</div>
-								</section>
-								<section>
-									<div class='block-heading'>
-										<h2>Au fil de l'aventure</h2>
-										<button type='button' class='text-button' onClick={() => setView('journal')}>
-											Le journal <Icon name='arrow' size={15} />
-										</button>
-									</div>
-									<div class='journal-preview panel'>
-										{state.journal.length ? (
-											state.journal
-												.slice(-4)
-												.reverse()
-												.map((entry) => (
-													<div class='timeline-entry'>
-														<span class='timeline-dot' />
-														<time>
-															{new Date(entry.date).toLocaleDateString('fr-FR', {
-																day: 'numeric',
-																month: 'short',
-															})}
-														</time>
-														<h4>{entry.title}</h4>
-														<p>{entry.description}</p>
-													</div>
-												))
-										) : (
-											<div class='empty-journal'>
-												<Icon name='journal' size={32} />
-												<h3>Aucune entrée au journal</h3>
-												<button
-													type='button'
-													class='text-button'
-													onClick={() => setView('journal')}
-												>
-													Écrire la première note <Icon name='plus' size={16} />
-												</button>
-											</div>
-										)}
-									</div>
-								</section>
-							</div>
-							<CampaignInfo campaign={campaign} />
-						</>
+						<Dashboard
+							campaign={campaign}
+							state={state}
+							scenes={scenes}
+							scene={scene}
+							chapter={chapter}
+							combatOpen={combatOpen}
+							setView={setView}
+						/>
 					)}
 					{(view === 'campaign' || view === 'chapters') && (
 						<>
@@ -785,7 +632,11 @@ export function App() {
 									</select>
 								</label>
 								<div class='button-row'>
-									<button type='button' onClick={download}>
+									<button
+										type='button'
+										aria-keyshortcuts={blocked ? undefined : 'Control+S Meta+S'}
+										onClick={download}
+									>
 										{blocked
 											? 'Exporter la sauvegarde endommagée originale'
 											: 'Exporter la sauvegarde JSON'}
@@ -888,7 +739,7 @@ export function App() {
 						<button
 							type='button'
 							class='icon-button'
-							aria-label='Masquer le panneau de contexte'
+							aria-label='Fermer le panneau de contexte'
 							onClick={() => setContext(false)}
 						>
 							<Icon name='close' size={17} />
@@ -925,6 +776,22 @@ export function App() {
 					</div>
 					<button type='button' class='context-link' onClick={() => setView('players')}>
 						Voir les fiches du groupe <Icon name='arrow' size={15} />
+					</button>
+					<button
+						type='button'
+						class='context-link'
+						disabled={combatOpen}
+						title={combatOpen ? 'Impossible pendant un combat' : undefined}
+						onClick={() => {
+							if (
+								confirm(
+									'Repos long du groupe ? Les PV, PV temporaires, ressources et sauvegardes contre la mort des PJ vivants seront remis à zéro ou au maximum, et leur épuisement baissera de 1.',
+								)
+							)
+								update((s) => game.longRest(s, campaign))
+						}}
+					>
+						Repos long <Icon name='arrow' size={15} />
 					</button>
 					{state.inventory.length > 0 ? (
 						<section class='context-section'>

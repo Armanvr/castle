@@ -17,3 +17,7 @@ dist/
 .impeccable/
 .claude/
 .planning/
+
+# Playwright
+playwright-report/
+test-results/

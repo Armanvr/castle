@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { test } from 'node:test'
+import { describe, test } from 'node:test'
 import { validateCampaign } from '../src/services/campaignLoader.ts'
 import {
+	addParticipant,
 	applyChoice,
 	CONDITIONS,
 	canChoose,
@@ -15,6 +16,7 @@ import {
 	finishEncounter,
 	getVitals,
 	heal,
+	longRest,
 	nextTurn,
 	participantLabel,
 	promoteTie,
@@ -27,6 +29,7 @@ import {
 	sortedParticipants,
 	startEncounter,
 	undoChoice,
+	updateCombatStats,
 	updateVitals,
 	vitalsSnapshot,
 } from '../src/services/game.ts'
@@ -282,18 +285,20 @@ test('save validation rejects unknown versions and bad campaign references', asy
 	assert.deepEqual(importGame(JSON.stringify({ ...state, version: 0 }), c), state)
 })
 
+type LooseCampaign = { chapters: { scenes: { id?: string; source: { pages: unknown } }[] }[] }
+
 test('campaign validation rejects missing and duplicate identifiers and dangling references', async () => {
 	const c = await fixture()
-	const missingId = structuredClone(c) as unknown as Record<string, any>
+	const missingId = structuredClone(c) as unknown as LooseCampaign
 	delete missingId.chapters[0].scenes[0].id
 	assert.throws(() => validateCampaign(missingId), /identifiant absent/)
-	const duplicateId = structuredClone(c) as unknown as Record<string, any>
+	const duplicateId = structuredClone(c)
 	duplicateId.chapters[1].scenes[0].id = duplicateId.chapters[0].scenes[0].id
 	assert.throws(() => validateCampaign(duplicateId), /dupliqué/)
-	const dangling = structuredClone(c) as unknown as Record<string, any>
+	const dangling = structuredClone(c)
 	dangling.chapters[0].scenes[0].transitions.push({ sceneId: 'missing-scene', label: 'Go' })
 	assert.throws(() => validateCampaign(dangling), /scène inconnu/)
-	const badSource = structuredClone(c) as unknown as Record<string, any>
+	const badSource = structuredClone(c) as unknown as LooseCampaign
 	badSource.chapters[0].scenes[0].source.pages = ['not-a-page']
 	assert.throws(() => validateCampaign(badSource), /invalide/)
 })
@@ -757,4 +762,75 @@ test('concentrationNotice: DC, temp HP, drop to 0, no tag, dead target', async (
 
 test('Concentration is a selectable condition', () => {
 	assert.equal(CONDITIONS.at(-1), 'Concentration')
+})
+
+describe('longRest', () => {
+	const tired = async () => {
+		const c = await fixture()
+		const state = createInitialState(c)
+		const [alive, dead] = c.players.map((p) => p.id)
+		Object.assign(state.players[alive!]!, {
+			hp: 1,
+			tempHp: 4,
+			exhaustion: 2,
+			status: 'unconscious',
+			deathSaves: { successes: 1, failures: 2 },
+			resources: { 'demo-resource': 0 },
+		})
+		Object.assign(state.players[dead!]!, { hp: 0, exhaustion: 3, status: 'dead' })
+		return { c, state, alive: alive!, dead: dead! }
+	}
+	test('restores HP, resources, exhaustion and death saves, leaves the dead alone, journals the party', async () => {
+		const { c, state, alive, dead } = await tired()
+		const next = longRest(state, c)
+		const v = next.players[alive]!
+		assert.deepEqual(
+			[v.hp, v.tempHp, v.exhaustion, v.status, v.deathSaves, v.resources['demo-resource']],
+			[v.maxHp, 0, 1, 'active', { successes: 0, failures: 0 }, 1],
+		)
+		assert.deepEqual(next.players[dead], state.players[dead])
+		const entry = next.journal.at(-1)!
+		assert.equal(entry.title, 'Repos long')
+		assert.deepEqual(
+			entry.participants,
+			c.players.filter((p) => p.id !== dead).map((p) => p.name),
+		)
+		assert.equal(state.players[alive]!.hp, 1)
+	})
+	test('exhaustion never goes below 0', async () => {
+		const { c, state, alive } = await tired()
+		state.players[alive]!.exhaustion = 0
+		assert.equal(longRest(state, c).players[alive]!.exhaustion, 0)
+	})
+	test('refused while a combat is not finished, allowed once finished', async () => {
+		const { c, state } = await tired()
+		const fighting = startEncounter(state, c, 'demo-training', { random: half })
+		assert.throws(() => longRest(fighting, c), /combat/i)
+		assert.doesNotThrow(() => longRest(finishEncounter(fighting), c))
+	})
+})
+
+describe('duplicate a creature (+ 1 in the initiative list)', () => {
+	test('the copy keeps the source stats, starts at full HP and takes the next number', async () => {
+		const { c, state } = await training()
+		const source = state.combat!.participants.find((p) => p.monsterId && p.type === 'monster')!
+		// the DM adjusted this exemplar and it took damage: the copy follows the edited stats, not the bestiary
+		let s = updateCombatStats(state, c, source.id, { maxHp: 31, armorClass: 17, initiativeBonus: 4 })
+		s = damage(s, source.id, 10)
+		const src = s.combat!.participants.find((p) => p.id === source.id)!
+		const sameBefore = s.combat!.participants.filter((p) => p.monsterId === src.monsterId).length
+		// same call as the button
+		const next = addParticipant(s, c, src.monsterId!, src.type, {
+			maxHp: src.maxHp,
+			armorClass: src.armorClass,
+			initiativeBonus: src.initiativeBonus,
+		})
+		const copy = next.combat!.participants.at(-1)!
+		assert.notEqual(copy.id, src.id)
+		assert.deepEqual([copy.name, copy.maxHp, copy.armorClass, copy.initiativeBonus], [src.name, 31, 17, 4])
+		assert.equal(getVitals(next, copy).hp, 31)
+		assert.equal(copy.initiative, 0)
+		assert.equal(getVitals(next, src).hp, getVitals(s, src).hp) // the source is untouched
+		assert.equal(participantLabel(copy, next), `${src.name} · ${sameBefore + 1}`)
+	})
 })

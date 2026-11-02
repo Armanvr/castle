@@ -39,9 +39,23 @@ Aucune fiche PJ réelle n'est fournie. Saisir les personnages du groupe avec leu
 
 Une nouvelle partie commence sans PJ, combat, journal, inventaire ni scène visitée. Le chapitre 1 est proposé comme point de départ sans progression supposée. Les ajouts du MJ restent identifiés comme personnalisés.
 
+## Pendant la partie
+
+- **Raccourcis du combat** : `N` passe au tour suivant, `D` place le curseur dans la saisie des dégâts, `Entrée` applique les dégâts saisis, `Ctrl+Z` / `Cmd+Z` annule la dernière action sur les PV. Ils sont ignorés pendant la saisie dans un champ, où le `Ctrl+Z` du navigateur continue de fonctionner.
+- **Annulation des PV** : les 20 dernières actions du combat (dégâts, soins, sauvegardes contre la mort, saisies de PV, dégâts appliqués depuis un jet) peuvent être annulées. Cet historique reste en mémoire : il n'est pas sauvegardé et se vide au rechargement ou à la fin du combat.
+- **Jets des monstres** : sous un jet de dégâts, choisir une cible puis « Appliquer N dégâts ».
+- **Conditions** : durée facultative en rounds, décomptée au début du tour de la créature concernée. À 0, la condition reste affichée « expirée » et le MJ la retire. La condition « Concentration » déclenche un rappel du jet de sauvegarde de Constitution (DD = max(10, moitié des dégâts)) ; le jet reste à la main du MJ.
+- **Mode table** : le bouton « Mode table » au-dessus du combat masque la navigation et les panneaux. Pour en sortir : « Quitter le mode table » ou Échap (hors saisie et hors recherche). Sur téléphone, « Annuler » et « Tour suivant » restent épinglés en haut de l'écran.
+- **Recherche globale** : `Ctrl+K` / `Cmd+K` ou le bouton « Rechercher ». Scènes, PNJ, monstres, objets et PJ, sans tenir compte des accents ni de la casse.
+- **Export rapide** : `Ctrl+S` / `Cmd+S` exporte la sauvegarde JSON, y compris depuis un champ de saisie ; ignoré pendant un chargement, un import ou une sauvegarde protégée. L'annonce « Sauvegarde exportée. » est vocalisée.
+- **Repos long** : le bouton « Repos long » du panneau du groupe (désactivé pendant un combat) remet les PJ vivants à leurs PV maximum, sans PV temporaires, ressources au maximum, épuisement −1 et sauvegardes contre la mort à zéro. Un PJ mort reste mort ; une entrée est ajoutée au journal. Les dés de vie (repos court) restent à la main du MJ.
+- **Fin de combat** : le journal reçoit un récapitulatif (rounds, PJ à terre, créatures vaincues, retirés) de l'état final du combat.
+
 ## Données et sauvegardes
 
 Les JSON de campagne restent immuables. Seul l'état de partie est conservé dans `localStorage`, sur l'origine du navigateur utilisée. Changer de navigateur, de port ou effacer les données du site change les sauvegardes disponibles. Exporter régulièrement une copie JSON depuis les paramètres.
+
+Un rappel d'export s'affiche après chaque fin de combat, et à l'ouverture lorsque la partie a progressé sans export depuis plus de 7 jours. La date du dernier export est indiquée dans les paramètres ; elle est conservée à part, hors de la sauvegarde.
 
 L'import est validé avant remplacement. Une sauvegarde invalide doit être signalée ; conserver son export pour diagnostic. Une nouvelle version de format nécessite une migration explicite : ne pas modifier simplement son numéro de version.
 

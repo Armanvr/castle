@@ -8,7 +8,7 @@ export function cleanupLegacyDemoStorage(): { preservedSaves: number; error?: st
 		const demoManifest = '/campaigns/stormwreck-isle/manifest.json'
 		if (localStorage.getItem('dnd-dm:active-manifest') === demoManifest)
 			localStorage.removeItem('dnd-dm:active-manifest')
-		localStorage.removeItem('dnd-dm:slot:' + demoManifest)
+		localStorage.removeItem(`dnd-dm:slot:${demoManifest}`)
 		// Legacy sessions may contain MJ additions; preserve their bytes outside the active campaign.
 		for (let index = 0; index < localStorage.length; index++)
 			if (/^dnd-dm:campaign:stormwreck-isle:v1:slot:[1-3]$/.test(localStorage.key(index) ?? '')) preservedSaves++

@@ -1,8 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import * as game from '../services/game'
 import { childField, fieldLabel, fieldValue, isTechnicalKey, valueLabel } from '../services/labels'
-import type { Campaign, Choice, GameState, Monster, Scene, Source } from '../types'
-import type { Update } from './CombatView'
+import type { Campaign, Choice, GameState, Monster, Scene, Source, Update } from '../types'
 import { Icon } from './icons'
 import { readIntegerInput } from './input'
 
@@ -380,7 +379,7 @@ export function CharactersView({ campaign, state, update }: { campaign: Campaign
 					</article>
 				))}
 			</div>
-			<h2>Personnages & PNJ · informations MJ</h2>
+			<h2 class='cards-grid-heading'>Personnages & PNJ · informations MJ</h2>
 			<div class='cards-grid'>
 				{campaign.npcs.map((npc) => (
 					<NpcCard key={npc.id} campaign={campaign} id={npc.id} />
@@ -390,7 +389,7 @@ export function CharactersView({ campaign, state, update }: { campaign: Campaign
 	)
 }
 
-import { VitalControls } from './CombatView'
+import { VitalControls } from './CombatSheet'
 export function BestiaryView({ campaign }: { campaign: Campaign }) {
 	return (
 		<>
