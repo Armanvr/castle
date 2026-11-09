@@ -48,14 +48,21 @@ Une nouvelle partie commence sans PJ, combat, journal, inventaire ni scène visi
 - **Mode table** : le bouton « Mode table » au-dessus du combat masque la navigation et les panneaux. Pour en sortir : « Quitter le mode table » ou Échap (hors saisie et hors recherche). Sur téléphone, « Annuler » et « Tour suivant » restent épinglés en haut de l'écran.
 - **Recherche globale** : `Ctrl+K` / `Cmd+K` ou le bouton « Rechercher ». Scènes, PNJ, monstres, objets et PJ, sans tenir compte des accents ni de la casse.
 - **Export rapide** : `Ctrl+S` / `Cmd+S` exporte la sauvegarde JSON, y compris depuis un champ de saisie ; ignoré pendant un chargement, un import ou une sauvegarde protégée. L'annonce « Sauvegarde exportée. » est vocalisée.
-- **Repos long** : le bouton « Repos long » du panneau du groupe (désactivé pendant un combat) remet les PJ vivants à leurs PV maximum, sans PV temporaires, ressources au maximum, épuisement −1 et sauvegardes contre la mort à zéro. Un PJ mort reste mort ; une entrée est ajoutée au journal. Les dés de vie (repos court) restent à la main du MJ.
-- **Fin de combat** : le journal reçoit un récapitulatif (rounds, PJ à terre, créatures vaincues, retirés) de l'état final du combat.
+- **Repos long** : le bouton « Repos long » du panneau du groupe (désactivé pendant un combat) remet les PJ vivants à leurs PV maximum, sans PV temporaires, ressources au maximum, épuisement −1 et sauvegardes contre la mort à zéro. Un PJ mort reste mort ; une entrée est ajoutée au journal. Le bouton « Repos court » ouvre un dialogue : le MJ saisit les PV récupérés par PJ vivant (les dés de vie restent à sa main).
+- **Fin de combat** : le journal reçoit un récapitulatif (rounds, PJ à terre, créatures vaincues, retirés) de l'état final du combat, avec l'XP gagnée.
+- **Expérience** : l'XP des créatures vaincues (morts ou à terre, hors alliés et retirés) vient de leur FP selon la table 2014 ; elle est partagée à parts égales, arrondie à l'inférieur, entre les PJ du combat encore en vie. Les créatures au FP inconnu sont signalées et ne rapportent rien. La fiche de chaque PJ affiche son XP, ajustable à la main (0 à 10 000 000).
+- **Préparer la session** : le tableau de bord rassemble la scène en cours, les scènes accessibles depuis ses choix, leurs rencontres (badge « À préparer » quand une quantité ou une statistique manque) et les avertissements qui les concernent.
+- **Écran des joueurs** : le bouton « Écran des joueurs » de la barre du haut ouvre un second onglet à placer sur une TV ou un second écran. Il montre l'ordre d'initiative, le tour en cours et les PV des PJ ; jamais les PV, CA ni initiative des créatures. Dans une scène, « Montrer aux joueurs » y affiche le texte à lire ; « Effacer l'écran des joueurs » le retire. Rien de ce qui est montré n'est sauvegardé. La synchronisation est locale (même navigateur, même adresse).
 
 ## Données et sauvegardes
 
 Les JSON de campagne restent immuables. Seul l'état de partie est conservé dans `localStorage`, sur l'origine du navigateur utilisée. Changer de navigateur, de port ou effacer les données du site change les sauvegardes disponibles. Exporter régulièrement une copie JSON depuis les paramètres.
 
 Un rappel d'export s'affiche après chaque fin de combat, et à l'ouverture lorsque la partie a progressé sans export depuis plus de 7 jours. La date du dernier export est indiquée dans les paramètres ; elle est conservée à part, hors de la sauvegarde.
+
+**Points de restauration** : les 10 derniers états sont gardés à part, par campagne et emplacement, et listés dans les paramètres. Un point est créé automatiquement avant chaque fin de combat, repos court, repos long et import, ainsi qu'avant une restauration ; « Créer un point de restauration » en ajoute un à la main. « Restaurer » demande confirmation et valide l'état comme un import. Ces points restent dans le navigateur : ils ne remplacent pas un export. Si la place manque, les plus anciens sont sacrifiés en premier, jamais la sauvegarde principale.
+
+**Fichier de sauvegarde automatique** (Chrome, Edge et autres navigateurs Chromium) : « Lier un fichier de sauvegarde » choisit un fichier JSON sur le disque ; chaque sauvegarde y est ensuite écrite automatiquement (après 1,5 s de calme) et compte comme un export. Le lien n'est pas mémorisé : il faut relier le fichier à chaque ouverture de l'application. En cas d'échec d'écriture, une alerte s'affiche et le fichier est délié.
 
 L'import est validé avant remplacement. Une sauvegarde invalide doit être signalée ; conserver son export pour diagnostic. Une nouvelle version de format nécessite une migration explicite : ne pas modifier simplement son numéro de version.
 

@@ -17,12 +17,14 @@ export function CombatView({
 	campaign,
 	state,
 	update,
+	checkpoint,
 	requestedEncounter,
 	clearRequested,
 }: {
 	campaign: Campaign
 	state: GameState
 	update: Update
+	checkpoint: (label: string) => void
 	requestedEncounter?: string
 	clearRequested: () => void
 }) {
@@ -500,8 +502,10 @@ export function CombatView({
 							type='button'
 							class='danger'
 							onClick={() => {
-								if (confirm('Terminer ce combat et inscrire sa fin au journal ?'))
-									update(game.finishEncounter)
+								if (confirm('Terminer ce combat et inscrire sa fin au journal ?')) {
+									checkpoint(`Fin de combat : ${combat.name}`)
+									update((s) => game.finishEncounter(s, campaign))
+								}
 							}}
 						>
 							Terminer le combat

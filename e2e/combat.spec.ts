@@ -13,7 +13,7 @@ test('lancer une rencontre affiche le combat en cours avec un participant actif'
 })
 
 test('N avance le tour', async ({ page }) => {
-	const before = await activeName(page).innerText()
+	const before = (await activeName(page).textContent())!
 	await page.keyboard.press('n')
 	await expect(activeName(page)).not.toHaveText(before)
 })
@@ -40,7 +40,7 @@ test('les raccourcis ne font rien dans la zone de notes', async ({ page }) => {
 	await page.keyboard.press('Enter')
 	await expect(sheetHp(page)).toHaveJSProperty('value', full - 3)
 
-	const before = await activeName(page).innerText()
+	const before = (await activeName(page).textContent())!
 	await sheet(page).getByText('Ajuster les statistiques').click()
 	const notes = sheet(page).getByRole('textbox', { name: /Notes MJ/ })
 	await notes.click()

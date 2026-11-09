@@ -1,6 +1,7 @@
 import type { Campaign, Character, Choice, Combat, Combatant, GameState, Vitals } from '../types.ts'
 import { rollDice } from './dice.ts'
 import { frPlural } from './labels.ts'
+import { MAX_XP, xpForChallenge } from './xp.ts'
 
 export const CONDITIONS = [
 	'Aveuglé',
@@ -108,16 +109,72 @@ function combatRecap(state: GameState, combat: Combat): string {
 		.filter(Boolean)
 		.join(' ')
 }
-export function finishEncounter(state: GameState): GameState {
+// Defeated = non-PJ, non-ally, dead or unconscious (removed ones never count). Shared evenly (rounded down) among PJ not dead.
+function combatXp(state: GameState, campaign: Campaign, combat: Combat) {
+	const defeated = combat.participants.filter((p) => {
+		const status = getVitals(state, p).status
+		return p.type !== 'player' && p.type !== 'ally' && (status === 'dead' || status === 'unconscious')
+	})
+	let total = 0
+	const unknown: string[] = []
+	for (const p of defeated) {
+		const xp = xpForChallenge(campaign.monsters.find((m) => m.id === p.monsterId)?.challenge ?? '')
+		if (xp === null) unknown.push(participantLabel(p, state))
+		else total += xp
+	}
+	const recipients = combat.participants.flatMap((p) =>
+		p.playerId && getVitals(state, p).status !== 'dead' ? [p.playerId] : [],
+	)
+	const each = recipients.length ? Math.floor(total / recipients.length) : 0
+	const recap = [
+		total > 0 ? `XP : ${total}${recipients.length ? ` (${each} chacun)` : ''}.` : '',
+		unknown.length ? `XP non calculée : ${unknown.join(', ')} (FP inconnu).` : '',
+	]
+		.filter(Boolean)
+		.join(' ')
+	return { recap, recipients, each }
+}
+// `campaign` is optional so callers without it still finish a combat; XP is only awarded when it is given.
+export function finishEncounter(state: GameState, campaign?: Campaign): GameState {
 	if (!state.combat || state.combat.status === 'finished') return state
+	const xp = campaign ? combatXp(state, campaign, state.combat) : null
 	const next = addJournal(
 		{ ...state, combat: { ...state.combat, status: 'finished' } },
 		`Rencontre terminée : ${state.combat.name}`,
-		combatRecap(state, state.combat),
+		[combatRecap(state, state.combat), xp?.recap].filter(Boolean).join(' '),
 		'encounter',
 	)
 	next.journal.at(-1)!.participants = state.combat.participants.map((p) => p.name)
+	if (xp?.each)
+		next.xp = {
+			...next.xp,
+			...Object.fromEntries(xp.recipients.map((id) => [id, Math.min(MAX_XP, (state.xp?.[id] ?? 0) + xp.each)])),
+		}
 	return next
+}
+// Hit dice stay with the DM: they enter the HP regained. A PJ at 0 HP healed above 0 gets back on their feet.
+export function shortRest(state: GameState, campaign: Campaign, healing: Record<string, number>): GameState {
+	if (state.combat && state.combat.status !== 'finished') throw new Error('Repos court impossible pendant un combat.')
+	if (Object.values(healing).some((n) => !Number.isSafeInteger(n) || n < 0))
+		throw new Error('PV récupérés : entiers positifs ou nuls requis.')
+	const next = copy(state)
+	const names: string[] = []
+	const lines: string[] = []
+	for (const character of campaignWithPlayers(campaign, state).players) {
+		const v = next.players[character.id]
+		if (!v || v.status === 'dead') continue
+		const hp = Math.min(v.maxHp, v.hp + (healing[character.id] ?? 0))
+		lines.push(`${character.name} +${hp - v.hp} PV`)
+		names.push(character.name)
+		v.hp = hp
+		if (hp > 0 && (v.status === 'unconscious' || v.status === 'stable')) {
+			v.status = 'active'
+			v.deathSaves = { successes: 0, failures: 0 }
+		}
+	}
+	const rested = addJournal(next, 'Repos court', lines.join(', ') || 'Aucun PJ concerné.', 'rest')
+	rested.journal.at(-1)!.participants = names
+	return rested
 }
 // A dead PJ stays dead. Dice, spell slots and the like are the DM's call: only `resources` are refilled.
 export function longRest(state: GameState, campaign: Campaign): GameState {

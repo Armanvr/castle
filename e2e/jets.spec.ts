@@ -9,17 +9,15 @@ test('jet de dégâts d’un monstre : cible, application, PV, annulation', asyn
 		.first()
 		.click()
 	const total = Number(
-		(
-			await actions
-				.getByText(/Total : \d+/)
-				.first()
-				.innerText()
-		).match(/\d+/)![0],
+		(await actions
+			.getByText(/Total : \d+/)
+			.first()
+			.textContent())!.match(/\d+/)![0],
 	)
 
 	// the attacker is never offered as a target: the first real option is another zombie
 	const target = actions.getByRole('combobox', { name: 'Cible' }).first()
-	const label = (await target.locator('option').nth(1).innerText()).trim()
+	const label = (await target.locator('option').nth(1).textContent())!.trim()
 	await expect(actions.getByRole('button', { name: /^Appliquer / }).first()).toBeDisabled()
 	await target.selectOption({ label })
 

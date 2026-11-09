@@ -248,6 +248,7 @@ export interface GameState {
 	playerStats?: Record<string, Pick<Character['combat'], 'maxHp' | 'armorClass' | 'initiativeBonus'>>
 	sceneAdditions?: Record<string, Partial<Record<'readAloud' | 'summary' | 'dmNotes' | 'dialogues', string>>>
 	itemAssignments?: Record<string, string>
+	xp?: Record<string, number>
 	undo: { choiceId: string; before: Omit<GameState, 'undo'>; after: Omit<GameState, 'undo'> } | null
 }
 export type Update = (change: (state: GameState) => GameState) => void

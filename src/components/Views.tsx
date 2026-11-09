@@ -1,6 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import * as game from '../services/game'
 import { childField, fieldLabel, fieldValue, isTechnicalKey, valueLabel } from '../services/labels'
+import type { Reveal } from '../services/playerScreen'
+import { MAX_XP } from '../services/xp'
 import type { Campaign, Choice, GameState, Monster, Scene, Source, Update } from '../types'
 import { Icon } from './icons'
 import { readIntegerInput } from './input'
@@ -11,12 +13,14 @@ export function SceneView({
 	state,
 	scene,
 	update,
+	reveal,
 	goCombat,
 }: {
 	campaign: Campaign
 	state: GameState
 	scene: Scene
 	update: Update
+	reveal: (r: Reveal) => void
 	goCombat: (id?: string) => void
 }) {
 	const selectChoice = (choice: Choice) => {
@@ -38,6 +42,7 @@ export function SceneView({
 			</button>
 		</div>
 	)
+	const readAloudText = [scene.readAloud, added?.readAloud].filter(Boolean).join('\n\n')
 	const noReadAloud = 'Aucun texte à lire fourni : consultez le livret.'
 	const noDialogue = 'Aucun dialogue pour cette scène.'
 	return (
@@ -128,6 +133,15 @@ export function SceneView({
 						<Icon name='chapters' size={16} /> À LIRE AUX JOUEURS
 					</span>
 					{scene.readAloud ? <blockquote>{scene.readAloud}</blockquote> : <p>{noReadAloud}</p>}
+					{readAloudText && (
+						<button
+							type='button'
+							class='text-button'
+							onClick={() => reveal({ title: scene.title, text: readAloudText })}
+						>
+							<Icon name='eye' size={15} /> Montrer aux joueurs
+						</button>
+					)}
 					<SceneAddition
 						scene={scene}
 						state={state}
@@ -324,6 +338,28 @@ export function CharactersView({ campaign, state, update }: { campaign: Campaign
 								)
 							})}
 						</div>
+						<label class='resource-label'>
+							XP : {state.xp?.[p.id] ?? 0}
+							<input
+								type='number'
+								min='0'
+								max={MAX_XP}
+								step='1'
+								aria-label={`XP de ${p.name}, ajustement manuel`}
+								value={state.xp?.[p.id] ?? 0}
+								onBlur={(e) => {
+									// a refused entry (empty, out of range) shows the saved value again
+									if (!e.currentTarget.checkValidity() || e.currentTarget.value === '') {
+										e.currentTarget.setCustomValidity('')
+										e.currentTarget.value = String(state.xp?.[p.id] ?? 0)
+									}
+								}}
+								onChange={(e) => {
+									const value = readIntegerInput(e.currentTarget)
+									if (value !== null) update((s) => ({ ...s, xp: { ...s.xp, [p.id]: value } }))
+								}}
+							/>
+						</label>
 						<div class='tags'>
 							<span class='tag'>CA {p.combat.armorClass}</span>
 							<span class='tag'>

@@ -5,6 +5,31 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) ; ve
 
 ## [Non publié]
 
+## [0.3.0] — 2026-11-09
+
+### Ajouté
+
+- **Points de restauration** : les 10 derniers états de partie sont conservés à part (clé `…:snapshots`, par campagne et emplacement) et listés dans Paramètres avec date et libellé. Points automatiques avant la fin d'un combat, un repos court, un repos long, un import et une restauration ; bouton « Créer un point de restauration ». « Restaurer » demande confirmation et valide l'état comme un import. Si le quota est atteint, les points les plus anciens sont supprimés, y compris pour laisser passer la sauvegarde principale.
+- **Fichier de sauvegarde automatique** (navigateurs Chromium) : « Lier un fichier de sauvegarde » écrit chaque sauvegarde dans un fichier JSON choisi par le MJ, 1,5 s après le dernier changement, et met à jour « Dernier export ». Un échec d'écriture affiche une alerte et délie le fichier. Le lien n'est pas mémorisé d'une ouverture à l'autre.
+- **Repos court** : bouton « Repos court » à côté de « Repos long », désactivé pendant un combat. Le dialogue demande les PV récupérés pour chaque PJ vivant (les dés de vie restent à la main du MJ), plafonnés aux PV maximum ; un PJ à 0 PV soigné se relève. Entrée « Repos court » au journal.
+- **Points d'expérience** : à la fin d'un combat, l'XP des créatures vaincues (mortes ou à terre, hors alliés et retirés) est calculée depuis leur FP (table D&D 5e 2014) et partagée entre les PJ du combat encore en vie. Le récapitulatif du journal l'indique, et signale les créatures au FP inconnu. XP affichée et ajustable sur chaque fiche de PJ (0 à 10 000 000).
+- **Préparer la session** : section du tableau de bord avec la scène en cours, les scènes suivantes, leurs rencontres (badge « À préparer ») et les avertissements de données qui les concernent.
+- **Écran des joueurs** : bouton « Écran des joueurs » (barre du haut) qui ouvre `?ecran=joueurs` dans un second onglet, synchronisé localement par `BroadcastChannel`. Il affiche en grand l'ordre d'initiative, le participant en cours, les PV des PJ et l'état des créatures (« Vaincu »), sans jamais leurs PV, CA ou initiative. « Montrer aux joueurs » y affiche le texte à lire d'une scène, « Effacer l'écran des joueurs » le retire ; rien n'est sauvegardé. Bouton « Plein écran ».
+
+### Modifié
+
+- **Format de sauvegarde** : champ facultatif `xp` (entiers de 0 à 10 000 000 par PJ connu). Les sauvegardes existantes se chargent sans changement.
+- **Lint** : 0 avertissement (63 auparavant). `src/index.css` est réordonné par spécificité croissante, sans changement visuel (styles calculés identiques sur 64 captures, bureau et téléphone) ; les seuls `!important` restants sont ceux du mouvement réduit.
+
+### Corrigé
+
+- **Mode table** : un appui sur Échap juste après l'entrée en mode table pouvait être ignoré (raccourci enregistré après l'affichage).
+
+### Tests
+
+- Tests unitaires des points de restauration, de l'écriture automatique, du repos court, de l'XP, de la préparation de session et de la vue publique de l'écran des joueurs.
+- Tests de bout en bout : points de restauration, fichier lié (sélecteur simulé), repos court, XP, préparation de session, écran des joueurs.
+
 ## [0.2.0] — 2026-11-01
 
 ### Ajouté
@@ -86,6 +111,7 @@ Première version versionnée. Elle regroupe le travail mené du 23 au 28 octobr
 - Les recherches de libellés utilisent `Object.hasOwn` pour qu'une sauvegarde importée ne puisse pas atteindre les propriétés du prototype.
 - L'import de sauvegarde est validé (version, références de campagne, bornes numériques) avant tout remplacement. Aucun `localStorage.clear()`.
 
-[Non publié]: https://github.com/Armanvr/castle/compare/v0.2.0...HEAD
+[Non publié]: https://github.com/Armanvr/castle/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/Armanvr/castle/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Armanvr/castle/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Armanvr/castle/releases/tag/v0.1.0

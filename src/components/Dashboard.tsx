@@ -1,3 +1,4 @@
+import { sessionPrep } from '../services/sessionPrep'
 import type { Campaign, Chapter, GameState, Scene } from '../types'
 import { Icon } from './icons'
 import { CampaignInfo } from './Views'
@@ -10,6 +11,8 @@ export function Dashboard({
 	chapter,
 	combatOpen,
 	setView,
+	openScene,
+	openEncounter,
 }: {
 	campaign: Campaign
 	state: GameState
@@ -18,7 +21,10 @@ export function Dashboard({
 	chapter: Chapter | undefined
 	combatOpen: boolean
 	setView: (view: string) => void
+	openScene: (id: string) => void
+	openEncounter: (id: string) => void
 }) {
+	const prep = sessionPrep(state, campaign)
 	const completed = Object.values(state.sceneStatus).filter((s) => s === 'completed').length
 	const status = state.combat?.status
 	const combatLabel = status === 'suspended' ? 'Combat suspendu' : 'Combat en cours'
@@ -191,6 +197,62 @@ export function Dashboard({
 					</div>
 				</section>
 			</div>
+			<section class='panel session-prep' aria-labelledby='session-prep-title'>
+				<h2 id='session-prep-title'>Préparer la session</h2>
+				{prep.scene ? (
+					<>
+						<h3>Scène active</h3>
+						<button type='button' class='text-button' onClick={() => setView('campaign')}>
+							{prep.scene.title} <Icon name='arrow' size={15} />
+						</button>
+						<h3>Scènes suivantes</h3>
+						{prep.nextScenes.length ? (
+							<ul>
+								{prep.nextScenes.map((s) => (
+									<li key={s.id}>
+										<button type='button' class='text-button' onClick={() => openScene(s.id)}>
+											{s.title} <Icon name='arrow' size={15} />
+										</button>
+									</li>
+								))}
+							</ul>
+						) : (
+							<p>Aucune scène suivante liée à la scène active.</p>
+						)}
+						<h3>Rencontres</h3>
+						{prep.encounters.length ? (
+							<ul>
+								{prep.encounters.map(({ encounter, needsPrep }) => (
+									<li key={encounter.id}>
+										<button
+											type='button'
+											class='text-button'
+											onClick={() => openEncounter(encounter.id)}
+										>
+											{encounter.name} <Icon name='arrow' size={15} />
+										</button>
+										{needsPrep && <span class='tag'>À préparer</span>}
+									</li>
+								))}
+							</ul>
+						) : (
+							<p>Aucune rencontre dans la scène active ni dans les suivantes.</p>
+						)}
+						{prep.warnings.length > 0 && (
+							<>
+								<h3>Avertissements</h3>
+								<ul>
+									{prep.warnings.map((w) => (
+										<li key={w}>{w}</li>
+									))}
+								</ul>
+							</>
+						)}
+					</>
+				) : (
+					<p>Aucune scène active : choisissez une scène dans les chapitres pour préparer la suite.</p>
+				)}
+			</section>
 			<CampaignInfo campaign={campaign} />
 		</>
 	)

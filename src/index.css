@@ -1,75 +1,4 @@
 @import "tailwindcss";
-.dice-result {
-	display: grid;
-	gap: 4px;
-	margin-top: 12px;
-	font-variant-numeric: tabular-nums;
-	overflow-wrap: anywhere;
-}
-.dice-result > b {
-	color: var(--copper);
-	font-size: 18px;
-}
-/* Tailwind preflight already zeroes fieldset/legend border, margin and padding. */
-.combat-stats-editor {
-	margin-top: 12px;
-	min-width: 0;
-}
-.monster-actions {
-	margin: 20px 0;
-}
-.monster-action {
-	border-top: 1px solid var(--border);
-	padding: 14px 0;
-}
-.monster-action h4 {
-	margin: 0 0 8px;
-	font-size: 16px;
-}
-.monster-action .tags {
-	gap: 8px 16px;
-}
-.attack-rolls {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-}
-.formula-roll {
-	min-width: 0;
-	max-width: 100%;
-}
-.formula-roll button {
-	text-align: left;
-	overflow-wrap: anywhere;
-}
-.scene-reading > p,
-.scene-reading > blockquote,
-.scene-reading .mj-addition > p {
-	max-inline-size: 70ch;
-}
-.scene-references > h3 {
-	margin: 24px 0 12px;
-}
-.scene-navigation {
-	margin-top: 20px;
-}
-.scene-addition {
-	margin-top: 20px;
-}
-.scene-addition details {
-	margin-top: 12px;
-}
-.scene-addition textarea {
-	min-height: 120px;
-}
-.mj-addition {
-	padding-top: 12px;
-	border-top: 1px solid var(--border);
-}
-.mj-addition > p {
-	white-space: pre-wrap;
-	overflow-wrap: anywhere;
-}
 :root {
 	color-scheme: dark;
 	--bg: #131517;
@@ -176,6 +105,9 @@ summary:focus-visible {
 .tag.is-expired {
 	color: var(--muted);
 	border-style: dashed;
+}
+small {
+	font-size: var(--fs-meta);
 }
 .condition-duration,
 .apply-damage {
@@ -285,9 +217,6 @@ textarea::placeholder {
 .timeline-entry time,
 input[type="number"] {
 	font-variant-numeric: tabular-nums;
-}
-small {
-	font-size: var(--fs-meta);
 }
 .eyebrow {
 	font-size: var(--fs-label);
@@ -406,9 +335,6 @@ small {
 	background: #332b25;
 	border-color: #5b4432;
 	color: #e6b083;
-}
-.nav-item.selected svg {
-	color: #d49a68;
 }
 .nav-item:where(:enabled):hover {
 	background: #252727;
@@ -660,9 +586,8 @@ small {
 	line-height: 1.2;
 	font-weight: 400;
 }
-.dashboard-stats b small {
-	color: #898e87;
-	font-size: 15px;
+.stat-caption {
+	display: block;
 }
 .dashboard-stats .stat-caption {
 	font-size: var(--fs-meta);
@@ -1020,6 +945,9 @@ meter::-moz-meter-bar {
 	right: 13px;
 	color: #68715a;
 }
+.nav-item.selected svg {
+	color: #d49a68;
+}
 .location-card > small {
 	color: #9da68c;
 	font-size: var(--fs-meta);
@@ -1185,10 +1113,10 @@ meter::-moz-meter-bar {
 	margin: 17px 0 0;
 	color: #e0d9c7;
 }
-.dialogue {
+p.dialogue {
 	font-style: italic;
 	font-family: Georgia, serif;
-	font-size: 17px !important;
+	font-size: 17px;
 }
 .tags,
 .condition-list {
@@ -1256,10 +1184,6 @@ meter::-moz-meter-bar {
 	line-height: 1.4;
 	margin: 2px 0 0;
 }
-.combat-toolbar p strong {
-	color: var(--text);
-	font-weight: 600;
-}
 .combat-toolbar button {
 	font-size: var(--fs-control);
 	padding: 9px 12px;
@@ -1284,11 +1208,6 @@ meter::-moz-meter-bar {
 	align-items: center;
 	justify-content: space-between;
 	gap: 6px 10px;
-}
-.removed-participants li button {
-	min-height: 32px;
-	padding: 0 12px;
-	font-size: var(--fs-control);
 }
 .add-participant {
 	display: flex;
@@ -1503,6 +1422,10 @@ meter::-moz-meter-bar {
 	font-size: 32px;
 	font-weight: 400;
 }
+.combat-toolbar p strong {
+	color: var(--text);
+	font-weight: 600;
+}
 .hp-number > span {
 	font-size: var(--fs-meta);
 	color: #8d9587;
@@ -1698,11 +1621,16 @@ summary {
 .settings-section .button-row {
 	margin: 18px 0;
 }
-.settings-section .button-row > input {
-	flex: 1;
-}
 .settings-section small {
 	color: #828d7c;
+}
+.snapshot-list small,
+.button-row > span small {
+	display: block;
+}
+.dashboard-stats b small {
+	color: #898e87;
+	font-size: 15px;
 }
 .danger-zone {
 	border-color: #634039;
@@ -1751,11 +1679,6 @@ summary {
 }
 .alert.reminder > span {
 	flex-basis: 30ch;
-}
-.alert.reminder button {
-	border: 1px solid #856348;
-	padding: 6px 12px;
-	min-height: 36px;
 }
 .empty-state {
 	display: flex;
@@ -2095,11 +2018,8 @@ summary {
 	.context-heading {
 		margin-bottom: 20px;
 	}
-	.context-section {
-		margin-top: 20px !important;
-	}
 	.context-panel .context-section {
-		margin-top: 22px !important;
+		margin-top: 22px;
 	}
 	.app-footer {
 		padding: 15px 18px;
@@ -2205,8 +2125,11 @@ summary {
 }
 @media (prefers-reduced-motion: reduce) {
 	* {
+		/* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every transition rule whatever its specificity */
 		transition: none !important;
+		/* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat every animation rule whatever its specificity */
 		animation: none !important;
+		/* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat any scroll-behavior rule whatever its specificity */
 		scroll-behavior: auto !important;
 	}
 }
@@ -2218,9 +2141,6 @@ button.brand {
 	justify-content: flex-start;
 	min-height: 0;
 	line-height: 1.6;
-}
-.stat-caption {
-	display: block;
 }
 
 .reward-item {
@@ -2275,6 +2195,9 @@ button.brand {
 .party-choice input {
 	width: auto;
 }
+.settings-section .button-row > input {
+	flex: 1;
+}
 .encounter-preparation .inline-fields {
 	flex-wrap: wrap;
 }
@@ -2321,8 +2244,9 @@ button.brand {
 	padding: 16px 20px 24px;
 }
 
-/* Global search. */
-.search-dialog {
+/* Global search (and the short rest dialog's shared frame). */
+.search-dialog,
+.rest-dialog {
 	width: min(640px, calc(100vw - 32px));
 	max-height: min(70vh, 560px);
 	margin: 12vh auto 0;
@@ -2337,12 +2261,22 @@ button.brand {
 	flex-direction: column;
 	gap: 10px;
 }
-.search-dialog::backdrop {
+.search-dialog::backdrop,
+.rest-dialog::backdrop {
 	background: rgb(0 0 0 / 0.6);
 }
 .search-dialog ul {
 	overflow-y: auto;
 	min-height: 0;
+}
+.formula-roll button {
+	text-align: left;
+	overflow-wrap: anywhere;
+}
+.removed-participants li button {
+	min-height: 32px;
+	padding: 0 12px;
+	font-size: var(--fs-control);
 }
 .search-dialog li button {
 	width: 100%;
@@ -2354,6 +2288,11 @@ button.brand {
 	border-color: transparent;
 	overflow-wrap: anywhere;
 }
+.alert.reminder button {
+	border: 1px solid #856348;
+	padding: 6px 12px;
+	min-height: 36px;
+}
 .search-dialog li button:focus-visible {
 	background: var(--panel-raised);
 }
@@ -2362,4 +2301,192 @@ button.brand {
 }
 .search-status {
 	font-size: var(--fs-meta);
+}
+.mj-addition > p {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.dice-result {
+	display: grid;
+	gap: 4px;
+	margin-top: 12px;
+	font-variant-numeric: tabular-nums;
+	overflow-wrap: anywhere;
+}
+.dice-result > b {
+	color: var(--copper);
+	font-size: 18px;
+}
+/* Tailwind preflight already zeroes fieldset/legend border, margin and padding. */
+.combat-stats-editor {
+	margin-top: 12px;
+	min-width: 0;
+}
+.monster-actions {
+	margin: 20px 0;
+}
+.monster-action {
+	border-top: 1px solid var(--border);
+	padding: 14px 0;
+}
+.monster-action h4 {
+	margin: 0 0 8px;
+	font-size: 16px;
+}
+.monster-action .tags {
+	gap: 8px 16px;
+}
+.attack-rolls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+.formula-roll {
+	min-width: 0;
+	max-width: 100%;
+}
+.scene-reading > p,
+.scene-reading > blockquote,
+.scene-reading .mj-addition > p {
+	max-inline-size: 70ch;
+}
+.scene-references > h3 {
+	margin: 24px 0 12px;
+}
+.scene-navigation {
+	margin-top: 20px;
+}
+.scene-addition {
+	margin-top: 20px;
+}
+.scene-addition details {
+	margin-top: 12px;
+}
+.scene-addition textarea {
+	min-height: 120px;
+}
+.mj-addition {
+	padding-top: 12px;
+	border-top: 1px solid var(--border);
+}
+/* Écran des joueurs (?ecran=joueurs) : grand format pour TV / second écran */
+.player-screen {
+	min-height: 100vh;
+	padding: clamp(24px, 4vw, 64px);
+	font-size: clamp(24px, 2.6vw, 52px);
+	line-height: 1.4;
+	display: grid;
+	align-content: start;
+	gap: clamp(20px, 2.5vw, 40px);
+}
+.player-fullscreen {
+	justify-self: end;
+	font-size: var(--fs-control);
+	background: transparent;
+	border: 1px solid var(--border);
+	color: var(--muted);
+	padding: 6px 12px;
+	border-radius: 5px;
+}
+.player-waiting {
+	text-align: center;
+	margin-top: 20vh;
+}
+.player-combat h1 {
+	margin: 4px 0 16px;
+	font-size: 1.6em;
+}
+.player-round {
+	font-size: 0.7em;
+}
+.player-order {
+	display: grid;
+	gap: clamp(10px, 1.2vw, 20px);
+}
+.player-order li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 8px clamp(20px, 2.5vw, 48px);
+	padding: clamp(14px, 1.6vw, 28px) clamp(20px, 2.4vw, 44px);
+	background: var(--panel);
+	border: 2px solid var(--border);
+	border-radius: 6px;
+}
+.player-order li.active {
+	background: var(--panel-raised);
+	border-color: var(--copper);
+	font-weight: 700;
+	font-size: 1.15em;
+}
+.player-turn {
+	font-size: 0.55em;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--bg);
+	background: var(--copper);
+	padding: 0.1em 0.6em;
+	border-radius: 4px;
+}
+.player-name {
+	flex: 1;
+}
+.player-hp {
+	color: var(--green);
+}
+.player-status {
+	color: var(--red);
+}
+.player-reveal {
+	padding: clamp(20px, 3vw, 48px);
+}
+.player-reveal h2 {
+	margin: 0 0 16px;
+	color: var(--copper);
+}
+.player-reveal .player-text {
+	margin: 0;
+	font-size: inherit;
+	line-height: 1.5;
+	color: var(--text);
+	white-space: pre-line;
+}
+
+/* Restore points, short rest dialog, session preparation. */
+.snapshot-list {
+	display: grid;
+	gap: 8px;
+	margin-top: 12px;
+}
+.snapshot-list li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.rest-dialog {
+	width: min(480px, calc(100vw - 32px));
+	max-height: 85vh;
+	margin: auto;
+}
+.rest-dialog form {
+	display: grid;
+	gap: 12px;
+}
+.session-prep {
+	margin-top: 24px;
+}
+.session-prep ul {
+	display: grid;
+	gap: 6px;
+}
+.session-prep li {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+}
+.session-prep h3 {
+	margin: 16px 0 8px;
 }

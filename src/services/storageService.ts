@@ -1,5 +1,6 @@
 import type { Campaign, GameState, Vitals } from '../types.ts'
 import { campaignWithPlayers, createInitialState } from './game.ts'
+import { MAX_XP } from './xp.ts'
 
 export const storageKey = (campaignId: string, slot = '1') => `dnd-dm:campaign:${campaignId}:v1:slot:${slot}`
 export function cleanupLegacyDemoStorage(): { preservedSaves: number; error?: string } {
@@ -194,6 +195,11 @@ export function validateGame(input: unknown, campaign: Campaign): GameState {
 		if (!campaign.npcs.some((n) => n.id === id) || typeof v !== 'number' || !Number.isFinite(v)) invalid()
 	if (Object.keys(value.players).length !== campaign.players.length) invalid()
 	for (const p of campaign.players) validateVitals(value.players[p.id], p.combat.maxHp, p.resources)
+	if (value.xp !== undefined) {
+		if (!object(value.xp)) invalid()
+		for (const [id, n] of Object.entries(value.xp))
+			if (!campaign.players.some((p) => p.id === id) || !integer(n, 0, MAX_XP)) invalid()
+	}
 	for (const j of value.journal)
 		if (
 			!object(j) ||
@@ -315,11 +321,108 @@ export function exportReminderDue(state: GameState, lastExport: number | null, n
 	const progress = state.journal.length > 0 || Object.keys(state.sceneStatus).length > 0
 	return progress && (lastExport === null || now - lastExport > EXPORT_REMINDER_DAYS * 86_400_000)
 }
-export function saveGame(state: GameState, slot = '1'): string | null {
+export interface Snapshot {
+	at: number
+	label: string
+	state: string
+}
+const MAX_SNAPSHOTS = 10
+const snapshotsKey = (campaignId: string, slot: string) => `${storageKey(campaignId, slot)}:snapshots`
+export function listSnapshots(campaignId: string, slot: string): Snapshot[] {
 	try {
-		localStorage.setItem(storageKey(state.campaignId, slot), exportGame(state))
-		return null
-	} catch (error) {
-		return `Sauvegarde impossible : ${error instanceof Error ? error.message : String(error)}`
+		const list: unknown = JSON.parse(localStorage.getItem(snapshotsKey(campaignId, slot)) ?? '[]')
+		return Array.isArray(list)
+			? list.filter(
+					(s): s is Snapshot =>
+						object(s) &&
+						typeof s.at === 'number' &&
+						typeof s.label === 'string' &&
+						typeof s.state === 'string',
+				)
+			: []
+	} catch {
+		return []
 	}
+}
+// The undo history is dropped: it can double the size and a restore point is a fresh start anyway.
+// `at` is kept strictly increasing: it is the list key and two points can share a millisecond.
+export function addSnapshot(state: GameState, slot: string, label: string, now = Date.now()): string | null {
+	const previous = listSnapshots(state.campaignId, slot)
+	const at = Math.max(now, (previous[0]?.at ?? 0) + 1)
+	const list = [{ at, label, state: exportGame({ ...state, undo: null }) }, ...previous].slice(0, MAX_SNAPSHOTS)
+	for (;;)
+		try {
+			localStorage.setItem(snapshotsKey(state.campaignId, slot), JSON.stringify(list))
+			return null
+		} catch (error) {
+			// On a full quota, sacrifice the oldest restore point; the previous stored list stays untouched if all fail.
+			if (list.length <= 1)
+				return `Point de restauration impossible : ${error instanceof Error ? error.message : String(error)}`
+			list.pop()
+		}
+}
+// Debounced, one write at a time: a save made during a write is written right after it. A failure stops the autosave.
+export function createFileAutosave(
+	write: (json: string) => Promise<void>,
+	delay = 1500,
+	hooks: { onSuccess?: (at: number) => void; onError?: (error: unknown) => void } = {},
+) {
+	let pending: string | null = null
+	let writing = false
+	let timer: ReturnType<typeof setTimeout> | undefined
+	async function drain() {
+		if (writing) return
+		writing = true
+		try {
+			while (pending !== null) {
+				const json = pending
+				pending = null
+				try {
+					await write(json)
+				} catch (error) {
+					pending = null
+					hooks.onError?.(error)
+					return
+				}
+				hooks.onSuccess?.(Date.now())
+			}
+		} finally {
+			writing = false
+		}
+	}
+	return {
+		save(json: string) {
+			pending = json
+			clearTimeout(timer)
+			timer = setTimeout(drain, delay)
+		},
+		cancel() {
+			pending = null
+			clearTimeout(timer)
+		},
+	}
+}
+// The main save always wins over restore points: on a full quota the oldest point of this slot is sacrificed, then the write is retried.
+function dropOldestSnapshot(campaignId: string, slot: string): boolean {
+	const list = listSnapshots(campaignId, slot)
+	if (!list.length) return false
+	list.pop()
+	try {
+		if (list.length) localStorage.setItem(snapshotsKey(campaignId, slot), JSON.stringify(list))
+		else localStorage.removeItem(snapshotsKey(campaignId, slot))
+		return true
+	} catch {
+		return false
+	}
+}
+export function saveGame(state: GameState, slot = '1'): string | null {
+	const json = exportGame(state)
+	for (;;)
+		try {
+			localStorage.setItem(storageKey(state.campaignId, slot), json)
+			return null
+		} catch (error) {
+			if (!dropOldestSnapshot(state.campaignId, slot))
+				return `Sauvegarde impossible : ${error instanceof Error ? error.message : String(error)}`
+		}
 }

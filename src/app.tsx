@@ -1,22 +1,28 @@
-import { useEffect, useRef, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks'
 import { CombatView } from './components/CombatView'
 import { Dashboard } from './components/Dashboard'
 import { Icon } from './components/icons'
 import { isTyping } from './components/input'
 import { SearchDialog } from './components/Search'
+import { ShortRestDialog } from './components/ShortRestDialog'
+import { usePlayerScreen } from './components/usePlayerScreen'
 import { BestiaryView, CharactersView, ItemsView, SceneView } from './components/Views'
 import { BUNDLED_CAMPAIGN_URL, loadCampaign } from './services/campaignLoader'
 import * as game from './services/game'
 import { frPlural, journalTypeLabel } from './services/labels'
 import type { SearchResult } from './services/search'
 import {
+	addSnapshot,
 	cleanupLegacyDemoStorage,
+	createFileAutosave,
 	exportGame,
 	exportReminderDue,
 	importGame,
 	lastExportAt,
+	listSnapshots,
 	loadGame,
 	markExported,
+	type Snapshot,
 	saveGame,
 	storageKey,
 } from './services/storageService'
@@ -34,6 +40,15 @@ const NAV = [
 	['settings', 'Paramètres'],
 ]
 const DEFAULT_MANIFEST = BUNDLED_CAMPAIGN_URL
+// Minimal File System Access API types (Chromium only; TypeScript's DOM lib does not ship them).
+interface SaveFileHandle {
+	name: string
+	createWritable(): Promise<{ write(data: string): Promise<void>; close(): Promise<void> }>
+}
+type SaveFilePicker = (options: {
+	suggestedName: string
+	types: { description: string; accept: Record<string, string[]> }[]
+}) => Promise<SaveFileHandle>
 export function App() {
 	const [staticCampaign, setCampaign] = useState<Campaign | null>(null)
 	const [state, setState] = useState<GameState | null>(null)
@@ -63,6 +78,17 @@ export function App() {
 	// latest export action for the global Ctrl+S listener (download is defined after the early returns)
 	const exportShortcut = useRef<() => void>(() => {})
 	const noticeTimer = useRef<number | undefined>(undefined)
+	const [snapshots, setSnapshots] = useState<Snapshot[]>([])
+	const [restOpen, setRestOpen] = useState(false)
+	// shortcut: the file handle is not persisted (IndexedDB), the file must be linked again each session.
+	const autosave = useRef<ReturnType<typeof createFileAutosave> | null>(null)
+	const [linkedFile, setLinkedFile] = useState<{ name: string; at: number | null } | null>(null)
+	const unlinkFile = () => {
+		autosave.current?.cancel()
+		autosave.current = null
+		setLinkedFile(null)
+	}
+	const players = usePlayerScreen(state, (text) => announce(text))
 	const combatStatus = useRef<string | undefined>(undefined)
 	const submittedNote = useRef<{ id: string; note: string; title: string } | null>(null)
 	useEffect(() => {
@@ -80,10 +106,14 @@ export function App() {
 	}, [table, canTable])
 	const status = state?.combat?.status
 	useEffect(() => {
+		if (state) setSnapshots(listSnapshots(state.campaignId, slot))
+	}, [state?.campaignId, slot, view])
+	useEffect(() => {
 		if (status === 'finished' && combatStatus.current && combatStatus.current !== 'finished') setReminder('combat')
 		combatStatus.current = status
 	}, [status])
-	useEffect(() => {
+	// layout effect: the listener must see the new tableMode before "Quitter le mode table" is painted
+	useLayoutEffect(() => {
 		const onKey = (e: KeyboardEvent) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
 				e.preventDefault()
@@ -131,6 +161,7 @@ export function App() {
 			setReminder(!result.error && exportReminderDue(result.state, last) ? 'stale' : null)
 			setError(result.error || '')
 			setBlocked(Boolean(result.error))
+			unlinkFile()
 			setSlot(nextSlot)
 			try {
 				localStorage.setItem(`dnd-dm:slot:${DEFAULT_MANIFEST}`, nextSlot)
@@ -165,6 +196,7 @@ export function App() {
 		const problem = saveGame(state, slot)
 		setSaved(!problem)
 		if (problem) setError(problem)
+		else autosave.current?.save(exportGame(state))
 	}, [state, slot, blocked, loading, importing])
 	const update: Update = (change) => {
 		if (opening.current || importPending.current) return
@@ -216,6 +248,82 @@ export function App() {
 		setView({ npc: 'players', player: 'players', monster: 'bestiary', item: 'items' }[r.kind])
 		setScrollTarget(`${r.kind}-${r.id}`)
 	}
+	// emptied first, restored next tick, so a second identical notice is announced again
+	const announce = (text: string) => {
+		clearTimeout(noticeTimer.current)
+		setExportNotice('')
+		noticeTimer.current = window.setTimeout(() => {
+			setExportNotice(text)
+			noticeTimer.current = window.setTimeout(() => setExportNotice(''), 3000)
+		}, 100)
+	}
+	// restore point of the current game; skipped on a protected (not loaded) save; true once stored
+	const checkpoint = (label: string) => {
+		if (blocked) return false
+		const problem = addSnapshot(state, slot, label)
+		if (problem) setError(problem)
+		setSnapshots(listSnapshots(state.campaignId, slot))
+		return !problem
+	}
+	const restore = (snapshot: Snapshot) => {
+		if (blocked || loading || importing || opening.current || importPending.current) return
+		if (
+			!confirm(
+				`Restaurer le point « ${snapshot.label} » du ${new Date(snapshot.at).toLocaleString('fr-FR')} ? L’état actuel de l’emplacement ${slot} sera remplacé, après un point « Avant restauration ».`,
+			)
+		)
+			return
+		try {
+			const restored = importGame(snapshot.state, staticCampaign!)
+			checkpoint('Avant restauration')
+			setError('')
+			combatStatus.current = restored.combat?.status
+			setState(restored)
+			announce('Point de restauration appliqué.')
+		} catch (e) {
+			setError(e instanceof Error ? e.message : 'Point de restauration non valide.')
+		}
+	}
+	const linkFile = async () => {
+		try {
+			const handle = await (window as unknown as { showSaveFilePicker: SaveFilePicker }).showSaveFilePicker({
+				suggestedName: `${state.campaignId}-sauvegarde-${slot}.json`,
+				types: [{ description: 'Sauvegarde JSON', accept: { 'application/json': ['.json'] } }],
+			})
+			unlinkFile()
+			const [campaignId, linkedSlot] = [state.campaignId, slot]
+			const file = createFileAutosave(
+				async (json) => {
+					const writable = await handle.createWritable()
+					await writable.write(json)
+					await writable.close()
+				},
+				1500,
+				{
+					onSuccess: (at) => {
+						// a write still in flight when the file was unlinked or replaced
+						if (autosave.current !== file) return
+						markExported(campaignId, linkedSlot, at)
+						setExportedAt(at)
+						setReminder(null)
+						setLinkedFile({ name: handle.name, at })
+					},
+					onError: (e) => {
+						setError(
+							`Écriture dans le fichier de sauvegarde impossible : ${e instanceof Error ? e.message : String(e)}. Le fichier a été délié ; reliez-le pour reprendre.`,
+						)
+						unlinkFile()
+					},
+				},
+			)
+			autosave.current = file
+			setLinkedFile({ name: handle.name, at: null })
+			file.save(exportGame(state))
+		} catch (e) {
+			if (!(e instanceof DOMException && e.name === 'AbortError'))
+				setError(e instanceof Error ? e.message : 'Fichier de sauvegarde non lié.')
+		}
+	}
 	const download = () => {
 		let data = exportGame(state)
 		if (blocked) {
@@ -238,13 +346,7 @@ export function App() {
 			markExported(campaign.manifest.id, slot, now)
 			setExportedAt(now)
 			setReminder(null)
-			// emptied first, restored next tick, so a second export re-announces the same text
-			clearTimeout(noticeTimer.current)
-			setExportNotice('')
-			noticeTimer.current = window.setTimeout(() => {
-				setExportNotice('Sauvegarde exportée.')
-				noticeTimer.current = window.setTimeout(() => setExportNotice(''), 3000)
-			}, 100)
+			announce('Sauvegarde exportée.')
 		}
 	}
 	exportShortcut.current = () => {
@@ -348,6 +450,20 @@ export function App() {
 						<button
 							type='button'
 							class='icon-button'
+							aria-label='Écran des joueurs'
+							title='Écran des joueurs (nouvel onglet)'
+							onClick={players.open}
+						>
+							<Icon name='eye' />
+						</button>
+						{players.revealed && (
+							<button type='button' class='text-button' onClick={players.clear}>
+								Effacer l’écran des joueurs
+							</button>
+						)}
+						<button
+							type='button'
+							class='icon-button'
 							aria-label={context ? 'Masquer le panneau de contexte' : 'Afficher le panneau de contexte'}
 							aria-expanded={context}
 							onClick={() => setContext(!context)}
@@ -402,6 +518,11 @@ export function App() {
 							chapter={chapter}
 							combatOpen={combatOpen}
 							setView={setView}
+							openScene={navigate}
+							openEncounter={(id) => {
+								setPreparedEncounter(id)
+								setView('encounters')
+							}}
 						/>
 					)}
 					{(view === 'campaign' || view === 'chapters') && (
@@ -482,6 +603,7 @@ export function App() {
 									state={state}
 									scene={scene}
 									update={update}
+									reveal={players.show}
 									goCombat={(id) => {
 										setPreparedEncounter(id)
 										setView('encounters')
@@ -516,6 +638,7 @@ export function App() {
 							update={update}
 							requestedEncounter={preparedEncounter}
 							clearRequested={() => setPreparedEncounter(undefined)}
+							checkpoint={checkpoint}
 						/>
 					)}
 					{view === 'bestiary' && <BestiaryView campaign={campaign} />}
@@ -664,6 +787,7 @@ export function App() {
 															`Remplacer l’emplacement ${slot} par le fichier importé ? Le contenu actuel de cet emplacement sera remplacé.`,
 														)
 													) {
+														checkpoint('Avant import')
 														setBlocked(false)
 														setError('')
 														// an imported, already finished combat must not trigger the "Combat terminé" reminder
@@ -689,6 +813,82 @@ export function App() {
 									</div>
 								)}
 							</section>
+							<section class='panel settings-section'>
+								<h3>Points de restauration</h3>
+								<p>
+									Copies locales de l’emplacement {slot} (10 au plus, les plus anciennes sont
+									écartées). Un point est créé à la fin d’un combat, à chaque repos et avant un import
+									ou une restauration.
+								</p>
+								<div class='button-row'>
+									<button
+										type='button'
+										disabled={blocked || loading || importing}
+										onClick={() =>
+											checkpoint('Point manuel') && announce('Point de restauration créé.')
+										}
+									>
+										Créer un point de restauration
+									</button>
+								</div>
+								{snapshots.length ? (
+									<ul class='snapshot-list' aria-label='Points de restauration'>
+										{snapshots.map((snapshot) => (
+											<li key={snapshot.at}>
+												<span>
+													{snapshot.label}
+													<small>{new Date(snapshot.at).toLocaleString('fr-FR')}</small>
+												</span>
+												<button
+													type='button'
+													disabled={blocked || loading || importing}
+													aria-label={`Restaurer le point ${snapshot.label} du ${new Date(snapshot.at).toLocaleString('fr-FR')}`}
+													onClick={() => restore(snapshot)}
+												>
+													Restaurer
+												</button>
+											</li>
+										))}
+									</ul>
+								) : (
+									<p>Aucun point de restauration pour cet emplacement.</p>
+								)}
+							</section>
+							{'showSaveFilePicker' in window && (
+								<section class='panel settings-section'>
+									<h3>Fichier de sauvegarde automatique</h3>
+									<p>
+										Liez un fichier : chaque sauvegarde y est recopiée. Le lien n’est pas conservé
+										entre deux sessions.
+									</p>
+									{linkedFile ? (
+										<div class='button-row'>
+											<span>
+												Fichier lié : <strong>{linkedFile.name}</strong>
+												<small>
+													Dernière écriture :{' '}
+													{linkedFile.at
+														? new Date(linkedFile.at).toLocaleString('fr-FR')
+														: 'en attente'}
+												</small>
+											</span>
+											<button type='button' onClick={unlinkFile}>
+												Délier
+											</button>
+										</div>
+									) : (
+										<div class='button-row'>
+											<button
+												type='button'
+												disabled={blocked || loading || importing}
+												onClick={() => void linkFile()}
+											>
+												Lier un fichier de sauvegarde
+											</button>
+										</div>
+									)}
+								</section>
+							)}
 							<section class='panel settings-section'>
 								<h3>Règles & contenu</h3>
 								<p>
@@ -782,13 +982,24 @@ export function App() {
 						class='context-link'
 						disabled={combatOpen}
 						title={combatOpen ? 'Impossible pendant un combat' : undefined}
+						onClick={() => setRestOpen(true)}
+					>
+						Repos court <Icon name='arrow' size={15} />
+					</button>
+					<button
+						type='button'
+						class='context-link'
+						disabled={combatOpen}
+						title={combatOpen ? 'Impossible pendant un combat' : undefined}
 						onClick={() => {
 							if (
 								confirm(
 									'Repos long du groupe ? Les PV, PV temporaires, ressources et sauvegardes contre la mort des PJ vivants seront remis à zéro ou au maximum, et leur épuisement baissera de 1.',
 								)
-							)
+							) {
+								checkpoint('Repos long')
 								update((s) => game.longRest(s, campaign))
+							}
 						}}
 					>
 						Repos long <Icon name='arrow' size={15} />
@@ -858,6 +1069,20 @@ export function App() {
 					</section>
 				</aside>
 			)}
+			<ShortRestDialog
+				campaign={campaign}
+				state={state}
+				open={restOpen}
+				onClose={() => setRestOpen(false)}
+				onConfirm={(healing) => {
+					checkpoint('Repos court')
+					update((s) => {
+						const next = game.shortRest(s, campaign, healing)
+						announce(`Repos court : ${next.journal.at(-1)?.description}.`)
+						return next
+					})
+				}}
+			/>
 			<SearchDialog
 				campaign={campaign}
 				open={searching}

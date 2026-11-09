@@ -27,6 +27,9 @@ L’état de partie est sauvegardé sur cet appareil dans le stockage du navigat
 - Ajouts personnels éditables et sauvegardés par scène pour le résumé, les dialogues et le texte à lire aux joueurs. Le bloc de notes du MJ a été retiré de cette page ; ses données existantes sont conservées.
 - Combat : initiative, tours, PV actuels et temporaires, PV maximum, CA, bonus d’initiative, conditions et sauvegardes contre la mort. Les changements de statistiques des PJ persistent dans leurs fiches et les rencontres suivantes ; ceux des monstres restent propres à chaque exemplaire.
 - Les attaques et jets des monstres sont accessibles sous leurs PV. Les boutons utilisent les formules connues ; le lanceur global de dés a été retiré à la demande du MJ. Les résultats des jets sont temporaires.
+- Entre les combats : repos court (PV récupérés saisis par le MJ) et repos long ; XP des créatures vaincues calculée depuis leur FP (table 2014) et ajustable ; préparation de session sur le tableau de bord.
+- Écran des joueurs dans un second onglet local : ordre d'initiative, PV des PJ et texte révélé par le MJ, jamais les statistiques des créatures.
+- Sauvegardes : points de restauration locaux (10 derniers) et, sur Chromium, écriture automatique dans un fichier lié par le MJ.
 - Les sources de campagne restent distinctes de l’état de partie et des ajouts du MJ. Ne pas inventer de dialogue, texte officiel, statistique ou effet manquant. Signaler les informations incomplètes et conserver leur provenance.
 - Préserver les sauvegardes et leur compatibilité ; valider les imports avant remplacement. Aucun effacement global du stockage.
 
